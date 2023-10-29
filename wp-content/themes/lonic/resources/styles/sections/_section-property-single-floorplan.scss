@@ -1,0 +1,14 @@
+.section-property-single-floorplan {
+  position: relative;
+  background: #e7e4dd;
+
+  .image {
+    background: #e7e4dd;
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    mix-blend-mode: multiply;
+  }
+}

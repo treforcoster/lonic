@@ -1,0 +1,33 @@
+body#tinymce.wp-editor h1,
+body#tinymce.wp-editor h2,
+body#tinymce.wp-editor h3 {
+  font-weight: 300;
+  font-family: 'baskerville-display-pt', serif;
+}
+
+body#tinymce.wp-editor h4 {
+  font-weight: 300;
+  color: #d5a65a;
+  font-family: 'forma-djr-display', sans-serif;
+}
+
+body#tinymce.wp-editor h1 strong,
+body#tinymce.wp-editor h2 strong,
+body#tinymce.wp-editor h3 strong,
+body#tinymce.wp-editor h4 strong {
+  font-weight: 400;
+  font-family: 'forma-djr-display', sans-serif;
+}
+
+body#tinymce.wp-editor .lead-in-heading {
+  display: block;
+  color: #d5a65a;
+  font-size: 14px;
+  font-weight: 300;
+  font-family: 'forma-djr-display', sans-serif;
+}
+
+body#tinymce.wp-editor p {
+  font-weight: 300;
+  color: #687f82;
+}

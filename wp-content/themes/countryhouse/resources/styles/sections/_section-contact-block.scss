@@ -1,0 +1,58 @@
+.section-contact-block {
+  img {
+    width: 100%;
+    height: auto;
+  }
+
+  h3 {
+    color: #0f272d;
+  }
+
+  @include media-breakpoint-up(lg) {
+    .header-wrapper {
+      position: relative;
+      &:before {
+        content: '';
+        width: calc(100% + var(--bs-gutter-x));
+        height: 1px;
+        position: absolute;
+        left: calc(-1 * var(--bs-gutter-x) * 0.5);
+        bottom: 0;
+        background: #cdd4d5;
+        opacity: 0.5;
+        z-index: 1000;
+      }
+
+      &:after {
+        content: '';
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="36.549" height="19.52" viewBox="0 0 36.549 19.52"> <defs> <style> .cls-1 { fill: %23dda54b; } </style> </defs> <path id="Path_1389" data-name="Path 1389" class="cls-1" d="M201.252,93.181l-9.911,9.76a11.958,11.958,0,0,0-16.726,0l-9.911-9.76,9.911-9.76a11.958,11.958,0,0,0,16.726,0Z" transform="translate(-164.703 -83.421)"/></svg>');
+        width: 2.083vw;
+        height: 1.042vw;
+        position: absolute;
+        left: calc(-1 * (1.7vw / 2));
+        bottom: calc(-1 * (1.042vw / 2));
+        margin-left: -1.042vw;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        z-index: 1000;
+      }
+    }
+  }
+
+  .image {
+    overflow: hidden;
+    border-radius: 0.8vw;
+    width: 109%;
+    @include media-breakpoint-up(lg) {
+      width: 50vw;
+    }
+    img {
+      width: 100%;
+      @include media-breakpoint-up(lg) {
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+}

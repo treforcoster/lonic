@@ -1,0 +1,104 @@
+.section-accordion {
+  &.hide-on-desktop {
+    @include media-breakpoint-up(lg) {
+      display: none;
+    }
+  }
+  .accordion-row {
+    .accordion-header {
+      border-top: 1px solid #687f82;
+      h3 {
+        &:after {
+          content: '';
+          $arrowIcon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="7.877" height="7.001" viewBox="0 0 7.877 7.001"><path id="Polygon_22" data-name="Polygon 22" d="M3.938,0,7.877,7H0Z" transform="translate(7.877 7.001) rotate(180)" fill="%23687f82"/></svg>');
+          position: absolute;
+          right: 0;
+          width: 10px;
+          height: 100%;
+          background-position: center;
+          background-repeat: no-repeat;
+
+          background-color: #687f82;
+
+          -webkit-mask-image: $arrowIcon;
+          mask-image: $arrowIcon;
+
+          -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+          -webkit-mask-position: center;
+          mask-position: center;
+        }
+
+        cursor: pointer;
+        position: relative;
+        color: #d5a65a !important;
+        margin: 0;
+        font-family: var(--font-copy);
+        font-size: var(--text-size-medium-h4-xs);
+        padding-bottom: var(--text-size-medium-h4-xs-p);
+        line-height: var(--text-size-medium-h4-lh);
+        letter-spacing: var(--text-size-medium-h4-mobile-ls);
+        font-weight: var(--text-size-medium-h4-w);
+        text-transform: var(--text-size-medium-h4-t);
+
+        @include media-breakpoint-up(sm) {
+          font-size: var(--text-size-medium-h4-sm);
+          padding-bottom: var(--text-size-medium-h4-sm-p);
+        }
+
+        @include media-breakpoint-up(md) {
+          font-size: var(--text-size-medium-h4-md);
+          padding-bottom: var(--text-size-medium-h4-md-p);
+        }
+
+        @include media-breakpoint-up(lg) {
+          letter-spacing: var(--text-size-medium-h4-ls);
+          font-size: var(--text-size-medium-h4-lg);
+          padding-bottom: var(--text-size-medium-h4-lg-p);
+        }
+
+        @include media-breakpoint-up(xl) {
+          font-size: var(--text-size-medium-h4-xl);
+          padding-bottom: var(--text-size-medium-h4-xl-p);
+        }
+
+        @include media-breakpoint-up(xxl) {
+          font-size: var(--text-size-medium-h4-xxl);
+          padding-bottom: var(--text-size-medium-h4-xxl-p);
+        }
+      }
+
+      &.closed {
+        h3 {
+          &:after {
+            background-color: #687f82;
+          }
+        }
+      }
+
+      &.open {
+        h3 {
+          &:after {
+            background-color: #d5a65a;
+            -ms-transform: rotate(180deg); /* IE 9 */
+            -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+            transform: rotate(180deg);
+          }
+        }
+      }
+    }
+    .accordion-body {
+      padding: 0;
+      height: 0;
+      overflow: hidden;
+
+      h4 {
+        color: #98b5b9;
+      }
+
+      p {
+        color: #fff;
+      }
+    }
+  }
+}

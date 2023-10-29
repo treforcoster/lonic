@@ -1,0 +1,261 @@
+.m-desktop-element {
+  @include media-breakpoint-up(lg) {
+    margin: var(--element-lg);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin: var(--element-xl);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin: var(--element-xxl);
+  }
+}
+
+.m-desktop-intro {
+  @include media-breakpoint-up(lg) {
+    margin: var(--intro-lg);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin: var(--intro-xl);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin: var(--intro-xxl);
+  }
+}
+
+.m-t-desktop-none {
+  @include media-breakpoint-up(lg) {
+    margin-top: 0;
+  }
+}
+
+.m-t-desktop-element-half {
+  @include media-breakpoint-up(lg) {
+    margin-top: calc(var(--element-lg) / 2);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin-top: calc(var(--element-xl) / 2);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin-top: calc(var(--element-xxl) / 2);
+  }
+}
+
+.m-t-desktop-element {
+  @include media-breakpoint-up(lg) {
+    margin-top: var(--element-lg);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin-top: var(--element-xl);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin-top: var(--element-xxl);
+  }
+}
+
+.m-t-desktop-intro {
+  @include media-breakpoint-up(lg) {
+    margin-top: var(--intro-lg);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin-top: var(--intro-xl);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin-top: var(--intro-xxl);
+  }
+}
+
+.m-t-desktop-section {
+  @include media-breakpoint-up(lg) {
+    margin-top: var(--section-lg);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin-top: var(--section-xl);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin-top: var(--section-xxl);
+  }
+}
+
+.m-r-desktop-none {
+  @include media-breakpoint-up(lg) {
+    margin-right: 0;
+  }
+}
+
+.m-r-desktop-element {
+  @include media-breakpoint-up(lg) {
+    margin-right: var(--element-lg);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin-right: var(--element-xl);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin-right: var(--element-xxl);
+  }
+}
+
+.m-r-desktop-intro {
+  @include media-breakpoint-up(lg) {
+    margin-right: var(--intro-lg);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin-right: var(--intro-xl);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin-right: var(--intro-xxl);
+  }
+}
+
+.m-r-desktop-section {
+  @include media-breakpoint-up(lg) {
+    margin-right: var(--section-lg);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin-right: var(--section-xl);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin-right: var(--section-xxl);
+  }
+}
+
+.m-b-desktop-none {
+  @include media-breakpoint-up(lg) {
+    margin-bottom: 0;
+  }
+}
+
+.m-b-desktop-element {
+  @include media-breakpoint-up(lg) {
+    margin-bottom: var(--element-lg);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin-bottom: var(--element-xl);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin-bottom: var(--element-xxl);
+  }
+}
+
+.m-b-desktop-element-half {
+  @include media-breakpoint-up(lg) {
+    margin-bottom: calc(var(--element-lg) / 2);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin-bottom: calc(var(--element-xl) / 2);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin-bottom: calc(var(--element-xxl) / 2);
+  }
+}
+
+.m-b-desktop-intro {
+  @include media-breakpoint-up(lg) {
+    margin-bottom: var(--intro-lg);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin-bottom: var(--intro-xl);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin-bottom: var(--intro-xxl);
+  }
+}
+
+.m-b-desktop-section {
+  @include media-breakpoint-up(lg) {
+    margin-bottom: var(--section-lg);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin-bottom: var(--section-xl);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin-bottom: var(--section-xxl);
+  }
+}
+
+.m-l-desktop-none {
+  @include media-breakpoint-up(lg) {
+    margin-left: 0;
+  }
+}
+
+.m-l-desktop-element {
+  @include media-breakpoint-up(lg) {
+    margin-left: var(--element-lg);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin-left: var(--element-xl);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin-left: var(--element-xxl);
+  }
+}
+
+.m-l-desktop-intro {
+  @include media-breakpoint-up(lg) {
+    margin-left: var(--intro-lg);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin-left: var(--intro-xl);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin-left: var(--intro-xxl);
+  }
+}
+
+.m-l-desktop-section {
+  @include media-breakpoint-up(lg) {
+    margin-left: var(--section-lg);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin-left: var(--section-xl);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin-left: var(--section-xxl);
+  }
+}
+
+.m-desktop-section {
+  @include media-breakpoint-up(lg) {
+    margin: var(--section-lg);
+  }
+
+  @include media-breakpoint-up(xl) {
+    margin: var(--section-xl);
+  }
+
+  @include media-breakpoint-up(xxl) {
+    margin: var(--section-xxl);
+  }
+}

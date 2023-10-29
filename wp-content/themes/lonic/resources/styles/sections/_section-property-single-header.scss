@@ -1,0 +1,29 @@
+.section-property-single-header {
+  position: relative;
+
+  h2 {
+    padding-bottom: 0vw !important;
+  }
+
+  .h2 {
+    color: #718c93;
+    padding-right: 5px;
+  }
+
+  .tags {
+    flex-direction: row;
+    align-items: center;
+  }
+  .text-lg-right {
+    .lead-in-heading {
+      line-height: 1.2;
+    }
+  }
+
+  p {
+    letter-spacing: 0.5px;
+    @include media-breakpoint-up(lg) {
+      letter-spacing: 0.06vw;
+    }
+  }
+}

@@ -1,0 +1,354 @@
+.section {
+  position: relative;
+
+  .content {
+    position: relative;
+    z-index: 50;
+  }
+  @include media-breakpoint-up(lg) {
+    &.section-line {
+      &:before {
+        content: '';
+        width: 1px;
+        height: 100%;
+        position: absolute;
+        left: 5.729vw;
+        top: 0;
+        background: #cdd4d5;
+        opacity: 0.5;
+        z-index: 1000;
+      }
+    }
+
+    &.marker-title-h2 {
+      .content {
+        z-index: 1500;
+        h2 {
+          &:after {
+            content: '';
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="36.549" height="19.52" viewBox="0 0 36.549 19.52"> <defs> <style> .cls-1 { fill: %23dda54b; } </style> </defs> <path id="Path_1389" data-name="Path 1389" class="cls-1" d="M201.252,93.181l-9.911,9.76a11.958,11.958,0,0,0-16.726,0l-9.911-9.76,9.911-9.76a11.958,11.958,0,0,0,16.726,0Z" transform="translate(-164.703 -83.421)"/></svg>');
+            width: 2.083vw;
+            height: 1.042vw;
+            position: absolute;
+            left: 5.729vw;
+            margin-left: -1.042vw;
+            margin-top: 0.9vw;
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+
+            @include media-breakpoint-up(lg) {
+              top: var(--section-lg);
+            }
+
+            @include media-breakpoint-up(xl) {
+              top: var(--section-xl);
+            }
+
+            @include media-breakpoint-up(xxl) {
+              top: var(--section-xxl);
+            }
+          }
+        }
+      }
+    }
+
+    &.marker-title-h2-intro {
+      .content {
+        z-index: 1500;
+        h2 {
+          &:after {
+            content: '';
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="36.549" height="19.52" viewBox="0 0 36.549 19.52"> <defs> <style> .cls-1 { fill: %23dda54b; } </style> </defs> <path id="Path_1389" data-name="Path 1389" class="cls-1" d="M201.252,93.181l-9.911,9.76a11.958,11.958,0,0,0-16.726,0l-9.911-9.76,9.911-9.76a11.958,11.958,0,0,0,16.726,0Z" transform="translate(-164.703 -83.421)"/></svg>');
+            width: 2.083vw;
+            height: 1.042vw;
+            position: absolute;
+            left: 5.729vw;
+            margin-left: -1.042vw;
+            margin-top: 0.9vw;
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+
+            @include media-breakpoint-up(lg) {
+              top: var(--intro-lg);
+            }
+
+            @include media-breakpoint-up(xl) {
+              top: var(--intro-xl);
+            }
+
+            @include media-breakpoint-up(xxl) {
+              top: var(--intro-xxl);
+            }
+          }
+        }
+      }
+    }
+
+    &.marker-title-h2-lead-in {
+      .content {
+        z-index: 1500;
+        h1,
+        h2 {
+          &:after {
+            content: '';
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="36.549" height="19.52" viewBox="0 0 36.549 19.52"> <defs> <style> .cls-1 { fill: %23dda54b; } </style> </defs> <path id="Path_1389" data-name="Path 1389" class="cls-1" d="M201.252,93.181l-9.911,9.76a11.958,11.958,0,0,0-16.726,0l-9.911-9.76,9.911-9.76a11.958,11.958,0,0,0,16.726,0Z" transform="translate(-164.703 -83.421)"/></svg>');
+            width: 2.083vw;
+            height: 1.042vw;
+            position: absolute;
+            left: 5.729vw;
+            margin-left: -1.042vw;
+            margin-top: 1.9vw;
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            display: none;
+
+            @include media-breakpoint-up(lg) {
+              display: block;
+              top: var(--section-lg);
+            }
+
+            @include media-breakpoint-up(xl) {
+              top: var(--section-xl);
+            }
+
+            @include media-breakpoint-up(xxl) {
+              top: var(--section-xxl);
+            }
+          }
+        }
+      }
+    }
+
+    &.marker-title-h2-small {
+      .content {
+        z-index: 1500;
+        h2 {
+          &:after {
+            content: '';
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="36.549" height="19.52" viewBox="0 0 36.549 19.52"> <defs> <style> .cls-1 { fill: %23dda54b; } </style> </defs> <path id="Path_1389" data-name="Path 1389" class="cls-1" d="M201.252,93.181l-9.911,9.76a11.958,11.958,0,0,0-16.726,0l-9.911-9.76,9.911-9.76a11.958,11.958,0,0,0,16.726,0Z" transform="translate(-164.703 -83.421)"/></svg>');
+            width: 2.083vw;
+            height: 1.042vw;
+            position: absolute;
+            left: 5.729vw;
+            margin-left: -1.042vw;
+            margin-top: 1vw;
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+
+            @include media-breakpoint-up(lg) {
+              top: var(--element-lg);
+            }
+
+            @include media-breakpoint-up(xl) {
+              top: var(--element-xl);
+            }
+
+            @include media-breakpoint-up(xxl) {
+              top: var(--element-xxl);
+            }
+          }
+        }
+      }
+    }
+
+    &.marker-title-h2-lead-in-footer {
+      .content {
+        z-index: 1500;
+        h2 {
+          &:after {
+            content: '';
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="36.549" height="19.52" viewBox="0 0 36.549 19.52"> <defs> <style> .cls-1 { fill: %23dda54b; } </style> </defs> <path id="Path_1389" data-name="Path 1389" class="cls-1" d="M201.252,93.181l-9.911,9.76a11.958,11.958,0,0,0-16.726,0l-9.911-9.76,9.911-9.76a11.958,11.958,0,0,0,16.726,0Z" transform="translate(-164.703 -83.421)"/></svg>');
+            width: 2.083vw;
+            height: 1.042vw;
+            position: absolute;
+            left: 5.729vw;
+            margin-left: -1.042vw;
+            margin-top: 0.9vw;
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+
+            @include media-breakpoint-up(lg) {
+              top: -0.4vw;
+            }
+
+            @include media-breakpoint-up(xl) {
+              top: -0.4vw;
+            }
+
+            @include media-breakpoint-up(xxl) {
+              top: -0.4vw;
+            }
+          }
+        }
+      }
+    }
+
+    &.marker-line {
+      .content {
+        z-index: 1500;
+
+        &:after {
+          content: '';
+          background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="36.549" height="19.52" viewBox="0 0 36.549 19.52"> <defs> <style> .cls-1 { fill: %23dda54b; } </style> </defs> <path id="Path_1389" data-name="Path 1389" class="cls-1" d="M201.252,93.181l-9.911,9.76a11.958,11.958,0,0,0-16.726,0l-9.911-9.76,9.911-9.76a11.958,11.958,0,0,0,16.726,0Z" transform="translate(-164.703 -83.421)"/></svg>');
+          width: 2.083vw;
+          height: 1.042vw;
+          position: absolute;
+          left: 5.729vw;
+          margin-left: -1.042vw;
+          margin-top: 0.9vw;
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
+
+          @include media-breakpoint-up(lg) {
+            top: var(--section-lg);
+          }
+
+          @include media-breakpoint-up(xl) {
+            top: var(--section-xl);
+          }
+
+          @include media-breakpoint-up(xxl) {
+            top: var(--section-xxl);
+          }
+        }
+      }
+    }
+  }
+
+  .area-wrapper-h2-lead-in {
+    z-index: 1500;
+    h2 {
+      &:after {
+        content: '';
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="36.549" height="19.52" viewBox="0 0 36.549 19.52"> <defs> <style> .cls-1 { fill: %23dda54b; } </style> </defs> <path id="Path_1389" data-name="Path 1389" class="cls-1" d="M201.252,93.181l-9.911,9.76a11.958,11.958,0,0,0-16.726,0l-9.911-9.76,9.911-9.76a11.958,11.958,0,0,0,16.726,0Z" transform="translate(-164.703 -83.421)"/></svg>');
+        width: 2.083vw;
+        height: 1.042vw;
+        position: absolute;
+        left: 0vw;
+        margin-left: -2.5vw;
+        margin-top: 0vw;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+
+        display: none;
+        @include media-breakpoint-up(lg) {
+          display: block;
+        }
+
+        @include media-breakpoint-up(lg) {
+          top: var(--element-lg);
+        }
+
+        @include media-breakpoint-up(xl) {
+          top: var(--element-xl);
+        }
+
+        @include media-breakpoint-up(xxl) {
+          top: var(--element-xxl);
+        }
+      }
+    }
+  }
+  &.image-left {
+    .marker-bottom {
+      position: relative;
+      &:before {
+        content: '';
+        width: 400%;
+        height: 1px;
+        position: absolute;
+        bottom: 0;
+        left: calc(-1.042vw - 1.5rem - 49.6vw);
+        background: #cdd4d5;
+        opacity: 0.5;
+        z-index: 1000;
+        display: none;
+        @include media-breakpoint-up(lg) {
+          display: block;
+        }
+      }
+    }
+  }
+
+  &.image-right {
+    .marker-bottom {
+      position: relative;
+
+      &:before {
+        content: '';
+        width: 150%;
+        height: 1px;
+        position: absolute;
+        bottom: 0;
+        left: calc(-1.042vw - 0.75rem);
+        background: #cdd4d5;
+        opacity: 0.5;
+        z-index: 1000;
+        display: none;
+        @include media-breakpoint-up(lg) {
+          display: block;
+        }
+      }
+
+      &:after {
+        content: '';
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="36.549" height="19.52" viewBox="0 0 36.549 19.52"> <defs> <style> .cls-1 { fill: %23dda54b; } </style> </defs> <path id="Path_1389" data-name="Path 1389" class="cls-1" d="M201.252,93.181l-9.911,9.76a11.958,11.958,0,0,0-16.726,0l-9.911-9.76,9.911-9.76a11.958,11.958,0,0,0,16.726,0Z" transform="translate(-164.703 -83.421)"/></svg>');
+        width: 2.083vw;
+        height: 1.042vw;
+        position: absolute;
+        left: 0vw;
+        margin-left: -2.5vw;
+        margin-top: 0vw;
+        bottom: -0.45vw;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        z-index: 1100;
+        display: none;
+        @include media-breakpoint-up(lg) {
+          display: block;
+        }
+
+        // @include media-breakpoint-up(lg) {
+        //   bottom: var(--element-lg);
+        // }
+
+        // @include media-breakpoint-up(xl) {
+        //   bottom: var(--element-xl);
+        // }
+
+        // @include media-breakpoint-up(xxl) {
+        //   bottom: var(--element-xxl);
+        // }
+      }
+    }
+  }
+
+  .description-wrapper {
+    position: relative;
+    &:before {
+      content: '';
+      width: calc(100% + 1.5rem);
+      height: 1px;
+      position: absolute;
+      bottom: 0;
+      //left: calc(-1.042vw - 1.5rem - 49.6vw);
+      left: calc(-1 * (1.5rem / 2));
+      background: #cdd4d5;
+      opacity: 0.5;
+      z-index: 1000;
+      display: none;
+
+      @include media-breakpoint-up(lg) {
+        display: block;
+      }
+    }
+  }
+}

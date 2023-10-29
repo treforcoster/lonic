@@ -1,0 +1,57 @@
+.section-property-single-general-info {
+  background: #fafaf8;
+
+  .container-fluid {
+    .row {
+      .col-5 {
+        min-height: 55.99vw;
+
+        .description-wrapper {
+          position: relative;
+          &:before {
+            content: '';
+            width: calc(100% + var(--bs-gutter-x));
+            height: 1px;
+            position: absolute;
+            left: calc(-1 * var(--bs-gutter-x) * 0.5);
+            bottom: 0;
+            background: #cdd4d5;
+            opacity: 0.5;
+            z-index: 1000;
+          }
+
+          &:after {
+            content: '';
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="36.549" height="19.52" viewBox="0 0 36.549 19.52"> <defs> <style> .cls-1 { fill: %23dda54b; } </style> </defs> <path id="Path_1389" data-name="Path 1389" class="cls-1" d="M201.252,93.181l-9.911,9.76a11.958,11.958,0,0,0-16.726,0l-9.911-9.76,9.911-9.76a11.958,11.958,0,0,0,16.726,0Z" transform="translate(-164.703 -83.421)"/></svg>');
+            width: 2.083vw;
+            height: 1.042vw;
+            position: absolute;
+            left: calc(-1 * (1.7vw / 2));
+            bottom: calc(-1 * (1.042vw / 2));
+            margin-left: -1.042vw;
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 1000;
+          }
+        }
+      }
+    }
+  }
+
+  .large-image {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 56.771vw;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+}

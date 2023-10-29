@@ -1,0 +1,387 @@
+// body {
+//   // width: 100vw;
+//   // height: 100vw;
+//   // overflow: hidden;
+//   //padding-top: 90px;
+// }
+
+// $spinLogo: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg xmlns='http://www.w3.org/2000/svg' id='Stamp' viewBox='0 0 170.66 170.66'%3E%3Cdefs%3E%3Cstyle%3E .cls-1 %7B fill: %2312c4d6%3B %7D %3C/style%3E%3C/defs%3E%3Cpolygon class='cls-1' points='107.56 156.21 101.67 157.79 101.35 156.59 102.85 147.93 104.58 147.47 103.12 155.85 107.18 154.77 107.56 156.21'%3E%3C/polygon%3E%3Cpolygon class='cls-1' points='96 158.81 89.94 159.43 89.81 158.19 92.66 149.88 94.44 149.7 91.68 157.75 95.85 157.32 96 158.81'%3E%3C/polygon%3E%3Cpath class='cls-1' d='M73.23 148.95c.67 .12 1.27 .36 1.82 .71 .54 .35 .99 .77 1.33 1.26 .34 .49 .58 1.05 .72 1.68 .14 .62 .14 1.27 .02 1.92-.16 .88-.52 1.64-1.06 2.28-.54 .64-1.22 1.1-2.02 1.37-.8 .27-1.65 .33-2.54 .17-.83-.15-1.57-.48-2.2-.97-.63-.49-1.1-1.1-1.41-1.81l1.49-.58c.21 .47 .52 .87 .94 1.2 .42 .33 .9 .54 1.45 .64 .9 .17 1.7 0 2.42-.49 .71-.49 1.15-1.2 1.32-2.1 .17-.91 0-1.72-.49-2.44-.49-.72-1.18-1.16-2.08-1.33-.55-.1-1.08-.07-1.59 .08-.51 .16-.94 .42-1.31 .78l-1.19-1.08c.54-.55 1.2-.95 1.96-1.18 .76-.24 1.56-.27 2.4-.12'%3E%3C/path%3E%3Cpolygon class='cls-1' points='55.69 153.29 54.23 152.71 57.68 144.15 59.13 144.74 57.68 148.35 61.88 150.04 63.33 146.43 64.8 147.02 61.36 155.57 59.88 154.98 61.32 151.42 57.12 149.73 55.69 153.29'%3E%3C/polygon%3E%3Cpath class='cls-1' d='M49.36 143.4l-2.57-1.68-.93 4.23 3.5-2.55Zm-1.78-5.27l-.46 2.05 3.51 2.3 1.7-1.23 1.43 .94-8.1 5.72-1.58-1.04 2.02-9.7 1.47 .96Z'%3E%3C/path%3E%3Cpolygon class='cls-1' points='31.85 136.59 30.71 135.48 37.17 128.9 38.33 130.03 37.05 137.91 41.62 133.26 42.75 134.37 36.29 140.95 35.14 139.82 36.42 131.94 31.85 136.59'%3E%3C/polygon%3E%3Cpath class='cls-1' d='M31.47 121.11c.38 .56 .63 1.16 .77 1.79 .13 .63 .14 1.24 .03 1.83-.11 .59-.34 1.15-.69 1.69-.35 .54-.8 .99-1.36 1.36-.74 .5-1.53 .78-2.37 .84-.84 .06-1.64-.1-2.4-.48-.76-.38-1.39-.95-1.9-1.7-.47-.7-.76-1.45-.85-2.25-.09-.79 .01-1.55 .3-2.27l1.46 .66c-.19 .48-.26 .98-.2 1.51 .06 .53 .24 1.02 .56 1.49 .51 .76 1.19 1.22 2.04 1.38 .85 .16 1.66-.01 2.42-.53 .76-.51 1.23-1.2 1.4-2.05 .17-.85 0-1.66-.51-2.41-.31-.47-.7-.82-1.17-1.08-.47-.25-.96-.38-1.47-.38l-.06-1.6c.78 0 1.52 .19 2.22 .57 .7 .38 1.29 .92 1.77 1.63'%3E%3C/path%3E%3Cpolygon class='cls-1' points='24.99 112.85 23.16 108.61 24.54 108.02 26.99 113.71 18.52 117.36 16.09 111.73 17.47 111.14 19.27 115.31 21.42 114.39 19.79 110.62 21.17 110.03 22.79 113.8 24.99 112.85'%3E%3C/polygon%3E%3Cpath class='cls-1' d='M15.1 103.49l2.83-.66-.51-2.16c-.09-.4-.31-.7-.64-.9-.34-.2-.7-.25-1.11-.16-.4 .1-.71 .3-.91 .63-.21 .33-.26 .69-.17 1.09l.51 2.16Zm6.71-5.25l-2.8 3.1 .27 1.17 3.34-.78 .36 1.54-8.98 2.1-.87-3.73c-.2-.84-.09-1.6 .32-2.3 .41-.69 1.02-1.13 1.83-1.32 .68-.16 1.31-.09 1.9 .2 .59 .29 1.03 .75 1.33 1.38l2.86-3.22 .44 1.86Z'%3E%3C/path%3E%3Cpolygon class='cls-1' points='11.27 86.45 11.18 84.68 17.28 88.03 20.58 87.86 20.66 89.45 17.36 89.62 11.65 93.6 11.55 91.78 15.72 88.89 11.27 86.45'%3E%3C/polygon%3E%3Cpolygon class='cls-1' points='20.53 71.18 21.48 67.08 22.94 67.42 21.63 73.06 12.65 70.98 13.01 69.43 20.53 71.18'%3E%3C/polygon%3E%3Cpath class='cls-1' d='M22.17 59.35l1.23-2.82-4.33-.21 3.1 3.03Zm4.9-2.64l-2.1-.1-1.68 3.85 1.5 1.47-.68 1.57-7-7.02 .75-1.73 9.9 .36-.7 1.61Z'%3E%3C/path%3E%3Cpolygon class='cls-1' points='25.97 40.94 26.89 39.64 34.44 44.92 33.52 46.25 25.53 46.29 30.87 50.03 29.97 51.33 22.41 46.05 23.33 44.72 31.32 44.68 25.97 40.94'%3E%3C/polygon%3E%3Cpolygon class='cls-1' points='38.07 38.71 41.36 35.48 42.41 36.54 37.98 40.88 31.52 34.31 35.9 30.01 36.95 31.07 33.7 34.26 35.34 35.93 38.27 33.06 39.32 34.12 36.39 37 38.07 38.71'%3E%3C/polygon%3E%3Cg%3E%3Cpath class='cls-1' d='M50.91 26.11c-.26 .15-.53 .19-.81 .12-.28-.07-.5-.23-.65-.49-.15-.26-.19-.53-.11-.8 .08-.28 .25-.49 .5-.64 .26-.15 .53-.2 .81-.13 .28 .07 .49 .23 .64 .49 .15 .26 .19 .53 .12 .81-.07 .28-.24 .49-.51 .65'%3E%3C/path%3E%3Cpath class='cls-1' d='M15.32 40.52C3.35 59.22-.62 81.46 4.14 103.15c4.76 21.69 17.68 40.22 36.38 52.19 18.7 11.97 40.94 15.94 62.63 11.18 21.69-4.76 40.22-17.68 52.19-36.38 11.97-18.7 15.94-40.94 11.18-62.63-4.76-21.69-17.68-40.22-36.38-52.19C111.44 3.35 89.2-.62 67.52 4.14 45.83 8.9 27.29 21.82 15.32 40.52m141.85 90.8c-12.28 19.19-31.31 32.45-53.56 37.33-22.26 4.88-45.08 .81-64.27-11.48C20.15 144.89 6.89 125.87 2.01 103.61c-4.88-22.25-.81-45.08 11.48-64.27S44.79 6.9 67.05 2.01c22.26-4.88 45.08-.81 64.27 11.48 19.19 12.28 32.45 31.31 37.33 53.56 4.88 22.26 .81 45.08-11.48 64.27'%3E%3C/path%3E%3C/g%3E%3Cpolygon class='cls-1' points='62.73 14.6 68.6 12.97 68.94 14.16 67.53 22.83 65.8 23.32 67.17 14.92 63.13 16.04 62.73 14.6'%3E%3C/polygon%3E%3Cpolygon class='cls-1' points='74.26 11.88 80.32 11.2 80.46 12.43 77.7 20.77 75.92 20.98 78.6 12.9 74.43 13.37 74.26 11.88'%3E%3C/polygon%3E%3Cpath class='cls-1' d='M97.14 21.51c-.67-.12-1.28-.35-1.82-.69-.55-.35-.99-.76-1.34-1.25-.35-.49-.59-1.05-.74-1.67-.14-.62-.16-1.27-.04-1.92 .15-.88 .5-1.64 1.04-2.29 .54-.65 1.21-1.11 2.01-1.39 .8-.28 1.65-.35 2.54-.19 .84 .15 1.57 .46 2.21 .95 .64 .49 1.11 1.08 1.43 1.79l-1.49 .6c-.21-.47-.53-.87-.95-1.19-.42-.32-.91-.53-1.46-.63-.9-.16-1.7 .02-2.41 .52-.71 .5-1.14 1.21-1.3 2.11-.16 .91 .01 1.72 .51 2.43 .5 .71 1.2 1.15 2.09 1.3 .55 .1 1.08 .06 1.59-.1 .5-.16 .94-.43 1.3-.8l1.2 1.06c-.54 .56-1.19 .96-1.95 1.2-.76 .24-1.56 .29-2.4 .15'%3E%3C/path%3E%3Cpolygon class='cls-1' points='114.63 16.98 116.1 17.55 112.74 26.14 111.28 25.57 112.69 21.94 108.48 20.3 107.06 23.92 105.59 23.34 108.94 14.76 110.42 15.33 109.02 18.91 113.24 20.55 114.63 16.98'%3E%3C/polygon%3E%3Cpath class='cls-1' d='M121.06 26.8l2.59 1.66 .89-4.24-3.48 2.58Zm1.83 5.25l.43-2.05-3.53-2.26-1.69 1.25-1.44-.92 8.03-5.8 1.59 1.02-1.91 9.72-1.48-.95Z'%3E%3C/path%3E%3Cpolygon class='cls-1' points='138.64 33.42 139.79 34.53 133.41 41.18 132.24 40.06 133.43 32.16 128.91 36.86 127.77 35.76 134.15 29.11 135.32 30.23 134.13 38.13 138.64 33.42'%3E%3C/polygon%3E%3Cpath class='cls-1' d='M139.18 48.9c-.39-.56-.65-1.15-.78-1.79-.14-.63-.15-1.24-.05-1.83 .11-.59 .33-1.16 .67-1.69 .35-.54 .79-1 1.35-1.38 .73-.51 1.52-.79 2.36-.86s1.64 .08 2.4 .46c.76 .37 1.4 .93 1.91 1.68 .48 .7 .77 1.45 .87 2.24 .1 .79 0 1.55-.28 2.28l-1.47-.65c.18-.48 .25-.99 .18-1.51-.07-.53-.26-1.02-.58-1.48-.52-.75-1.2-1.21-2.06-1.36s-1.66 .03-2.42 .55c-.76 .52-1.22 1.21-1.38 2.07-.16 .86 .02 1.66 .53 2.41 .32 .46 .71 .82 1.18 1.06 .47 .25 .96 .37 1.48 .37l.08 1.6c-.78 0-1.52-.18-2.22-.55-.71-.37-1.3-.91-1.78-1.61'%3E%3C/path%3E%3Cpolygon class='cls-1' points='145.75 57.1 147.62 61.32 146.26 61.92 143.75 56.25 152.17 52.52 154.66 58.12 153.3 58.73 151.45 54.57 149.31 55.52 150.97 59.27 149.61 59.88 147.94 56.13 145.75 57.1'%3E%3C/polygon%3E%3Cpath class='cls-1' d='M155.74 66.36l-2.82 .69 .53 2.15c.1 .4 .31 .7 .65 .89 .34 .2 .71 .25 1.11 .15 .4-.1 .7-.31 .9-.64 .2-.33 .25-.69 .16-1.09l-.53-2.15Zm-6.65 5.32l2.77-3.12-.29-1.17-3.33 .82-.38-1.54 8.95-2.2 .91 3.72c.21 .84 .11 1.6-.3 2.3-.4 .7-1.01 1.15-1.82 1.34-.68 .17-1.31 .11-1.9-.18-.59-.29-1.04-.74-1.34-1.36l-2.82 3.25-.46-1.86Z'%3E%3C/path%3E%3Cpolygon class='cls-1' points='159.75 83.35 159.86 85.12 153.72 81.84 150.43 82.04 150.33 80.45 153.62 80.25 159.3 76.21 159.41 78.03 155.28 80.96 159.75 83.35'%3E%3C/polygon%3E%3Cpolygon class='cls-1' points='150.65 98.72 149.74 102.83 148.28 102.51 149.53 96.85 158.53 98.84 158.19 100.38 150.65 98.72'%3E%3C/polygon%3E%3Cpath class='cls-1' d='M149.14 110.56l-1.2 2.83 4.33 .16-3.13-2.99Zm-4.87 2.69l2.1 .08 1.64-3.86-1.52-1.46 .67-1.57 7.07 6.95-.74 1.74-9.91-.25 .68-1.62Z'%3E%3C/path%3E%3Cpolygon class='cls-1' points='145.52 129.01 144.62 130.32 137.01 125.12 137.92 123.79 145.91 123.66 140.53 119.98 141.42 118.67 149.03 123.87 148.13 125.2 140.14 125.33 145.52 129.01'%3E%3C/polygon%3E%3Cpolygon class='cls-1' points='133.45 131.37 130.2 134.64 129.14 133.58 133.52 129.19 140.04 135.7 135.71 140.05 134.65 138.99 137.87 135.77 136.21 134.12 133.31 137.02 132.25 135.97 135.15 133.06 133.45 131.37'%3E%3C/polygon%3E%3Cpath class='cls-1' d='M120.74 144.11c.26-.15 .53-.2 .81-.13 .28 .07 .5 .23 .65 .49 .15 .26 .19 .52 .12 .8-.08 .28-.24 .49-.5 .65-.26 .16-.53 .2-.81 .13-.28-.07-.49-.23-.65-.49-.15-.26-.2-.53-.12-.8 .07-.28 .24-.5 .5-.65'%3E%3C/path%3E%3C/svg%3E");
+
+// .logo {
+//   background-color: #fff;
+//   -webkit-mask-image: $spinLogo;
+//   mask-image: $spinLogo;
+//   -webkit-mask-repeat: no-repeat;
+//   mask-repeat: no-repeat;
+//   -webkit-mask-position: center;
+//   mask-position: center;
+// }
+
+// #main {
+//   width: 100vw !important;
+//   //padding-top: 90px;
+//   //padding-top: 80px;
+
+//   //position: fixed;
+//   overflow-x: hidden;
+//   overflow-y: hidden;
+// }
+
+// .section {
+//   overflow: hidden;
+// }
+
+// #scroll-test {
+//   width: 100vw;
+//   height: 100vh;
+//   left: 500px;
+//   position: absolute;
+//   z-index: 5000;
+//   overflow: hidden;
+//   background: red;
+// }
+
+// #header-scroll {
+//   //display: none;
+//   //height: calc(100vh - 90px) !important;
+//   height: 100vh;
+//   width: 100vw;
+//   z-index: 5000;
+//   //position: absolute;
+//   overflow: hidden;
+//   position: absolute;
+//   width: 100vw;
+//   z-index: 5000;
+
+//   .inner {
+//     position: relative;
+//     padding-top: 90px;
+//   }
+
+//   .text-inner {
+//     position: relative;
+//     padding-top: 90px;
+//     height: 100%;
+//   }
+
+//   .icon {
+//     width: 25px;
+//     height: 25px;
+//     margin: 10px;
+
+//     display: inline-block;
+
+//     @include media-breakpoint-up(md) {
+//       position: absolute;
+//       margin: 0;
+//       width: 3.7vw;
+//       height: 3.7vw;
+//       //margin: 50px;
+//     }
+//   }
+
+//   .i1 {
+//     top: 0;
+//     left: 0;
+//   }
+
+//   .i2 {
+//     top: 0;
+//     right: 0;
+//   }
+
+//   .i3 {
+//     bottom: 0;
+//     left: 0;
+//   }
+
+//   .i4 {
+//     bottom: 0;
+//     right: 0;
+//   }
+
+//   h1 {
+//     color: #ffc800 !important;
+//   }
+
+//   .lincoln-logo {
+//     position: absolute;
+//     left: 50%;
+//     bottom: 0;
+//     margin-left: -9.219vw;
+//     width: 18.438vw;
+//     height: auto;
+//   }
+
+//   .circle-logo {
+//     position: absolute;
+//     left: 50%;
+//     top: -15vw;
+//     margin-left: -12.5vw;
+//     width: 25vw;
+//     height: 25vw;
+//     animation: rotate 10s linear infinite;
+//   }
+
+//   @keyframes rotate {
+//     to {
+//       transform: rotate(360deg);
+//     }
+//   }
+// }
+
+// #coming-soon {
+//   .inner {
+//     position: relative;
+//     padding-top: 90px;
+//   }
+// }
+
+// #building {
+//   h2 {
+//     color: #2161a6 !important;
+//   }
+// }
+
+// #historic {
+//   overflow: visible;
+
+//   .column-2 {
+//     padding-top: 10.417vw;
+//     position: relative;
+
+//     &:before {
+//       content: '';
+//       position: absolute;
+//       left: 50%;
+//       top: -12.5vw;
+//       margin-left: -12.5vw;
+//       width: 25vw;
+//       height: 25vw;
+//       animation: rotate 10s linear infinite;
+//       background-color: #12c4d6;
+//       -webkit-mask-image: $spinLogo;
+//       mask-image: $spinLogo;
+//       -webkit-mask-repeat: no-repeat;
+//       mask-repeat: no-repeat;
+//       -webkit-mask-position: center;
+//       mask-position: center;
+//       -webkit-mask-size: contain;
+//       mask-size: contain;
+//       z-index: 500;
+//     }
+//   }
+// }
+
+// #arrival {
+//   overflow: visible;
+
+//   &:before {
+//     content: '';
+//     position: absolute;
+//     left: 0vw;
+//     top: -12.5vw;
+//     margin-left: -8vw;
+//     width: 25vw;
+//     height: 25vw;
+//     animation: rotate 10s linear infinite;
+//     background-color: #fff;
+//     -webkit-mask-image: $spinLogo;
+//     mask-image: $spinLogo;
+//     -webkit-mask-repeat: no-repeat;
+//     mask-repeat: no-repeat;
+//     -webkit-mask-position: center;
+//     mask-position: center;
+//     -webkit-mask-size: contain;
+//     mask-size: contain;
+//     z-index: 500;
+//   }
+// }
+
+// #space {
+//   overflow: visible;
+
+//   &:before {
+//     content: '';
+//     position: absolute;
+//     right: 0vw;
+//     top: -12.5vw;
+//     margin-right: -8vw;
+//     width: 25vw;
+//     height: 25vw;
+//     animation: rotate 10s linear infinite;
+//     background-color: #ffc800;
+//     -webkit-mask-image: $spinLogo;
+//     mask-image: $spinLogo;
+//     -webkit-mask-repeat: no-repeat;
+//     mask-repeat: no-repeat;
+//     -webkit-mask-position: center;
+//     mask-position: center;
+//     -webkit-mask-size: contain;
+//     mask-size: contain;
+//     z-index: 500;
+//   }
+// }
+
+// #downloads {
+//   overflow: visible;
+
+//   &:before {
+//     content: '';
+//     position: absolute;
+//     right: 0vw;
+//     top: -12.5vw;
+//     margin-right: -8vw;
+//     width: 25vw;
+//     height: 25vw;
+//     animation: rotate 10s linear infinite;
+//     background-color: #12c4d6;
+//     -webkit-mask-image: $spinLogo;
+//     mask-image: $spinLogo;
+//     -webkit-mask-repeat: no-repeat;
+//     mask-repeat: no-repeat;
+//     -webkit-mask-position: center;
+//     mask-position: center;
+//     -webkit-mask-size: contain;
+//     mask-size: contain;
+//     z-index: 500;
+//   }
+// }
+// // ol {
+// //   list-style-type: decimal-leading-zero;
+// // }
+// ol {
+//   counter-reset: li 0;
+//   list-style-type: none;
+//   //counter-increment: start 3;
+
+//   li {
+//     counter-increment: li;
+//     padding-left: 1vw;
+//     position: relative;
+
+//     &:before {
+//       position: absolute;
+//       top: 0.3vw;
+//       left: -2vw;
+//       line-height: 2;
+//       content: '0' counter(li) ' ';
+//       font-size: 80%;
+//       width: 2vw;
+//       height: 2vw;
+//       text-align: center;
+//       background: #000;
+//       border-radius: 50%;
+//     }
+//   }
+
+//   li:nth-child(n + 10)::before {
+//     content: '' counter(li) ' ';
+//   }
+// }
+
+// #stations-desktop {
+//   overflow: hidden;
+//   width: 100vw;
+
+//   #connectivity {
+//     position: relative;
+//     &:before {
+//       content: '';
+//       left: -50vw;
+//       top: 1.8vw;
+//       width: 200vw;
+//       height: 0.15vw;
+//       position: absolute;
+//       background: var(--background-color-primary-alt);
+//     }
+//   }
+
+//   h2 {
+//     display: flex;
+//     align-items: center;
+//     color: var(--background-color-primary-alt);
+
+//     svg {
+//       width: 1.7vw;
+//       height: auto;
+//       top: -0.5vw;
+//       position: relative;
+//       margin-right: 0.8vw;
+//     }
+//   }
+// }
+
+// #gallery {
+//   .swiper-container {
+//     position: relative;
+//     z-index: 500;
+//   }
+
+//   .swiper-button-prev {
+//     position: absolute;
+//     z-index: 400;
+//     margin-left: 5px;
+//     //overflow: hidden;
+//     svg {
+//       position: absolute;
+//       padding: 2px;
+//       left: 50%;
+//       top: 50%;
+//       -ms-transform: translateY(-50%) translateX(-50%);
+//       transform: translateY(-50%) translateX(-50%);
+//     }
+//     &:before {
+//       content: '';
+//       background: red;
+//       top: 0;
+//       left: 0;
+//       position: absolute;
+//       width: var(--carousel-nav-height);
+//       height: var(--carousel-nav-height);
+//       background-color: #ffc800;
+//       border-radius: 100%;
+//     }
+//   }
+
+//   .swiper-button-next {
+//     position: absolute;
+//     z-index: 400;
+//     margin-right: 5px;
+//     //overflow: hidden;
+//     svg {
+//       position: absolute;
+//       padding: 2px;
+//       left: 50%;
+//       top: 50%;
+//       -ms-transform: translateY(-50%) translateX(-50%);
+//       transform: translateY(-50%) translateX(-50%);
+//     }
+//     &:before {
+//       content: '';
+//       background: red;
+//       top: 0;
+//       right: 0;
+//       position: absolute;
+//       width: var(--carousel-nav-height);
+//       height: var(--carousel-nav-height);
+//       background-color: #ffc800;
+//       border-radius: 100%;
+//     }
+//   }
+
+//   .h-1 {
+//     text-align: center;
+//     padding-top: 5vw;
+//   }
+//   .h-2 {
+//     text-align: center;
+//     padding-top: 5vw;
+//   }
+
+//   .i-6 {
+//     width: 100%;
+//     height: 100%;
+//     object-fit: cover;
+//   }
+// }

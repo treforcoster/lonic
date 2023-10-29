@@ -1,0 +1,151 @@
+@import 'bootstrap';
+
+//@import 'fonts/fonts';
+@import '~bootstrap/scss/functions';
+@import 'common/variables';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/bootstrap';
+@import '~select2/dist/css/select2';
+@import '~jquery-ui/dist/themes/base/jquery-ui';
+
+@import '~swiper/css/bundle';
+@import 'common/typography';
+@import 'common/bg-colors';
+@import 'common/text-colors';
+@import 'common/text-size-footer';
+@import 'common/text-size-large';
+@import 'common/text-size-medium';
+@import 'common/text-size-small';
+@import 'common/text-size-x-large';
+@import 'common/vertical-spacing';
+@import 'common/spacing-padding-mobile';
+@import 'common/spacing-padding-desktop';
+@import 'common/spacing-margin-mobile';
+@import 'common/spacing-margin-desktop';
+@import 'common/block';
+@import 'common/buttons';
+@import 'common/selectize';
+@import 'common/dropdowns-select2';
+@import 'common/carousel-settings';
+@import 'common/down-arrow';
+
+// @import 'cards/card-icon';
+
+@import 'headers/header-video';
+
+@import 'sections/section';
+@import 'sections/section-text-image';
+@import 'sections/section-text-stats';
+@import 'sections/section-quotes-carousel';
+@import 'sections/section-property-carousel';
+@import 'sections/section-video';
+@import 'sections/section-property-single-header';
+@import 'sections/section-property-single-general-info';
+@import 'sections/section-property-single-more-info';
+@import 'sections/section-property-single-carousel';
+@import 'sections/section-property-single-floorplan';
+@import 'sections/section-property-single-map';
+@import 'sections/section-property-single-further';
+@import 'sections/section-property-single-hero-image';
+
+@import 'sections/section-accordion';
+
+@import 'sections/section-testimonial-single-carousel';
+
+@import 'sections/section-property-archive-map';
+
+@import 'sections/section-approach-carousel';
+@import 'sections/section-locations-carousel';
+@import 'sections/section-values-carousel';
+@import 'sections/section-logo-block';
+@import 'sections/section-contact-block';
+@import 'sections/section-property-single-cta';
+@import 'sections/section-landing-gallery';
+@import 'sections/section-password-block';
+@import 'sections/section-area-map';
+
+@import 'sections/footer';
+
+@import 'cards/card-property-archive';
+@import 'cards/card-testimonial-archive';
+@import 'cards/card-team-member';
+@import 'cards/card-approach';
+
+// @import 'sections/section-carousel';
+// @import 'sections/section-floor-selector-gallery';
+// @import 'sections/section-text';
+
+@import 'utilities/align';
+@import 'utilities/height';
+@import 'utilities/tags';
+@import 'utilities/background';
+@import 'utilities/video';
+@import 'utilities/forms';
+
+@import 'utilities/header-burger-menu';
+
+@import 'utilities/socials';
+
+@import 'pages/post-type-archive-property';
+@import 'pages/single-property';
+@import 'pages/post-type-archive-testimonial';
+@import 'pages/single-testimonial';
+
+@import 'bespoke';
+
+html {
+  scroll-behavior: auto !important;
+}
+
+body,
+html {
+  width: 100vw;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
+
+.container-fluid {
+  padding-left: 7.292vw;
+  padding-right: 7.292vw;
+}
+
+.page-template-template-master,
+.page-template-template-landing {
+  #main {
+    padding-top: 200px;
+  }
+}
+#infinite-handle {
+  margin: 0 !important;
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+  grid-column: auto/span 12;
+  padding: 0 !important;
+
+  button {
+    padding: 0.45vw 0.9vw !important;
+    border: 1px solid #0f272d !important;
+    color: #0f272d !important;
+    border-radius: 1vw !important;
+    overflow: hidden !important;
+    line-height: 1 !important;
+
+    &:hover {
+      background: #0f272d !important;
+      color: #fff !important;
+    }
+  }
+}
+
+#ctis-loading {
+  margin: 0 !important;
+  width: 100%;
+  margin: 0 auto;
+  grid-column: auto/span 12;
+  padding: 0 !important;
+}
+
+.page-footer {
+  position: relative;
+}

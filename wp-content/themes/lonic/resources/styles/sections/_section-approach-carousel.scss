@@ -1,0 +1,162 @@
+.section-approach-carousel {
+  overflow: hidden;
+  position: relative;
+
+  .carousel-column {
+    position: relative;
+  }
+
+  .swiper-container {
+    overflow: visible;
+  }
+
+  .swiper-slide {
+    height: auto;
+    width: auto;
+    text-align: left;
+    $transition: 0.4s;
+
+    .card-approach {
+      -webkit-transition: all $transition ease-out;
+      -moz-transition: all $transition ease-out;
+      -ms-transition: all $transition ease-out;
+      -o-transition: all $transition ease-out;
+      transition: all $transition ease-out;
+      .slide-number {
+        -webkit-transition: all $transition ease-out;
+        -moz-transition: all $transition ease-out;
+        -ms-transition: all $transition ease-out;
+        -o-transition: all $transition ease-out;
+        transition: all $transition ease-out;
+      }
+      h3 {
+        -webkit-transition: all $transition ease-out;
+        -moz-transition: all $transition ease-out;
+        -ms-transition: all $transition ease-out;
+        -o-transition: all $transition ease-out;
+        transition: all $transition ease-out;
+      }
+      p {
+        -webkit-transition: all $transition ease-out;
+        -moz-transition: all $transition ease-out;
+        -ms-transition: all $transition ease-out;
+        -o-transition: all $transition ease-out;
+        transition: all $transition ease-out;
+      }
+    }
+
+    // &.swiper-slide-active {
+    //   .card-approach {
+    //     background: #14353a;
+    //     -webkit-transition: all $transition ease-out;
+    //     -moz-transition: all $transition ease-out;
+    //     -ms-transition: all $transition ease-out;
+    //     -o-transition: all $transition ease-out;
+    //     transition: all $transition ease-out;
+    //     .slide-number {
+    //       color: #fff;
+    //       -webkit-transition: all $transition ease-out;
+    //       -moz-transition: all $transition ease-out;
+    //       -ms-transition: all $transition ease-out;
+    //       -o-transition: all $transition ease-out;
+    //       transition: all $transition ease-out;
+    //     }
+    //     h3 {
+    //       color: #fff;
+    //       -webkit-transition: all $transition ease-out;
+    //       -moz-transition: all $transition ease-out;
+    //       -ms-transition: all $transition ease-out;
+    //       -o-transition: all $transition ease-out;
+    //       transition: all $transition ease-out;
+    //     }
+    //     p {
+    //       color: #fff;
+    //       -webkit-transition: all $transition ease-out;
+    //       -moz-transition: all $transition ease-out;
+    //       -ms-transition: all $transition ease-out;
+    //       -o-transition: all $transition ease-out;
+    //       transition: all $transition ease-out;
+    //     }
+    //   }
+    //}
+
+    // .slide-number {
+    //   margin-bottom: 10px;
+    // }
+  }
+
+  .navigation-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 7.292vw;
+    padding-right: 7.292vw;
+    height: 90px;
+    align-items: center;
+    //border-top: 1px solid #cdd4d5;
+
+    @include media-breakpoint-up(lg) {
+      border-top: none;
+      height: auto;
+      position: relative;
+      bottom: auto;
+      left: auto;
+      justify-content: end;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    align-items: center;
+    gap: 3.125vw;
+
+    .pagination {
+      display: flex;
+      width: auto !important;
+      align-items: center;
+    }
+
+    .navigation {
+      display: flex;
+      flex-direction: row;
+
+      gap: 1.5vw;
+
+      .swiper-button-disabled {
+        opacity: 0, 5;
+      }
+
+      .button-prev {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        @include media-breakpoint-up(lg) {
+          width: 3.958vw;
+          height: 3.958vw;
+        }
+
+        svg {
+          width: 100%;
+          height: auto;
+        }
+      }
+      .button-next {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        @include media-breakpoint-up(lg) {
+          width: 3.958vw;
+          height: 3.958vw;
+        }
+
+        svg {
+          width: 100%;
+          height: auto;
+        }
+      }
+    }
+  }
+}

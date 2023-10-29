@@ -1,0 +1,151 @@
+.card-team-member {
+  display: block;
+  text-decoration: none;
+  .inner {
+    background: #fff;
+    .featured-image {
+      position: relative;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: auto;
+      }
+
+      .bio {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: #fff;
+        opacity: 0;
+      }
+
+      .more-button {
+        background: #fff;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        position: absolute;
+        justify-items: center;
+        align-items: center;
+        cursor: pointer;
+        z-index: 500;
+        bottom: 0;
+        right: 0;
+
+        svg {
+          margin: auto;
+          width: 18px;
+          height: auto;
+        }
+
+        @include media-breakpoint-up(lg) {
+          width: 3.125vw;
+          height: 2.813vw;
+
+          svg {
+            margin: auto;
+            width: 1.406vw;
+            height: auto;
+          }
+        }
+
+        &:hover {
+          background: rgb(15, 39, 45, 0.95);
+        }
+      }
+
+      .close-button {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        position: absolute;
+        justify-items: center;
+        align-items: center;
+        cursor: pointer;
+        z-index: 500;
+        top: 0.4vw;
+        right: 0.4vw;
+        opacity: 0;
+        visibility: hidden;
+
+        svg {
+          margin: auto;
+          width: 15px;
+          height: auto;
+        }
+
+        @include media-breakpoint-up(lg) {
+          width: 3.125vw;
+          height: 2.813vw;
+
+          svg {
+            margin: auto;
+            width: 1.2vw;
+            height: auto;
+          }
+        }
+      }
+    }
+
+    .meta {
+      position: relative;
+      .lead-in-heading {
+        text-transform: uppercase;
+        color: #d5a65a !important;
+      }
+
+      h3 {
+        text-decoration: none;
+        color: #05282d !important;
+      }
+
+      .v-card {
+        position: absolute;
+        top: 0;
+        right: 0;
+        color: #687f82;
+
+        &:before {
+          content: '';
+          width: 0.833vw;
+          height: 100%;
+          position: absolute;
+          left: -1.2vw;
+          top: 0;
+          background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="15.278" height="15.279" viewBox="0 0 15.278 15.279"><defs><style> .cls-1 { fill: %236e6e6e; } </style></defs><path id="Icon_ionic-md-contact" data-name="Icon ionic-md-contact" class="cls-1" d="M11.014,3.375a7.639,7.639,0,1,0,7.639,7.639A7.662,7.662,0,0,0,11.014,3.375Zm0,2.292A2.292,2.292,0,1,1,8.722,7.958,2.3,2.3,0,0,1,11.014,5.667Zm0,11.033a5.565,5.565,0,0,1-4.583-2.446c.037-1.528,3.056-2.369,4.583-2.369s4.547.841,4.583,2.369A5.574,5.574,0,0,1,11.014,16.7Z" transform="translate(-3.375 -3.375)"/></svg>');
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
+      }
+
+      .contact {
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding-bottom: 0.5vw !important;
+
+        svg {
+          width: 15px;
+
+          @include media-breakpoint-up(lg) {
+            width: 1.042vw;
+          }
+          height: auto;
+        }
+
+        span {
+          padding-left: 10px;
+          @include media-breakpoint-up(lg) {
+            padding-left: 0.5vw;
+          }
+        }
+      }
+    }
+  }
+}

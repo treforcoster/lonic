@@ -1,0 +1,123 @@
+:root {
+  --font-headings: 'baskerville-display-pt', serif;
+  --font-copy: 'forma-djr-display', sans-serif;
+  --font-nav: 'baskerville-display-pt', serif;
+  --font-buttons: 'forma-djr-display', sans-serif;
+  --font-quotes: 'baskerville-display-pt', serif;
+  --font-cite: 'forma-djr-display', sans-serif;
+  --font-sans: 'forma-djr-display', sans-serif;
+  --font-serif: 'baskerville-display-pt', serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font-family: var(--font-headings);
+
+  strong {
+    font-family: var(--font-sans);
+  }
+
+  .lead-in-heading {
+    font-family: var(--font-sans);
+  }
+}
+
+.lead-in-heading {
+  font-family: var(--font-sans);
+}
+
+body,
+p,
+ol,
+ul {
+  font-family: var(--font-copy);
+}
+
+.property-description {
+  p {
+    font-family: var(--font-headings);
+    strong {
+      font-family: var(--font-sans);
+    }
+  }
+}
+
+blockquote {
+  p {
+    font-family: var(--font-quotes);
+  }
+
+  cite {
+    font-family: var(--font-cite);
+  }
+}
+
+body,
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.hr-short {
+  width: 4.2rem;
+}
+
+h1 {
+  .sub-heading {
+    text-transform: none;
+    font-size: 50%;
+    display: block;
+  }
+}
+
+h2 {
+  .sub-heading {
+    text-transform: none;
+    font-size: 50%;
+    display: block;
+  }
+}
+
+h3 {
+  .sub-heading {
+    text-transform: none;
+    font-size: 80%;
+    padding-top: 5px;
+    display: block;
+  }
+}
+
+h4 {
+  .sub-heading {
+    text-transform: none;
+    font-size: 80%;
+    padding-top: 5px;
+    display: block;
+  }
+}
+
+.serif {
+  font-family: var(--font-serif);
+}
+
+.font-italic p {
+  font-style: italic !important;
+}
+
+.uppercase {
+  text-transform: uppercase !important;
+}
+
+.lowercase {
+  text-transform: lowercase !important;
+}

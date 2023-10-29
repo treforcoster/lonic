@@ -1,0 +1,54 @@
+.section-text-image {
+  .image-portrait {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1500;
+    img {
+      width: 120%;
+      @include media-breakpoint-up(lg) {
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+
+  .image-landscape {
+    width: 115%;
+    height: 70vw;
+    border-top-left-radius: 5px;
+    overflow: hidden;
+    z-index: 1500;
+    @include media-breakpoint-up(lg) {
+      height: 42.448vw;
+    }
+    position: relative;
+
+    img {
+      width: 110%;
+      height: 100%;
+      @include media-breakpoint-up(lg) {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 56.771vw;
+        height: 100%;
+      }
+
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+
+  .reverse {
+    flex-direction: row-reverse;
+
+    .image-landscape {
+      img {
+        left: auto;
+        right: 0;
+      }
+    }
+  }
+}

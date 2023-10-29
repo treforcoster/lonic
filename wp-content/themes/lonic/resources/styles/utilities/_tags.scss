@@ -1,0 +1,29 @@
+.tags {
+  gap: 10px;
+  display: flex;
+
+  &.end {
+    justify-content: end;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 13px;
+    color: #687f82;
+    border: #687f82 1px solid;
+    border-radius: 14px;
+    overflow: hidden;
+    padding: 2px 11px 1px 11px;
+
+    @include media-breakpoint-up(lg) {
+      font-size: 0.8vw;
+      border-radius: 0.8vw;
+      padding: 2px 11px 1px 11px;
+    }
+
+    &.red {
+      color: #ca385b;
+      border: #ca385b 1px solid;
+    }
+  }
+}
