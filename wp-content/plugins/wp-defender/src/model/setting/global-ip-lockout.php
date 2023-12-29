@@ -46,7 +46,19 @@ class Global_Ip_Lockout extends Setting {
 		];
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function get_module_name(): string {
 		return __( 'Global IP Blocker', 'wpdef' );
+	}
+
+	/**
+	 * @param bool $flag
+	 *
+	 * @return string
+	 */
+	public static function get_module_state( $flag ): string {
+		return $flag ? __( 'active', 'wpdef' ) : __( 'inactive', 'wpdef' );
 	}
 }

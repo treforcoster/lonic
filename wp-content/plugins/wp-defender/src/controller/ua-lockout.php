@@ -84,10 +84,7 @@ class UA_Lockout extends Event {
 			$this->model->save();
 			Config_Hub_Helper::set_clear_active_flag();
 			// Maybe track.
-			if (
-				! defender_is_wp_cli() && $this->is_tracking_active()
-				&& $this->is_feature_state_changed( $prev_data, $data )
-			) {
+			if ( ! defender_is_wp_cli() && $this->is_feature_state_changed( $prev_data, $data ) ) {
 				$track_data = [
 					'Action' => $data['enabled'] ? 'Enabled' : 'Disabled',
 					'No of Bots in the Whitelist' => count( $this->model->get_lockout_list( 'allowlist', false ) ),
@@ -141,13 +138,49 @@ class UA_Lockout extends Event {
 	/**
 	 * @param array $data
 	 *
+	 * @return array
+	 */
+	private function adapt_data( array $data ): array {
+		$adapted_data = [];
+		if ( isset( $data['ua_banning_enabled'] ) ) {
+			$adapted_data['enabled'] = (bool) $data['ua_banning_enabled'];
+		}
+		if ( isset( $data['ua_banning_message'] ) ) {
+			$adapted_data['message'] = $data['ua_banning_message'];
+		}
+		if ( isset( $data['ua_banning_blacklist'] ) ) {
+			$adapted_data['blacklist'] = $data['ua_banning_blacklist'];
+		}
+		if ( isset( $data['ua_banning_whitelist'] ) ) {
+			$adapted_data['whitelist'] = $data['ua_banning_whitelist'];
+		}
+		if ( isset( $data['ua_banning_empty_headers'] ) ) {
+			$adapted_data['empty_headers'] = (bool) $data['ua_banning_empty_headers'];
+		}
+
+		return array_merge( $data, $adapted_data );
+	}
+
+	/**
+	 * @param array $data
+	 *
 	 * @return void
 	 */
 	public function import_data( $data ): void {
 		$model = $this->get_model();
-
-		$model->import( $data );
-		if ( $model->validate() ) {
+		if ( ! empty( $data ) ) {
+			$data = $this->adapt_data( $data );
+			$model->import( $data );
+			if ( $model->validate() ) {
+				$model->save();
+			}
+		} else {
+			$default_ua_values = $model->get_default_values();
+			$model->enabled = false;
+			$model->message = $default_ua_values['message'];
+			$model->blacklist = $default_ua_values['blacklist'];
+			$model->whitelist = $default_ua_values['whitelist'];
+			$model->empty_headers = false;
 			$model->save();
 		}
 	}

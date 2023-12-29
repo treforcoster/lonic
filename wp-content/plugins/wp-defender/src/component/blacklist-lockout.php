@@ -16,7 +16,7 @@ class Blacklist_Lockout extends Component {
 	 * Queue hooks when this class init.
 	 */
 	public function add_hooks() {
-		add_filter( 'defender_ip_lockout_assets', array( &$this, 'output_scripts_data' ) );
+		add_filter( 'defender_ip_lockout_assets', [ &$this, 'output_scripts_data' ] );
 	}
 
 	/**
@@ -26,35 +26,33 @@ class Blacklist_Lockout extends Component {
 	 * @throws \MaxMind\Db\Reader\InvalidDatabaseException
 	 */
 	public function output_scripts_data( $data ) {
-		$model       = new Model_Blacklist_Lockout();
-		$user_ip     = $this->get_user_ip();
+		$model = new Model_Blacklist_Lockout();
+		$user_ip = $this->get_user_ip();
 		$exist_geodb = $this->is_geodb_downloaded();
 		// If MaxMind GeoIP DB is downloaded then display the required data.
 		if ( $exist_geodb ) {
-			$current_country     = $this->get_current_country( $user_ip );
-			$current_country     = $current_country['iso'] ?? false;
-			$country_list        = $this->countries_list();
-			$blacklist_countries = array_merge( array( 'all' => __( 'Block all', 'wpdef' ) ), $country_list );
-			$whitelist_countries = array_merge( array( 'all' => __( 'Allow all', 'wpdef' ) ), $country_list );
+			$current_country = $this->get_current_country( $user_ip );
+			$current_country = $current_country['iso'] ?? false;
+			$country_list = $this->countries_list();
+			$blacklist_countries = array_merge( [ 'all' => __( 'Block all', 'wpdef' ) ], $country_list );
+			$whitelist_countries = array_merge( [ 'all' => __( 'Allow all', 'wpdef' ) ], $country_list );
 		} else {
-			$current_country     = false;
-			$blacklist_countries = array();
-			$whitelist_countries = array();
+			$current_country = false;
+			$blacklist_countries = [];
+			$whitelist_countries = [];
 		}
-		$data['blacklist'] = array(
+		$data['blacklist'] = [
 			'model'   => $model->export(),
-			'summary' => array(
-				'day' => 0,
-			),
-			'misc'    => array(
-				'geo_db_downloaded'   => $exist_geodb,
-				'current_country'     => $current_country,
+			'summary' => [ 'day' => 0 ],
+			'misc' => [
+				'geo_db_downloaded' => $exist_geodb,
+				'current_country' => $current_country,
 				'blacklist_countries' => $blacklist_countries,
 				'whitelist_countries' => $whitelist_countries,
-				'user_ip'             => $user_ip,
-			),
-			'class'   => Model_Blacklist_Lockout::class,
-		);
+				'user_ip' => $user_ip,
+			],
+			'class' => Model_Blacklist_Lockout::class,
+		];
 
 		return $data;
 	}
@@ -64,13 +62,13 @@ class Blacklist_Lockout extends Component {
 	 *
 	 * @return bool
 	 */
-	public function is_country_whitelist( $ip ) {
+	public function is_country_whitelist( $ip ): bool {
 		// Check Firewall > IP Banning > Locations section is activated or not.
 		$country = $this->get_current_country( $ip );
 		if ( false === $country ) {
 			return false;
 		}
-		$model     = new Model_Blacklist_Lockout();
+		$model = new Model_Blacklist_Lockout();
 		$whitelist = $model->get_country_whitelist();
 		if ( empty( $whitelist ) ) {
 			return false;
@@ -87,10 +85,11 @@ class Blacklist_Lockout extends Component {
 	 *
 	 * @return array
 	 */
-	private function get_default_ip_whitelisted() {
-		$ips = array(
+	private function get_default_ip_whitelisted(): array {
+		$ips = [
 			'18.204.159.253',
 			'54.227.51.40',
+			'3.93.131.0',
 			'18.219.56.14',
 			'45.55.78.242',
 			'35.171.56.101',
@@ -100,13 +99,19 @@ class Blacklist_Lockout extends Component {
 			'34.196.51.17',
 			'35.157.144.199',
 			'159.89.254.12',
+			'18.219.161.157',
+			'165.227.251.117',
+			'165.227.251.120',
+			'140.82.60.49',
+			'45.63.10.140',
+			...$this->get_blc_ip_whitelisted(),
 			'127.0.0.1',
 			array_key_exists( 'SERVER_ADDR', $_SERVER )
 				? $_SERVER['SERVER_ADDR']
 				: ( $_SERVER['LOCAL_ADDR'] ?? null ),
-		);
+		];
 
-		return apply_filters( 'ip_lockout_default_whitelist_ip', $ips );
+		return (array) apply_filters( 'ip_lockout_default_whitelist_ip', $ips );
 	}
 
 	/**
@@ -116,7 +121,7 @@ class Blacklist_Lockout extends Component {
 	 *
 	 * @return bool
 	 */
-	public function is_ip_whitelisted( $ip ) {
+	public function is_ip_whitelisted( $ip ): bool {
 		if ( in_array( $ip, $this->get_default_ip_whitelisted(), true ) ) {
 			return true;
 		}
@@ -146,7 +151,7 @@ class Blacklist_Lockout extends Component {
 	 *
 	 * @return bool
 	 */
-	public function is_country_blacklist( $ip ) {
+	public function is_country_blacklist( $ip ): bool {
 		// Check Firewall > IP Banning > Locations section is activated or not.
 		$country = $this->get_current_country( $ip );
 		if ( false === $country ) {
@@ -175,14 +180,14 @@ class Blacklist_Lockout extends Component {
 	 * @return array|bool
 	 */
 	public function verify_import_file( $file ) {
-		$fp   = fopen( $file, 'r' );
-		$data = array();
+		$fp = fopen( $file, 'r' );
+		$data = [];
 		while ( ( $line = fgetcsv( $fp ) ) !== false ) { //phpcs:ignore
 			if ( 2 !== count( $line ) ) {
 				return false;
 			}
 
-			if ( ! in_array( $line[1], array( 'allowlist', 'blocklist' ), true ) ) {
+			if ( ! in_array( $line[1], [ 'allowlist', 'blocklist' ], true ) ) {
 				return false;
 			}
 
@@ -219,7 +224,7 @@ class Blacklist_Lockout extends Component {
 	 *
 	 * @return bool
 	 */
-	public function is_geodb_downloaded() {
+	public function is_geodb_downloaded(): bool {
 		$model = new Model_Blacklist_Lockout();
 		// Likely the case after the config import with existed MaxMind license key.
 		if (

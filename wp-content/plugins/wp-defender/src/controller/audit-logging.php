@@ -495,10 +495,15 @@ class Audit_Logging extends Event {
 	 */
 	public function import_data( $data ): void {
 		$model = $this->model;
-
-		$model->import( $data );
-		if ( $model->validate() ) {
+		if ( empty( $data ) ) {
+			$model->enabled = false;
+			$model->storage_days = '6 months';
 			$model->save();
+		} else {
+			$model->import( $data );
+			if ( $model->validate() ) {
+				$model->save();
+			}
 		}
 	}
 

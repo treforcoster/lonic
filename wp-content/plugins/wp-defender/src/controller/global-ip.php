@@ -181,7 +181,24 @@ class Global_Ip extends Controller {
 	 */
 	public function to_array() {}
 
-	public function import_data( $data ) {}
+	/**
+	 * @param array $data
+	 *
+	 * @return void
+	 */
+	public function import_data( $data ) {
+		$model = $this->model;
+		if ( isset( $data['global_ip_list'] ) ) {
+			$model->enabled = (bool) $data['global_ip_list'];
+			if ( isset( $data['global_ip_list_blocklist_autosync'] ) ) {
+				$model->blocklist_autosync = (bool) $data['global_ip_list_blocklist_autosync'];
+			}
+		} else {
+			$model->enabled = false;
+			$model->blocklist_autosync = false;
+		}
+		$model->save();
+	}
 
 	/**
 	 * Remove all settings, configs generated in this container runtime.

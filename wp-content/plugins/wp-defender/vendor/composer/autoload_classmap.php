@@ -96,6 +96,7 @@ return array(
     'WP_Defender\\Component\\Password_Protection' => $baseDir . '/src/component/password-protection.php',
     'WP_Defender\\Component\\Product_Analytics' => $baseDir . '/src/component/product-analytics.php',
     'WP_Defender\\Component\\Quarantine' => $baseDir . '/src/component/quarantine.php',
+    'WP_Defender\\Component\\Rate' => $baseDir . '/src/component/rate.php',
     'WP_Defender\\Component\\Recaptcha' => $baseDir . '/src/component/recaptcha.php',
     'WP_Defender\\Component\\Scan' => $baseDir . '/src/component/scan.php',
     'WP_Defender\\Component\\Scan\\Tokens' => $baseDir . '/src/component/scan/tokens.php',

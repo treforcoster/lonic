@@ -20,35 +20,76 @@ class Admin {
 	 */
 	public $is_pro;
 
+	public function __construct() {
+		$this->is_pro = ( new WPMUDEV() )->is_pro();
+	}
+
+	/**
+	 * WP_DEFENDER_PRO sometimes doesn't match $this->is_pro, e.g. WPMU DEV Dashboard plugin is deactivated.
+	 *
+	 * @return bool.
+	 */
+	public function is_wp_org_version(): bool {
+		return ! $this->is_pro && ( defined( 'WP_DEFENDER_PRO' ) && ! WP_DEFENDER_PRO );
+	}
+
 	/**
 	 * Init admin actions.
 	 */
 	public function init() {
-		$this->is_pro = ( new WPMUDEV() )->is_pro();
-		$is_def_page = defender_current_page();
 		// Display plugin links.
 		add_filter( 'network_admin_plugin_action_links_' . DEFENDER_PLUGIN_BASENAME, [ $this, 'settings_link' ] );
 		add_filter( 'plugin_action_links_' . DEFENDER_PLUGIN_BASENAME, [ $this, 'settings_link' ] );
 		add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 3 );
-		// WP_DEFENDER_PRO sometimes doesn't match $this->is_pro, e.g. WPMU DEV Dashboard is deactivated.
-		if ( ! defined( 'WP_DEFENDER_PRO' ) ||
-			( defined( 'WP_DEFENDER_PRO' ) && ! WP_DEFENDER_PRO )
-		) {
-			// This area is only for wp.org members.
-			if ( $is_def_page && ! is_multisite() ) {
-				add_action( 'admin_notices', [ $this, 'show_rating_notice' ] );
-			} elseif ( $is_def_page && is_multisite() && is_main_site() ) {
-				add_action( 'network_admin_notices', [ $this, 'show_rating_notice' ] );
-			}
-			add_action( 'wp_ajax_defender_dismiss_notification', [ $this, 'dismiss_notice' ] );
+		// Only for plugin pages and actions are only for wp.org members.
+		if ( $this->is_wp_org_version() ) {
+			wd_di()->get( \WP_Defender\Component\Rate::class )->init();
 			add_action( 'admin_init', [ $this, 'register_free_modules' ], 20 );
+			// @since 4.4.0.
+			add_action( 'wpdef_fixed_scan_issue', [ $this, 'after_scan_fix' ], 10, 2 );
+			// For submenu callout.
+			add_action( 'admin_head', [ $this, 'retarget_submenu_callout' ] );
+
+			$message = __( 'Upgrade For 80% Off!', 'wpdef' );
+			add_submenu_page(
+				'wp-defender',
+				$message,
+				"<strong id=\"wpdef_menu_callout\" style=\"color: #FECF2F; font-weight: 700;\">" . $message . "</strong>",
+				is_multisite() ? 'manage_network_options' : 'manage_options',
+				'wdf-upsell',
+				[ $this, 'menu_nope' ]
+			);
 		}
+	}
+
+	/**
+	 * The method is a stub without content.
+	*/
+	private function menu_nope(): void {}
+
+	public function retarget_submenu_callout(): void {
+		$href = $this->get_link( 'upsell', 'defender_submenu_upsell' );
+		echo "<script type='text/javascript'>
+jQuery(document).ready(function($) {
+	$('#wpdef_menu_callout').closest('a').attr('target', '_blank').attr('rel', 'noopener noreferrer').attr('href', '" . $href . "');
+});
+</script>";
+	}
+
+	/**
+	 * Fired when the scan issue is fixed.
+	 *
+	 * @param string $issue_type Scan issue type, e.g. plugin_integrity, malware or vulnerability.
+	 * @param string $action     Scan action, e.g. delete or resolve.
+	*/
+	public function after_scan_fix( string $issue_type, string $action ): void {
+		\WP_Defender\Component\Rate::run_counter_of_fixed_scans();
 	}
 
 	/**
 	 * Return URL link.
 	 *
-	 * @param string $link_for Accepts: 'docs', 'plugin', 'rate', 'support', 'roadmap'.
+	 * @param string $link_for Accepts: 'docs', 'plugin', 'rate' and etc.
 	 * @param string $campaign Utm campaign tag to be used in link. Default: ''.
 	 * @param string $adv_path Advanced path. Default: ''.
 	 *
@@ -77,6 +118,9 @@ class Admin {
 			case 'pro_link':
 				$link = "{$domain}/$adv_path";
 				break;
+			case 'upsell':
+				$link = "{$domain}/project/wp-defender/{$utm_tags}";
+				break;
 			default:
 				$link = '';
 				break;
@@ -101,7 +145,7 @@ class Admin {
 		$action_links['docs'] = '<a target="_blank" href="' . $this->get_link( 'docs', 'defender_pluginlist_docs' ) . '" aria-label="' . esc_attr( __( 'Docs', 'wpdef' ) ) . '">' . esc_html__( 'Docs', 'wpdef' ) . '</a>';
 		if ( ! $wpmu_dev->is_member() ) {
 			if ( WP_DEFENDER_PRO_PATH !== DEFENDER_PLUGIN_BASENAME ) {
-				$action_links['upgrade'] = '<a style="color: #8D00B1;" target="_blank" href="' . $this->get_link( 'plugin', 'defender_pluginlist_upgrade' ) . '" aria-label="' . esc_attr( __( 'Upgrade to Defender Pro', 'wpdef' ) ) . '">' . esc_html__( 'Upgrade For 60% Off!', 'wpdef' ) . '</a>';
+				$action_links['upgrade'] = '<a style="color: #8D00B1;" target="_blank" href="' . $this->get_link( 'plugin', 'defender_pluginlist_upgrade' ) . '" aria-label="' . esc_attr( __( 'Upgrade to Defender Pro', 'wpdef' ) ) . '">' . esc_html__( 'Upgrade For 80% Off!', 'wpdef' ) . '</a>';
 			} elseif ( ! $wpmu_dev->is_hosted_site_connected_to_tfh() ) {
 				$action_links['renew'] = '<a style="color: #8D00B1;" target="_blank" href="' . $this->get_link( 'plugin', 'defender_pluginlist_renew' ) . '" aria-label="' . esc_attr( __( 'Renew Your Membership', 'wpdef' ) ) . '">' . esc_html__( 'Renew Membership', 'wpdef' ) . '</a>';
 			}
@@ -179,27 +223,6 @@ class Admin {
 	}
 
 	/**
-	 * Dismiss notice.
-	 */
-	public function dismiss_notice() {
-		if ( ! current_user_can( 'manage_options' ) || ! check_ajax_referer( 'defender_dismiss_notification' ) ) {
-			wp_send_json_error(
-				[ 'message' => __( 'Invalid request, you are not allowed to do that action.', 'wpdef' ) ]
-			);
-		}
-
-		$notification_name = ! empty( $_POST['prop'] ) ? sanitize_text_field( $_POST['prop'] ) : false;
-		if ( false === $notification_name ) {
-			wp_send_json_error(
-				[ 'message' => __( 'Invalid request, allowed data not provided.', 'wpdef' ) ]
-			);
-		}
-		update_site_option( $notification_name, true );
-
-		wp_send_json_success();
-	}
-
-	/**
 	 * Register sub-modules.
 	 */
 	public function register_free_modules() {
@@ -234,71 +257,5 @@ class Admin {
 			],
 			[ 'after', '.sui-wrap .sui-header' ]
 		);
-	}
-
-	/**
-	 * Show the rating notice.
-	 */
-	public function show_rating_notice() {
-		// @since 2.6.1
-		if ( get_site_option( 'defender_rating_success', apply_filters( 'wd_display_rating', false ) ) ) {
-			return;
-		}
-
-		$install_date = (int) get_site_option( 'defender_free_install_date', false );
-		// @since 2.6.1
-		$days_later_dismiss = get_site_option(
-			'defender_days_rating_later_dismiss',
-			apply_filters( 'wd_dismiss_rating', false )
-		);
-
-		if (
-			$install_date && ! $days_later_dismiss
-			&& current_time( 'timestamp' ) > strtotime( '+7 days', $install_date )
-		) { ?>
-			<div id="defender-free-usage-notice"
-				class="defender-rating-notice notice notice-info"
-				data-nonce="<?php echo esc_attr( wp_create_nonce( 'defender_dismiss_notification' ) ); ?>">
-
-				<p style="color: #72777C; line-height: 22px;"><?php esc_html_e( 'We\'ve spent countless hours developing Defender and making it free for you to use. We would really appreciate it if you dropped us a quick rating!', 'wpdef' ); ?></p>
-
-				<p>
-					<button type="button" class="button button-primary button-large"
-						data-prop="defender_rating_success"><?php esc_html_e( 'Rate Defender', 'wpdef' ); ?></button>
-					<a href="#" class="dismiss"
-						style="margin-left: 11px; color: #555; line-height: 16px; font-weight: 500; text-decoration: none;"
-						data-prop="defender_days_rating_later_dismiss"><?php esc_html_e( 'Maybe later', 'wpdef' ); ?></a>
-				</p>
-			</div>
-			<?php
-		}
-		?>
-
-		<script type="text/javascript">
-			jQuery('.defender-rating-notice a, .defender-rating-notice button').on('click', function (e) {
-				e.preventDefault();
-
-				var $notice = jQuery(e.currentTarget).closest('.defender-rating-notice'),
-					prop = jQuery(this).data('prop'),
-					ajaxUrl = '<?php echo admin_url( 'admin-ajax.php' ); ?>';
-
-				if ('defender_rating_success' === prop) {
-					window.open('https://wordpress.org/support/plugin/defender-security/reviews/#new-post', '_blank');
-				}
-
-				jQuery.post(
-					ajaxUrl,
-					{
-						action: 'defender_dismiss_notification',
-						prop: prop,
-						_ajax_nonce: $notice.data('nonce')
-					}
-				).always(function () {
-					$notice.hide();
-				});
-			});
-		</script>
-
-		<?php
 	}
 }

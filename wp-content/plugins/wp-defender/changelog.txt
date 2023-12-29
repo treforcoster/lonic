@@ -1,8 +1,37 @@
 Plugin Name: WP Defender
 Author: WPMU DEV
-Tested up to: 6.4
+Tested up to: 6.4.2
 
 Change Log:
+
+= 4.4.1 ( 2023-12-19 ) =
+
+- Enhance: UI Enhancements
+
+= 4.4.0 ( 2023-12-11 ) =
+
+- Enhance: Adjust the size of the summary box logo
+- Enhance: Update the Twitter name and logo
+- Enhance: Update SUI to the latest version
+- Fix: Update malware signatures
+- Fix: PHP warning after activating Defender Security Headers
+- Fix: Remove Translation Link when the Whitelabel Hide Links option is enabled
+
+= 4.3.1 ( 2023-12-06 ) =
+
+- Enhance: Minor code improvements and fixes
+
+= 4.3.0 ( 2023-11-27 ) =
+
+- Enhance: Whitelist IP addresses
+- Enhance: Display the status of Global IP in config details
+- Enhance: Check for plugin tables created without the default upgrade.php file
+- Enhance: Add URI Parameter to the 'wd_404_lockout' hook
+- Fix: Update malware signatures
+- Fix: Failed login with 2FA on Masked Login page
+- Fix: PHP v8.1 warning for Defender Masked Login
+- Fix: PHP v8.1 warning for setcookie()
+- Fix: Issue when applying custom config
 
 = 4.2.1 ( 2023-10-19 ) =
 
@@ -58,41 +87,5 @@ Change Log:
 
 - Fix: Quarantine table creation on upgrade from free to pro
 
-= 4.0.0 ( 2023-07-25 ) =
 
-- New: Safe Repair
-- Enhance: Compatibility with WordPress 6.3
-- Enhance: Replaced hero image with new product logo
-
-= 3.12.0 ( 2023-06-19 ) =
-
-- Enhance: Update global IP cron schedule to hourly
-- Enhance: Improve malware scan core
-- Enhance: Extend conditions for crawler request validation
-- Enhance: Replace trial prompts in Defender free
-- Fix: User agent is blocked when the blocklist is empty
-- Fix: Issues when deleting vulnerable plugins or themes
-- Fix: Released temporary IP addresses are shown in the Active Lockouts list
-- Fix: Detect malware in core-builder and core-engine plugins
-- Fix: Defender Reset option does not clean the malware results items
-- Fix: New hook to avoid the connection block for Manage WP when 2FA is enabled
-- Fix: Defender mask URL breaking the default language switch on the login page
-- Fix: Issues activating the mask login feature when a post/page and mask login slug are the same
-- Fix: Having login and registration forms on the same page causes a conflict with Google reCAPTCHA
-- Fix: Delete action shows up even after the deletion of the default security config
-- Fix: Issues in deleting the default security config
-- Fix: Google reCAPTCHA is not deactivated if Woocommerce is enabled without forms selection
-- Fix: User search for recipient does not work in notifications bulk configure
-- Fix: An error message is shown by default in the notification modal
-- Fix: Grammar and spelling errors
-- Fix: Typo on result lines on the Audit Logging page
-- Fix: Add comments for all translation strings with placeholders
-- Fix: Typo in "Change default admin user account" security recommendation
-- Fix: Typo in "Update PHP to latest version" security recommendation
-
-= 3.11.1 ( 2023-06-12 ) =
-
-- Enhance: Performance improvements
-
-
-734049-1697810737-au
+734049-1703800939-au

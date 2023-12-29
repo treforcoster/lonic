@@ -142,7 +142,7 @@ class Recaptcha extends Event {
 			return false;
 		}
 
-		return 'wdf-advanced-tools' === $_GET['page'] && 'recaptcha' === $_GET['view'];
+		return 'wdf-advanced-tools' === defender_get_current_page() && 'recaptcha' === $_GET['view'];
 	}
 
 	/**

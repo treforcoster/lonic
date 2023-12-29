@@ -14,6 +14,10 @@
 
 @endif
 
+@if(get_row_layout() == 'carousel')
+@include('components.sections.section-expanding-carousel')
+@endif
+
 @if(get_row_layout() == 'text_&_stats')
 @include('components.sections.section-text-stats')
 @endif

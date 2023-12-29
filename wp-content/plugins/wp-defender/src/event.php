@@ -34,7 +34,8 @@ abstract class Event extends \WP_Defender\Controller {
 	 * @return bool
 	 */
 	protected function is_tracking_active() {
-		return wd_di()->get( \WP_Defender\Model\Setting\Main_Setting::class )->usage_tracking;
+		return false; //Fastlane changes.
+		//return wd_di()->get( \WP_Defender\Model\Setting\Main_Setting::class )->usage_tracking;
 	}
 
 	/**
@@ -74,7 +75,7 @@ abstract class Event extends \WP_Defender\Controller {
 	 *
 	 * @return void
 	 */
-	protected function track_feature( $event, $data ) {
+	public function track_feature( $event, $data ) {
 		if( $this->is_tracking_active() ) {
 			$this->tracker()->track( $event, $data );
 		}

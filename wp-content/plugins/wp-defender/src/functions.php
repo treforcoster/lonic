@@ -325,11 +325,20 @@ function defender_get_request_url(): string {
 }
 
 /**
+ * What is the current WP page?
+ *
+ * @return string
+*/
+function defender_get_current_page(): string {
+	return empty( $_GET['page'] ) ? '' : sanitize_text_field( $_GET['page'] );
+}
+
+/**
  * Check that current page is from Defender.
  *
  * @return bool
 */
-function defender_current_page(): bool {
+function is_defender_page(): bool {
 	$pages = [
 		'wp-defender',
 		'wdf-hardener',
@@ -343,9 +352,8 @@ function defender_current_page(): bool {
 		'wdf-setting',
 		'wdf-tutorial',
 	];
-	$page = $_GET['page'] ?? null;
 
-	return in_array( $page, $pages, true );
+	return in_array( defender_get_current_page(), $pages, true );
 }
 
 /**
@@ -525,7 +533,7 @@ function defender_support_ticket_text(): string {
  *
  * @return string
  */
-function quarantine_pro_only() {
+function defender_quarantine_pro_only(): string {
 	return __( 'Safe Repair feature is only for Pro', 'wpdef' );
 }
 

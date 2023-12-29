@@ -19,16 +19,16 @@ class Mask_Login extends Component {
 	 *
 	 * @return bool
 	 */
-	public function is_on_login_page( $requested_path ) {
+	public function is_on_login_page( $requested_path ): bool {
 		// Decoded url path, e.g. for case 'wp-%61dmin'.
 		$requested_path = rawurldecode( strtolower( $requested_path ) );
-		$login_slugs    = apply_filters(
+		$login_slugs = apply_filters(
 			'wd_login_strict_slugs',
-			array(
+			[
 				'wp-admin',
 				'wp-login',
 				'wp-login.php',
-			)
+			]
 		);
 		foreach ( $login_slugs as $slug ) {
 			if ( false !== stristr( $requested_path, "$slug" ) ) {
@@ -37,13 +37,13 @@ class Mask_Login extends Component {
 		}
 		$login_slugs = apply_filters(
 			'wd_login_slugs',
-			array(
+			[
 				'login',
 				'dashboard',
 				'admin',
 				// Because WP redirects from 'login/' to the login page.
 				'login/',
-			)
+			]
 		);
 
 		// Check the request path contains default login text.
@@ -57,11 +57,11 @@ class Mask_Login extends Component {
 	/**
 	 * Check if the request is land on masked URL.
 	 *
-	 * @param $masked_url string
+	 * @param string $masked_url
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
-	public function is_land_on_masked_url( $masked_url ) {
+	public function is_land_on_masked_url( $masked_url ): bool {
 		return ltrim( rtrim( $this->get_request_path(), '/' ), '/' ) === ltrim( rtrim( $masked_url, '/' ), '/' );
 	}
 
@@ -70,7 +70,7 @@ class Mask_Login extends Component {
 	 *
 	 * @param null|string $site_url This only need in unit test.
 	 *
-	 * @return string
+	 * @return mixed
 	 */
 	public function get_request_path( $site_url = null ) {
 		if ( null === $site_url ) {
@@ -81,6 +81,7 @@ class Mask_Login extends Component {
 		$path = empty( wp_parse_url( $site_url, PHP_URL_PATH ) )
 			? ''
 			: wp_parse_url( $site_url, PHP_URL_PATH );
+
 		if ( strlen( $path ) && 0 === strpos( $request_uri, $path ) ) {
 			$request_uri = substr( $request_uri, strlen( $path ) );
 		}
@@ -92,9 +93,9 @@ class Mask_Login extends Component {
 	/**
 	 * Copy cat from the function get_site_url without the filter.
 	 *
-	 * @param null   $blog_id
-	 * @param string $path
-	 * @param null   $scheme
+	 * @param $blog_id
+	 * @param $path
+	 * @param $scheme
 	 *
 	 * @return string
 	 */
@@ -122,9 +123,9 @@ class Mask_Login extends Component {
 	 *
 	 * @return bool
 	 */
-	public function redeem_ticket( $ticket ) {
+	public function redeem_ticket( $ticket ): bool {
 		$settings = new \WP_Defender\Model\Setting\Mask_Login();
-		$detail   = $settings->express_tickets[ $ticket ] ?? false;
+		$detail = $settings->express_tickets[ $ticket ] ?? false;
 		if ( false === $detail ) {
 			return false;
 		}
@@ -137,7 +138,7 @@ class Mask_Login extends Component {
 			return false;
 		}
 
-		$detail['used']                      += 1;
+		$detail['used'] += 1;
 		$settings->express_tickets[ $ticket ] = $detail;
 		$settings->save();
 

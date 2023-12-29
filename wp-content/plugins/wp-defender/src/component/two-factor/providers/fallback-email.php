@@ -23,12 +23,12 @@ class Fallback_Email extends Two_Factor_Provider {
 	public static $slug = 'fallback-email';
 
 	/**
-	 * @type string
+	 * @var string
 	 */
 	public const FALLBACK_EMAIL_KEY = 'defenderAuthEmail';
 
 	/**
-	 * @type string
+	 * @var string
 	 */
 	public const FALLBACK_BACKUP_CODE_KEY = 'defenderBackupCode';
 

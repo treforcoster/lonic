@@ -47,9 +47,12 @@ class Quarantine extends Controller {
 		return [];
 	}
 
-	public function import_data( $data ): bool {
-		return true;
-	}
+	/**
+	 * @param array $data
+	 *
+	 * @return void
+	 */
+	public function import_data( $data ): void {}
 
 	public function remove_settings() {
 	}
@@ -126,7 +129,7 @@ class Quarantine extends Controller {
 	}
 
 	/**
-	 * Delete quarantined file
+	 * Delete quarantined file.
 	 *
 	 * @param Request $request
 	 *

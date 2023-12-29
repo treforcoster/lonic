@@ -109,7 +109,7 @@ class Password_Protection extends Event {
 				: $this->model->pwned_actions['force_change_message'];
 			$errors->add( 'defender_password_protection', $message );
 			// Remove the one time cookie notice once it's displayed.
-			$this->service->remove_cookie_notice( 'display_pwned_password_warning', true );
+			$this->service->remove_cookie_notice( 'display_pwned_password_warning' );
 		}
 
 		$login_password = $this->service->get_submitted_password();
@@ -271,14 +271,31 @@ class Password_Protection extends Event {
 	/**
 	 * @param array $data
 	 *
+	 * @return array
+	 */
+	private function adapt_data( array $data ): array {
+		$adapted_data = [];
+		if ( isset( $data['custom_message'] ) ) {
+			$adapted_data['force_change_message'] = $data['custom_message'];
+		}
+
+		return array_merge( $data, $adapted_data );
+	}
+
+	/**
+	 * @param array $data
+	 *
 	 * @return void
 	 */
 	public function import_data( $data ): void {
-		$model = $this->get_model();
-
-		$model->import( $data );
-		if ( $model->validate() ) {
-			$model->save();
+		if ( ! empty( $data ) ) {
+			// Upgrade for old versions.
+			$data = $this->adapt_data( $data );
+			$model = $this->get_model();
+			$model->import( $data );
+			if ( $model->validate() ) {
+				$model->save();
+			}
 		}
 	}
 

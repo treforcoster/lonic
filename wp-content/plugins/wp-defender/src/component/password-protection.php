@@ -213,12 +213,17 @@ class Password_Protection extends Component {
 	/**
 	 * Remove cookie notice.
 	 *
-	 * @param string $name
-	 * @param int $time
+	 * Setting the expiration time in the past indicates to the browser that the cookie has expired and should be removed.
+	 *
+	 * @since 4.3.0 Removed the $time parameter.
+	 *
+	 * @param string $name The name of the cookie.
+	 *
+	 * @return void
 	 */
-	public function remove_cookie_notice( $name, $time ) {
+	public function remove_cookie_notice( string $name ): void {
 		if ( isset( $_COOKIE[ $name ] ) ) {
-			setcookie( $name, null, $time, '/' );
+			setcookie( $name, '', time() - YEAR_IN_SECONDS, '/' );
 		}
 		$this->remove_extra_cookies();
 	}

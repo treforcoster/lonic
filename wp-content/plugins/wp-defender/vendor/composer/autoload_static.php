@@ -401,6 +401,7 @@ class ComposerStaticInitf0eb055c08a2deead8b913944120dc0a
         'WP_Defender\\Component\\Password_Protection' => __DIR__ . '/../..' . '/src/component/password-protection.php',
         'WP_Defender\\Component\\Product_Analytics' => __DIR__ . '/../..' . '/src/component/product-analytics.php',
         'WP_Defender\\Component\\Quarantine' => __DIR__ . '/../..' . '/src/component/quarantine.php',
+        'WP_Defender\\Component\\Rate' => __DIR__ . '/../..' . '/src/component/rate.php',
         'WP_Defender\\Component\\Recaptcha' => __DIR__ . '/../..' . '/src/component/recaptcha.php',
         'WP_Defender\\Component\\Scan' => __DIR__ . '/../..' . '/src/component/scan.php',
         'WP_Defender\\Component\\Scan\\Tokens' => __DIR__ . '/../..' . '/src/component/scan/tokens.php',

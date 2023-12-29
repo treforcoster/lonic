@@ -120,10 +120,7 @@ class Password_Reset extends Event {
 			$message = empty( $this->model->message ) ? $this->default_msg : $this->model->message;
 			$errors->add( 'defender_password_reset', $message );
 			// Remove the one time cookie notice once it's displayed.
-			$this->service->remove_cookie_notice(
-				'display_reset_password_warning',
-				true
-			);
+			$this->service->remove_cookie_notice( 'display_reset_password_warning' );
 
 			return $errors;
 		}

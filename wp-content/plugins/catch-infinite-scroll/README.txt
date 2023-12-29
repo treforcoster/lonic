@@ -3,7 +3,7 @@ Contributors: catchplugins, catchthemes, sakinshrestha, pratikshrestha, maheshma
 Donate link: https://catchplugins.com/plugins/catch-infinite-scroll-pro/
 Tags: infinite scroll, infinite scrolling, infinite, scroll, load more
 Requires at least: 5.7
-Tested up to: 6.1
+Tested up to: 6.4
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -41,6 +41,9 @@ Not so easy way (via FTP) :
 * Go to **Catch Infinite Scroll** from Dashboard menu
 
 == Changelog ==
+
+= 2.0.5 (Released: November 15, 2023) =
+* Compatibility check up to version 6.4
 
 = 2.0.4 (Released: November 03, 2022) =
 * Compatibility check up to version 6.1

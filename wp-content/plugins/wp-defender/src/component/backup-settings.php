@@ -224,7 +224,6 @@ class Backup_Settings extends Component {
 		$settings_sec_headers = new Model_Security_Headers();
 		$security_headers = $settings_sec_headers->export();
 		$ret = [
-			'security_tweaks' => $security_tweaks,
 			'scan' => $scan,
 			'iplockout' => $iplockout,
 			'two_factor' => $advanced_tools['two_factor'],
@@ -249,6 +248,8 @@ class Backup_Settings extends Component {
 		$ret['pwned_passwords']['enabled'] = $pwned_password_model->is_active();
 		$ret['pwned_passwords']['user_roles'] = $pwned_password_model->user_roles;
 		$ret['pwned_passwords']['custom_message'] = $pwned_password_model->pwned_actions['force_change_message'];
+		// It's better to add Tweaks as the last key to eliminate unexpected behavior with possible user logout.
+		$ret['security_tweaks'] = $security_tweaks;
 
 		return $ret;
 	}
@@ -383,31 +384,6 @@ class Backup_Settings extends Component {
 		$default_2fa_values = ( new Model_Two_Fa() )->get_default_values();
 		// Total data.
 		$data = [
-			'security_tweaks' => [
-				'notification_repeat' => 'weekly',
-				'subscribers' => $default_recipients,
-				'notification' => 'enabled',
-				'automate' => true,
-				'data' => [],
-				// @since 2.7.0 Specific values for 4 fixed, 0 ignored and 8 actioned tweaks. 12 tweaks in total.
-				'fixed' => [
-					'disable-xml-rpc',
-					'login-duration',
-					'disable-trackback',
-					'prevent-enum-users'
-				],
-				'issues' => [
-					'php-version',
-					'wp-version',
-					'prevent-php-executed',
-					'protect-information',
-					'replace-admin-username',
-					'security-key',
-					'disable-file-editor',
-					'hide-error',
-				],
-				'ignore' => [],
-			],
 			'scan' => [
 				'integrity_check' => true,
 				'check_core' => true,
@@ -573,6 +549,32 @@ class Backup_Settings extends Component {
 			$data['audit']['enabled'] = false;
 			$data['blocklist_monitor']['enabled'] = false;
 		}
+		// It's better to add Tweaks as the last key to eliminate unexpected behavior with possible user logout.
+		$data['security_tweaks'] = [
+			'notification_repeat' => 'weekly',
+			'subscribers' => $default_recipients,
+			'notification' => 'enabled',
+			'automate' => true,
+			'data' => [],
+			// @since 2.7.0 Specific values for 4 fixed, 0 ignored and 8 actioned tweaks. 12 tweaks in total.
+			'fixed' => [
+				'disable-xml-rpc',
+				'login-duration',
+				'disable-trackback',
+				'prevent-enum-users'
+			],
+			'issues' => [
+				'php-version',
+				'wp-version',
+				'prevent-php-executed',
+				'protect-information',
+				'replace-admin-username',
+				'security-key',
+				'disable-file-editor',
+				'hide-error',
+			],
+			'ignore' => [],
+		];
 
 		$configs['configs'] = $data;
 		$configs['strings'] = $this->create_default_module_strings( $data, $this->is_pro );
@@ -656,64 +658,20 @@ class Backup_Settings extends Component {
 						$value = str_replace( '{nl}', PHP_EOL, $value );
 					}
 				}
-				// Import data.
-				if ( 'iplockout' === $module ) {
-					foreach ( $controller as $lockout_controller ) {
-						$lockout_controller->import_data( $module_data );
-					}
-				} else {
+
+				/**
+				 * Import the data and perform separate actions for each of the main modules:
+				 * Scan, Firewall, Audit, Blocklist Monitor, Pwned Passwords,
+				 * 2FA, Mask Login, Security Headers, Main settings, Tweaks.
+				*/
+				if ( 'scan' === $module ) {
+					// Import.
 					$controller->import_data( $module_data );
-				}
 
-				if ( 'security_tweaks' === $module ) {
-					if ( 'migration' !== $request_reason ) {
-						// There is some tweaks that require re-login. Not display error message during since 2.8.1 because it breaks the config flow on the Hub.
-						// If this is combined with mask login, then we need to redirect to new URL.
-						// The automate function should return this.
-						$tweak_class = wd_di()->get( Controller_Security_Tweaks::class );
-						$need_reauth = $tweak_class->automate( $module_data, $request_reason );
-					}
-					if ( ! empty( $module_data ) && isset( $module_data['notification'] ) ) {
-						$tweak_notification = new Tweak_Reminder();
-						if ( $tweak_notification->status !== $module_data['notification'] ) {
-							$tweak_notification->status = $module_data['notification'];
-						}
-
-						if ( isset( $module_data['notification_repeat'] ) ) {
-							// Temporary check for older versions.
-							if ( is_bool( $module_data['notification_repeat'] ) ) {
-								$tweak_notification->configs['reminder'] = $module_data['notification_repeat']
-									? 'daily'
-									: 'weekly';
-							} elseif (
-								is_string( $module_data['notification_repeat'] )
-								&& in_array( $module_data['notification_repeat'], [ 'daily', 'weekly', 'monthly' ], true )
-							) {
-								$tweak_notification->configs['reminder'] = $module_data['notification_repeat'];
-							} else {
-								$tweak_notification->configs['reminder'] = 'weekly';
-							}
-						} else {
-							$tweak_notification->configs['reminder'] = 'weekly';
-						}
-						if ( ! empty( $module_data['subscribers'] ) ) {
-							// Reset all recipients before.
-							$tweak_notification->in_house_recipients = [];
-							$tweak_notification->out_house_recipients = [];
-							foreach ( $module_data['subscribers'] as $key => $subscribers ) {
-								$tweak_notification->$key = $subscribers;
-							}
-						}
-						if ( isset( $module_data['last_sent'] ) ) {
-							$tweak_notification->last_sent = $module_data['last_sent'];
-						}
-						$tweak_notification->save();
-					}
-				} elseif ( 'scan' === $module ) {
 					$scan_notification = new Malware_Notification();
 					$scan_report = new Malware_Report();
-					$scan_settings = new Model_Scan();
 					if ( ! empty( $module_data ) ) {
+						$scan_settings = new Model_Scan();
 						// For Scan notification.
 						if ( isset( $module_data['notification'] ) ) {
 							if ( $scan_notification->status !== $module_data['notification'] ) {
@@ -811,15 +769,13 @@ class Backup_Settings extends Component {
 						// @since 2.7.0 We can remove it in the next version.
 						$scan_report->dry_run = false;
 						$scan_report->save();
-						// For scan settings.
-						$scan_settings->scheduled_scanning = false;
-						$scan_settings->frequency = 'weekly';
-						$scan_settings->day_n = '1';
-						$scan_settings->day = 'sunday';
-						$scan_settings->time = '4:00';
-						$scan_settings->save();
 					}
 				} elseif ( 'iplockout' === $module ) {
+					// Run Lockout submodules.
+					foreach ( $controller as $lockout_controller ) {
+						$lockout_controller->import_data( $module_data );
+					}
+					// For Notification and Report.
 					if ( ! empty( $module_data ) ) {
 						// Get string values for notification & report.
 						if ( isset( $module_data['notification'] ) ) {
@@ -884,33 +840,6 @@ class Backup_Settings extends Component {
 							// @since 2.7.0 Remove 'dry_run'-restoring.
 							$lockout_report->save();
 						}
-						// For UA Banning.
-						if ( isset( $module_data['ua_banning_enabled'] ) ) {
-							$model_ua_lockout = new Model_Ua_Lockout();
-							$model_ua_lockout->enabled = (bool) $module_data['ua_banning_enabled'];
-							if ( isset( $module_data['ua_banning_message'] ) ) {
-								$model_ua_lockout->message = $module_data['ua_banning_message'];
-							}
-							if ( isset( $module_data['ua_banning_blacklist'] ) ) {
-								$model_ua_lockout->blacklist = $module_data['ua_banning_blacklist'];
-							}
-							if ( isset( $module_data['ua_banning_whitelist'] ) ) {
-								$model_ua_lockout->whitelist = $module_data['ua_banning_whitelist'];
-							}
-							if ( isset( $module_data['ua_banning_empty_headers'] ) ) {
-								$model_ua_lockout->empty_headers = (bool) $module_data['ua_banning_empty_headers'];
-							}
-							$model_ua_lockout->save();
-						}
-						// For Global IP List.
-						if ( isset( $module_data['global_ip_list'] ) ) {
-							$model_gi = wd_di()->get( Global_Ip_Lockout::class );
-							$model_gi->enabled = (bool) $module_data['global_ip_list'];
-							if ( isset( $module_data['global_ip_list_blocklist_autosync'] ) ) {
-								$model_gi->blocklist_autosync = (bool) $module_data['global_ip_list_blocklist_autosync'];
-							}
-							$model_gi->save();
-						}
 					} else {
 						// Default data for lockout notification.
 						$lockout_notification = new Firewall_Notification();
@@ -935,22 +864,11 @@ class Backup_Settings extends Component {
 						$lockout_report->day = 'sunday';
 						$lockout_report->time = '4:00';
 						$lockout_report->save();
-						// For UA banning.
-						$model_ua_lockout = new Model_Ua_Lockout();
-						$default_ua_values = $model_ua_lockout->get_default_values();
-						$model_ua_lockout->enabled = false;
-						$model_ua_lockout->message = $default_ua_values['message'];
-						$model_ua_lockout->blacklist = $default_ua_values['blacklist'];
-						$model_ua_lockout->whitelist = $default_ua_values['whitelist'];
-						$model_ua_lockout->empty_headers = false;
-						$model_ua_lockout->save();
-						// For Global IP List.
-						$model_gi = wd_di()->get( Global_Ip_Lockout::class );
-						$model_gi->enabled = false;
-						$model_gi->blocklist_autosync = false;
-						$model_gi->save();
 					}
 				} elseif ( 'audit' === $module ) {
+					// Import.
+					$controller->import_data( $module_data );
+					// Report.
 					$audit_report = new Audit_Report();
 					if ( ! empty( $module_data ) ) {
 						if (
@@ -985,11 +903,6 @@ class Backup_Settings extends Component {
 						}
 						// @since 2.7.0 Remove 'dry_run'-restoring.
 					} else {
-						// Default data for audit settings.
-						$audit_settings = new Model_Audit_Logging();
-						$audit_settings->enabled = false;
-						$audit_settings->storage_days = '6 months';
-						$audit_settings->save();
 						// For audit report.
 						$audit_report->status = 'disabled';
 						// @since 2.7.0 We can remove it in the next version.
@@ -1009,14 +922,69 @@ class Backup_Settings extends Component {
 					&& $this->is_pro
 					&& isset( $module_data['status'] )
 				) {
+					// No need to import data. Just change status.
 					( new Blocklist_Monitor() )->change_status( $module_data['status'] );
 				} elseif (
 					'pwned_passwords' === $module
 					&& isset( $module_data['custom_message'] )
 				) {
-					$model_pwned = new Model_Password_Protection();
-					$model_pwned->pwned_actions['force_change_message'] = $module_data['custom_message'];
-					$model_pwned->save();
+					$controller->import_data( $module_data );
+				} elseif ( 'two_factor' === $module ) {
+					$controller->import_data( $module_data );
+				} elseif ( 'mask_login' === $module ) {
+					$controller->import_data( $module_data );
+				} elseif ( 'security_headers' === $module ) {
+					$controller->import_data( $module_data );
+				} elseif ( 'settings' === $module ) {
+					$controller->import_data( $module_data );
+				} elseif ( 'security_tweaks' === $module ) {
+					// Import.
+					$controller->import_data( $module_data );
+					// Automate process.
+					if ( 'migration' !== $request_reason ) {
+						// There is some tweaks that require re-login. Not display error message during since 2.8.1 because it breaks the config flow on the Hub.
+						// If this is combined with mask login, then we need to redirect to new URL.
+						// The automate function should return this.
+						$tweak_class = wd_di()->get( Controller_Security_Tweaks::class );
+						$need_reauth = $tweak_class->automate( $module_data, $request_reason );
+					}
+					// For Tweak notification.
+					if ( ! empty( $module_data ) && isset( $module_data['notification'] ) ) {
+						$tweak_notification = new Tweak_Reminder();
+						if ( $tweak_notification->status !== $module_data['notification'] ) {
+							$tweak_notification->status = $module_data['notification'];
+						}
+
+						if ( isset( $module_data['notification_repeat'] ) ) {
+							// Temporary check for older versions.
+							if ( is_bool( $module_data['notification_repeat'] ) ) {
+								$tweak_notification->configs['reminder'] = $module_data['notification_repeat']
+									? 'daily'
+									: 'weekly';
+							} elseif (
+								is_string( $module_data['notification_repeat'] )
+								&& in_array( $module_data['notification_repeat'], [ 'daily', 'weekly', 'monthly' ], true )
+							) {
+								$tweak_notification->configs['reminder'] = $module_data['notification_repeat'];
+							} else {
+								$tweak_notification->configs['reminder'] = 'weekly';
+							}
+						} else {
+							$tweak_notification->configs['reminder'] = 'weekly';
+						}
+						if ( ! empty( $module_data['subscribers'] ) ) {
+							// Reset all recipients before.
+							$tweak_notification->in_house_recipients = [];
+							$tweak_notification->out_house_recipients = [];
+							foreach ( $module_data['subscribers'] as $key => $subscribers ) {
+								$tweak_notification->$key = $subscribers;
+							}
+						}
+						if ( isset( $module_data['last_sent'] ) ) {
+							$tweak_notification->last_sent = $module_data['last_sent'];
+						}
+						$tweak_notification->save();
+					}
 				}
 			}
 		}
@@ -1061,7 +1029,7 @@ class Backup_Settings extends Component {
 	 * @param string $module
 	 * @param bool $all_firewall_lockouts
 	 *
-	 * @return mixed
+	 * @return object|array|string
 	 */
 	public function module_to_controller( string $module, bool $all_firewall_lockouts = false ) {
 		switch ( $module ) {
@@ -1070,16 +1038,14 @@ class Backup_Settings extends Component {
 			case 'scan':
 				return new Controller_Scan();
 			case 'audit':
-				if ( class_exists( Audit_Logging::class ) ) {
-					return new Audit_Logging();
-				}
-				break;
+				return class_exists( Audit_Logging::class ) ? new Audit_Logging() : '';
 			case 'iplockout':
 				if ( $all_firewall_lockouts ) {
 					return [
 						new Controller_Firewall(),
 						new \WP_Defender\Controller\Login_Lockout(),
 						new \WP_Defender\Controller\Nf_Lockout(),
+						new \WP_Defender\Controller\Global_Ip(),
 						new \WP_Defender\Controller\Blacklist(),
 						new Controller_Ua_Lockout(),
 					];
@@ -1099,7 +1065,7 @@ class Backup_Settings extends Component {
 			case 'pwned_passwords':
 				return new Controller_Password_Protection();
 			default:
-				break;
+				return '';
 		}
 	}
 
@@ -1109,7 +1075,6 @@ class Backup_Settings extends Component {
 	 * @return bool
 	 */
 	public function check_for_new_structure( array $configs ): bool {
-
 		return array_key_exists( 'subscribers', $configs['security_tweaks'] );
 	}
 

@@ -61,7 +61,7 @@ class Prevent_Enum_Users extends Component implements Security_Key_Const_Interfa
 	public function shield_up() {
 		$this->resolved = true;
 
-		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+		if ( is_admin() || defender_is_wp_cli() ) {
 			return;
 		}
 

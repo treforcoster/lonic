@@ -1,5 +1,5 @@
 <section id="<?php //echo $sectionData->sectionOptions->section_id;
-              ?>" class="section header-video overflow-hidden">
+              ?>" class="section header-video overflow-hidden ">
 
 
   <?php $video = get_sub_field('video'); ?>

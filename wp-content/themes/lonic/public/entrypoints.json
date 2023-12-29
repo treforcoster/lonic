@@ -4,6 +4,14 @@
       "js/runtime.js",
       "js/app.js"
     ],
+    "woff": [
+      "styles/fonts/FaktumMedium/font.woff",
+      "styles/fonts/FaktumRegular/font.woff"
+    ],
+    "woff2": [
+      "styles/fonts/FaktumMedium/font.woff2",
+      "styles/fonts/FaktumRegular/font.woff2"
+    ],
     "dependencies": [
       "jquery"
     ]

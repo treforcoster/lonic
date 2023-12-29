@@ -194,10 +194,12 @@ class Blacklist_Lockout extends Setting {
 		if ( ! is_array( $arr ) ) {
 			return [];
 		}
-		$arr = array_filter( $arr );
-		$arr = array_map( 'trim', $arr );
 
-		return array_map( 'strtolower', $arr );
+		$arr = array_map( function( $value ) {
+			return strtolower( trim( $value ) );
+		}, $arr );
+
+		return array_filter( $arr );
 	}
 
 	/**

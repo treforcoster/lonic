@@ -72,15 +72,22 @@ class Security_Headers extends Event {
 			$this->model->save();
 			Config_Hub_Helper::set_clear_active_flag();
 			// Maybe track.
-			if ( $this->is_tracking_active() ) {
+			if ( ! defender_is_wp_cli() && $this->is_tracking_active() ) {
 				// The current model data.
 				$is_active_curr_data = $this->get_model()->is_any_activated();
 				// The previous model data.
 				$prev_data = $this->get_model()->old_settings;
-				$is_active_prev_data = true === $prev_data['sh_xframe'] || true === $prev_data['sh_xss_protection']
-						|| true === $prev_data['sh_content_type_options'] || true === $prev_data['sh_feature_policy']
-						|| true === $prev_data['sh_strict_transport'] || true === $prev_data['sh_referrer_policy'];
+
+				$is_active_prev_data = false;
+
+				if ( ! empty( $prev_data ) ) {
+					$is_active_prev_data = true === $prev_data['sh_xframe'] || true === $prev_data['sh_xss_protection']
+							|| true === $prev_data['sh_content_type_options'] || true === $prev_data['sh_feature_policy']
+							|| true === $prev_data['sh_strict_transport'] || true === $prev_data['sh_referrer_policy'];
+				}
+
 				$need_track = false;
+
 				if ( $is_active_prev_data && ! $is_active_curr_data ) {
 					$need_track = true;
 					$event = 'def_feature_deactivated';
@@ -88,6 +95,7 @@ class Security_Headers extends Event {
 					$need_track = true;
 					$event = 'def_feature_activated';
 				}
+
 				// Other conditionds without State's changes.
 				if ( $need_track ) {
 					$data = [
@@ -171,11 +179,14 @@ class Security_Headers extends Event {
 	public function data_frontend(): array {
 		$model = $this->get_model();
 
-		return array_merge( [
-			'model' => $model->export(),
-			'misc' => $model->get_headers_as_array( true ),
-			'enabled' => $model->get_enabled_headers( 3 )
-		], $this->dump_routes_and_nonces() );
+		return array_merge(
+			[
+				'model' => $model->export(),
+				'misc' => $model->get_headers_as_array( true ),
+				'enabled' => $model->get_enabled_headers( 3 ),
+			],
+			$this->dump_routes_and_nonces()
+		);
 	}
 
 	/**
@@ -204,7 +215,7 @@ class Security_Headers extends Event {
 	 */
 	public function export_strings(): array {
 		return [
-			$this->get_model()->is_any_activated() ? __( 'Active', 'wpdef' ) : __( 'Inactive', 'wpdef' )
+			$this->get_model()->is_any_activated() ? __( 'Active', 'wpdef' ) : __( 'Inactive', 'wpdef' ),
 		];
 	}
 }

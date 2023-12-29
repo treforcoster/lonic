@@ -272,11 +272,16 @@ trait Plugin {
 		return $content;
 	}
 
-	public function quarantine( string $parent_action ): array {
+	/**
+	 * @param string $parent_action
+	 *
+	 * @return array|WP_Error
+	 */
+	public function quarantine( string $parent_action ) {
 		if ( ! class_exists( 'WP_Defender\Controller\Quarantine' ) ) {
 			return new WP_Error(
 				'DEFENDER_PRO_ONLY_FEATURE',
-				quarantine_pro_only()
+				defender_quarantine_pro_only()
 			);
 		}
 

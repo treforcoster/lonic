@@ -114,9 +114,9 @@ if ( class_exists( 'WP_Defender\Controller\Quarantine' ) ) {
 // Complete cleaning.
 if ( $uninstall_settings && $uninstall_data ) {
 	delete_site_option( 'wd_nofresh_install' );
-	delete_site_option( 'defender_free_install_date' );
 	\WP_Defender\Component\Feature_Modal::delete_modal_key();
 	\WP_Defender\Controller\Data_Tracking::delete_modal_key();
+	\WP_Defender\Component\Rate::clean_up();
 }
 // Remains from old versions.
 delete_site_option( 'wd_audit_cached' );

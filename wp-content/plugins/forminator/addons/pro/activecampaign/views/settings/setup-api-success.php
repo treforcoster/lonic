@@ -3,7 +3,7 @@
 	<h3 id="forminator-integration-popup__title" class="sui-box-title sui-lg">
 		<?php
 		/* translators: 1: Add-on name */
-			printf( esc_html__( '%1$s Added', 'forminator' ), 'ActiveCampaign' );
+			printf( esc_html__( '%1$s Added', 'forminator' ), 'ActiveCampaign' );	 	 		  		  						   	
 		?>
 	</h3>
 

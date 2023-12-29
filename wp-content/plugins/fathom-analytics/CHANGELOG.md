@@ -1,11 +1,42 @@
 Changelog
 ==========
 
+### 3.2.2 - December 18, 2023
+
+PHP 5.6 compatibility fix
+
+### 3.2.1 - November 9, 2023
+
+Additional cache handling for LiteSpeed minification and combining.
+
+### 3.2.0 - November 6, 2023
+
+Added a way to avoid our embed script being minified and combined (which breaks our embed script) in some caching plugins.
+
+#### 3.1.2 - October 26, 2023
+
+Needed NULL not FALSE for wp_enqueue_script, fixed it now, thanks for the patience folks <3
+
+#### 3.1.1 - October 26, 2023
+
+Removed the ?ver from the script.js file as it broke with some caching plugins.
+
+#### 3.1.0 - October 25, 2023
+
+Moved Fathom script from footer to header
+Remove custom domain setting (see https://usefathom.com/docs/script/custom-domains)
+Add support to exclude logged in users by role from tracking
+Added settings link from plugin page
+
+### 3.0.7 - December 9, 2022
+
+Tested on new Wordpress version and updated our graphics for the Wordpress plugin page (well done, Paul, they're beautiful).
+
 ### 3.0.6 - April 26, 2022
 
 Fixed a placeholder.
 
-### 3.0.5 - Dec 7, 2021
+### 3.0.5 - December 7, 2021
 
 Fixed security issue where an administrator could inject XSS code into the Analytics tab and gain access to super administrator accounts on a multi-site installation.
 

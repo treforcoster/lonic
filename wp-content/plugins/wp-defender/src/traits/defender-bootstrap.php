@@ -192,8 +192,6 @@ SQL;
 	 * @since 2.7.1 No use dbDelta because PHP v8.1 triggers an error when calling query "DESCRIBE {$table};" if the table doesn't exist.
 	 */
 	protected function create_database_tables(): void {
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
@@ -323,7 +321,7 @@ SQL;
 		 */
 		$hub_class = wd_di()->get( HUB::class );
 		$hub_class->set_onboarding_status( $this->maybe_show_onboarding() );
-		if ( $hub_class->get_onboarding_status() && 'cli' !== php_sapi_name() ) {
+		if ( $hub_class->get_onboarding_status() && ! defender_is_wp_cli() ) {
 			// If it's cli we should start this normally.
 			Array_Cache::set( 'onboard', wd_di()->get( Onboard::class ) );
 		} else {
@@ -383,7 +381,7 @@ SQL;
 	 * @return string
 	 */
 	public function add_sui_to_body( string $classes ): string {
-		if ( ! defender_current_page() ) {
+		if ( ! is_defender_page() ) {
 			return $classes;
 		}
 		$classes .= sprintf( ' sui-%s ', DEFENDER_SUI );
@@ -597,7 +595,7 @@ SQL;
 		// Include admin class. Don't use is_admin().
 		add_action( 'admin_init', [ ( new \WP_Defender\Admin() ), 'init' ] );
 		// Add WP-CLI commands.
-		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+		if ( defender_is_wp_cli() ) {
 			\WP_CLI::add_command( 'defender', Cli::class );
 		}
 		// Rotational logger initialization.

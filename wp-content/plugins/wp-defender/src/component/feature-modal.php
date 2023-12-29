@@ -77,7 +77,6 @@ class Feature_Modal extends Component {
 			$allowed_fresh_install = (bool) get_site_option( 'wd_nofresh_install' );
 		}
 
-
 		return $allowed_fresh_install && (bool) get_site_option( $key ) && ! $info['hide_doc_link'];
 	}
 

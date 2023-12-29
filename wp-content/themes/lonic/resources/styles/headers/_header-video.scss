@@ -2,7 +2,6 @@
   position: relative;
   width: 100vw;
   height: 100vh;
-
   z-index: 4000;
 
   .bg-video-wrapper {
@@ -72,9 +71,13 @@
   }
 
   .inner {
-    height: 100%;
     width: 100%;
     z-index: 4;
+    height: 100%;
+    padding-top: var(--mobile-banner-height);
+    @include media-breakpoint-up(lg) {
+      padding-top: var(--banner-height);
+    }
     //background-color: rgba(0, 0, 0, 0.3);
     position: relative;
 

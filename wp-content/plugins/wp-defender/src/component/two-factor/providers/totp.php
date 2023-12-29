@@ -29,58 +29,58 @@ class Totp extends Two_Factor_Provider {
 	public static $slug = 'totp';
 
 	/**
-	 * @type string
+	 * @var string
 	 */
 	public const TOTP_AUTH_KEY = 'defenderAuthOn';
 
 	/**
 	 * Used def.key before v3.4.0.
 	 *
-	 * @type string
+	 * @var string
 	 */
 	public const TOTP_SECRET_KEY = 'defenderAuthSecret';
 
 	/**
 	 * Use Sodium library since v3.4.0.
 	 *
-	 * @type string
+	 * @var string
 	 */
 	public const TOTP_SODIUM_SECRET_KEY = 'defenderAuthSodiumSecret';
 
 	/**
-	 * @type string
+	 * @var string
 	 */
 	public const TOTP_FORCE_KEY = 'defenderForceAuth';
 
 	/**
-	 * @type int
+	 * @var int
 	 */
 	public const TOTP_DIGIT_COUNT = 6;
 
 	/**
-	 * @type int
+	 * @var int
 	 */
 	public const TOTP_TIME_STEP_SEC = 30;
 
 	/**
-	 * @type int
+	 * @var int
 	 */
 	public const TOTP_LENGTH = 16;
 
 	/**
 	 * RFC 4648 base32 alphabet.
-	 * @type string
+	 * @var string
 	 */
 	public const TOTP_CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
 
 	/**
-	 * @type string
+	 * @var string
 	 */
 	public const DEFAULT_CRYPTO = 'sha1';
 
 	/**
 	 * 1 = 30 second range for authenticator.
-	 * @type int
+	 * @var int
 	*/
 	public const TOTP_TIME_STEP_ALLOWANCE = 1;
 

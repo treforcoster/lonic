@@ -126,6 +126,8 @@ class Vuln_Result extends Behavior {
 			$model = Scan::get_last();
 			$model->remove_issue( $this->owner->id );
 
+			do_action( 'wpdef_fixed_scan_issue', 'vulnerability', 'resolve' );
+
 			return [ 'message' => __( 'This item has been resolved.', 'wpdef' ) ];
 		}
 
@@ -179,6 +181,8 @@ class Vuln_Result extends Behavior {
 			}
 			$model = Scan::get_last();
 			$model->remove_issue( $this->owner->id );
+
+			do_action( 'wpdef_fixed_scan_issue', 'vulnerability', 'resolve' );
 
 			return [ 'message' => __( 'This item has been resolved.', 'wpdef' ) ];
 		} elseif ( false === $result ) {
@@ -239,6 +243,8 @@ class Vuln_Result extends Behavior {
 		$model = Scan::get_last();
 		$model->remove_issue( $this->owner->id );
 
+		do_action( 'wpdef_fixed_scan_issue', 'vulnerability', 'delete' );
+
 		return [
 			'collect_type' => true,
 			'message' => $message,
@@ -275,6 +281,8 @@ class Vuln_Result extends Behavior {
 		$this->log( $message . 'is deleted', 'scan.log' );
 		$model = Scan::get_last();
 		$model->remove_issue( $this->owner->id );
+
+		do_action( 'wpdef_fixed_scan_issue', 'vulnerability', 'delete' );
 
 		return [
 			'collect_type' => true,

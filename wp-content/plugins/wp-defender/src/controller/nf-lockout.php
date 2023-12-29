@@ -73,10 +73,7 @@ class Nf_Lockout extends Event {
 			$this->model->save();
 			Config_Hub_Helper::set_clear_active_flag();
 			// Maybe track.
-			if (
-				! defender_is_wp_cli() && $this->is_tracking_active()
-				&& $this->is_feature_state_changed( $prev_data, $data )
-				) {
+			if ( ! defender_is_wp_cli() && $this->is_feature_state_changed( $prev_data, $data ) ) {
 				$track_data = [
 					'Action' => $data['enabled'] ? 'Enabled' : 'Disabled',
 					'Duration' => 'timeframe' === $data['lockout_type'] ? 'Temporary' : 'Permanent',
@@ -157,19 +154,16 @@ class Nf_Lockout extends Event {
 	 * Import the data of other source into this, it can be when HUB trigger the import, or user apply a preset.
 	 * @param array $data
 	 *
-	 * @return null|void
+	 * @return void
 	 */
-	public function import_data( $data ) {
+	public function import_data( $data ): void {
 		if ( ! empty( $data ) ) {
 			$data = $this->adapt_data( $data );
-		} else {
-			return;
-		}
-
-		$model = $this->model;
-		$model->import( $data );
-		if ( $model->validate() ) {
-			$model->save();
+			$model = $this->model;
+			$model->import( $data );
+			if ( $model->validate() ) {
+				$model->save();
+			}
 		}
 	}
 

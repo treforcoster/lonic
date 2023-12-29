@@ -22,7 +22,7 @@ trait Country {
 	 * @throws \MaxMind\Db\Reader\InvalidDatabaseException Thrown for unexpected data is found in DB.
 	 */
 	public function get_current_country( $ip ) {
-		if ( 'cli' === php_sapi_name() ) {
+		if ( defender_is_wp_cli() ) {
 			// Never catch if from cli.
 			return false;
 		}

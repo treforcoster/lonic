@@ -19,8 +19,8 @@ class Firewall extends Component {
 	private function is_commencing_staff_access( $access ): bool {
 		return wp_doing_ajax() &&
 			isset( $_GET['action'], $_POST['wdpunkey'] ) &&
-			'wdpunauth' === $_GET['action'] &&
-			hash_equals( $_POST['wdpunkey'], $access['key'] );
+			'wdpunauth' === sanitize_text_field( $_GET['action'] ) &&
+			hash_equals( sanitize_text_field( $_POST['wdpunkey'] ), $access['key'] );
 	}
 
 	/**

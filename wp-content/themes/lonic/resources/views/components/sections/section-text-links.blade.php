@@ -3,9 +3,17 @@
 ">
   <div class="container-fluid">
     <div class="row ">
-      <div class="col-lg-7 medium text-dark ">
+      <div class="col-lg-7 large text-dark ">
 
         <?php the_sub_field('text'); ?>
+
+
+      </div>
+
+      <div>
+        <?php $links = get_sub_field('links'); ?>
+
+        @include('components.helpers.links')
 
 
       </div>

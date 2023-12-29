@@ -7,6 +7,7 @@ use WP_Defender\Component\Timer;
 use WP_Defender\Model\Scan;
 use WP_Defender\Model\Scan_Item;
 use WP_Defender\Traits\IO;
+use WP_Defender\Helper\Analytics\Scan as Scan_Analytics;
 
 class Core_Integrity extends Behavior {
 	use IO;
@@ -44,7 +45,23 @@ class Core_Integrity extends Behavior {
 		$this->log( sprintf( 'current pos %s', $pos ), 'scan.log' );
 		while ( $core_files->valid() ) {
 			if ( ! $timer->check() ) {
-				$this->log( 'break out cause too long', 'scan.log' );
+
+				$reason = 'break out cause too long';
+
+				/**
+				 * @var Scan_Analytics
+				 */
+				$scan_analytics = wd_di()->get( Scan_Analytics::class );
+
+				$scan_analytics->track_feature(
+					$scan_analytics::EVENT_SCAN_FAILED,
+					[
+						$scan_analytics::EVENT_SCAN_FAILED_PROP => $scan_analytics::EVENT_SCAN_FAILED_ERROR,
+						'Error_Reason' => $reason,
+					]
+				);
+
+				$this->log( $reason, 'scan.log' );
 				break;
 			}
 
@@ -164,7 +181,7 @@ class Core_Integrity extends Behavior {
 			$checksums = $checksums[ $wp_version ];
 		}
 		if ( is_array( $checksums ) ) {
-			foreach( $checksums as $key => $checksum ) {
+			foreach ( $checksums as $key => $checksum ) {
 				$formatted_key = defender_replace_line( $key );
 
 				if ( $key !== $formatted_key ) {

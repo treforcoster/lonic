@@ -438,20 +438,17 @@ class Blacklist extends Controller {
 	 *
 	 * @param array $data
 	 *
-	 * @return null|void
+	 * @return void
 	 */
 	public function import_data( $data ) {
 		if ( ! empty( $data ) ) {
 			// Upgrade for old versions.
 			$data = $this->adapt_data( $data );
-		} else {
-			return;
-		}
-
-		$model = $this->model;
-		$model->import( $data );
-		if ( $model->validate() ) {
-			$model->save();
+			$model = $this->model;
+			$model->import( $data );
+			if ( $model->validate() ) {
+				$model->save();
+			}
 		}
 	}
 

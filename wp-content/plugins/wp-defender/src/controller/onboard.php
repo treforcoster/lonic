@@ -66,7 +66,7 @@ class Onboard extends Event {
 		$this->resolve_security_tweaks();
 		$this->preset_scanning();
 
-		$this->maybe_tracking();
+		$this->maybe_tracking( 'Activate & Configure' );
 		// @since 4.2.0 No display the Data Tracking after the Onboarding.
 		\WP_Defender\Controller\Data_Tracking::delete_modal_key();
 
@@ -138,12 +138,35 @@ class Onboard extends Event {
 		$class->security_tweaks_auto_action( $slugs, 'resolve' );
 	}
 
-	private function maybe_tracking() {
+	/**
+	 * @return array
+	 */
+	private function get_modules(): array {
+		$modules = [
+			'Firewall',
+			'Recommendations',
+		];
+		if ( $this->is_pro() ) {
+			$modules[] = 'Malware Scanning';
+			$modules[] = 'Audit Logging';
+			$modules[] = 'Blocklist Monitor';
+		} else {
+			$modules[] = 'WP file scanning';
+		}
+
+		return $modules;
+	}
+
+	/**
+	 * @param string $action
+	 */
+	private function maybe_tracking( string $action ) {
 		$usage_data_state = HTTP::post( 'usage_tracking', '' );
 		// Track it, the default option value is changed to True.
 		if ( 'true' === $usage_data_state ) {
 			wd_di()->get( Model_Main_Setting::class )->toggle_tracking( true );
 			$this->track_opt_toggle( true, 'Wizard' );
+			$this->track_feature( 'def_quick_setup', [ 'module' => $this->get_modules(), 'action' => $action ] );
 		}
 	}
 
@@ -160,7 +183,7 @@ class Onboard extends Event {
 		// @since 4.2.0 No display the Data Tracking after the Onboarding.
 		\WP_Defender\Controller\Data_Tracking::delete_modal_key();
 
-		$this->maybe_tracking();
+		$this->maybe_tracking( 'Start from scratch' );
 		wp_send_json_success();
 	}
 

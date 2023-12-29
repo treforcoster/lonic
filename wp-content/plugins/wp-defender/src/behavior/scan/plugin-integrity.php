@@ -10,9 +10,11 @@ use WP_Defender\Model\Scan_Item;
 use WP_Defender\Model\Setting\Scan as Scan_Settings;
 use WP_Defender\Traits\IO;
 use WP_Defender\Traits\Plugin;
+use WP_Defender\Helper\Analytics\Scan as Scan_Analytics;
 
 class Plugin_Integrity extends Behavior {
-	use IO, Plugin;
+	use IO;
+	use Plugin;
 
 	public const URL_PLUGIN_VCS = 'https://downloads.wordpress.org/plugin-checksums/';
 	public const PLUGIN_SLUGS = 'wd_plugin_slugs_changes';
@@ -85,7 +87,7 @@ class Plugin_Integrity extends Behavior {
 		if ( 404 === (int) wp_remote_retrieve_response_code( $response ) ) {
 			// This plugin is not found on WordPress.org.
 			$this->premium_slugs[] = $slug;
-			return  [];
+			return [];
 		}
 
 		$body = wp_remote_retrieve_body( $response );
@@ -174,7 +176,23 @@ class Plugin_Integrity extends Behavior {
 		$exist_smush_images = $integration_smush->exist_image_table();
 		while ( $plugin_files->valid() ) {
 			if ( ! $timer->check() ) {
-				$this->log( 'break out cause too long', 'scan.log' );
+
+				$reason = 'break out cause too long';
+
+				/**
+				 * @var Scan_Analytics
+				 */
+				$scan_analytics = wd_di()->get( Scan_Analytics::class );
+
+				$scan_analytics->track_feature(
+					$scan_analytics::EVENT_SCAN_FAILED,
+					[
+						$scan_analytics::EVENT_SCAN_FAILED_PROP => $scan_analytics::EVENT_SCAN_FAILED_ERROR,
+						'Error_Reason' => $reason,
+					]
+				);
+
+				$this->log( $reason, 'scan.log' );
 				break;
 			}
 
@@ -190,7 +208,7 @@ class Plugin_Integrity extends Behavior {
 				continue;
 			}
 
-			require_once( ABSPATH . 'wp-admin/includes/image.php' );
+			require_once ABSPATH . 'wp-admin/includes/image.php';
 			if (
 				$exist_smush_images
 				&& file_is_valid_image( $plugin_files->current() )

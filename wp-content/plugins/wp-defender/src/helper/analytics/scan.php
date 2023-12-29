@@ -2,13 +2,57 @@
 
 namespace WP_Defender\Helper\Analytics;
 
-use WP_Defender\Model\Setting\Scan as Scan_Setting;
+use WP_Defender\Event;
+use WP_Defender\Model\Scan_Item;
 use WP_Defender\Behavior\WPMUDEV;
+use WP_Defender\Model\Scan as Scan_Model;
+use WP_Defender\Model\Setting\Scan as Scan_Setting;
 
 /**
  * Gather analytics data required for scan feature.
  */
-class Scan {
+class Scan extends Event {
+
+	const EVENT_SCAN_FAILED = 'def_scan_failed';
+
+	const EVENT_SCAN_FAILED_PROP = 'Failure reason';
+
+	const EVENT_SCAN_FAILED_CANCEL = 'User Cancellation';
+
+	const EVENT_SCAN_FAILED_ERROR = 'Error';
+
+	// Mandatory empty methods.
+	// Start.
+	/**
+	 * @return array
+	 */
+	public function data_frontend(): array {
+		return [];
+	}
+
+	/**
+	 * @return array[]
+	 */
+	public function to_array(): array {
+		return [];
+	}
+
+	public function import_data( $data ) {
+	}
+
+	public function remove_settings() {
+	}
+
+	public function remove_data() {
+	}
+
+	/**
+	 * @return array
+	 */
+	public function export_strings(): array {
+		return [];
+	}
+	// End.
 
 	/**
 	 * Analytics data for scan started event.

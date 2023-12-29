@@ -50,7 +50,7 @@ if ( ! defined( 'WPINC' ) ) {
 			</div>
 		</div>
 		<?php
-			// $cancel_btn_class = $background_processing_enabled ? 'wp-smush-bo-cancel-bulk' : 'wp-smush-cancel-bulk';		  	   				 	    	 	
+			// $cancel_btn_class = $background_processing_enabled ? 'wp-smush-bo-cancel-bulk' : 'wp-smush-cancel-bulk';
 			$cancel_btn_class = 'wp-smush-cancel-btn';
 		?>
 		<button class="sui-progress-close <?php echo esc_attr( $cancel_btn_class ); ?>" type="button">

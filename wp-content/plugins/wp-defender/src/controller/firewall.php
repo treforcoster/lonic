@@ -19,6 +19,7 @@ use WP_Defender\Model\Setting\Login_Lockout as Login_Lockout_Model;
 use WP_Defender\Model\Setting\Notfound_Lockout;
 use WP_Defender\Model\Setting\User_Agent_Lockout;
 use WP_Defender\Model\Setting\Blacklist_Lockout as Blacklist_Model;
+use WP_Defender\Model\Setting\Global_Ip_Lockout;
 use WP_Defender\Behavior\WPMUDEV;
 
 class Firewall extends Event {
@@ -443,7 +444,7 @@ class Firewall extends Event {
 		( new Notfound_Lockout )->delete();
 		( new \WP_Defender\Model\Setting\Firewall() )->delete();
 		( new User_Agent_Lockout )->delete();
-		( new \WP_Defender\Model\Setting\Global_Ip_Lockout() )->delete();
+		( new Global_Ip_Lockout() )->delete();
 	}
 
 	/**
@@ -540,6 +541,9 @@ class Firewall extends Event {
 		// Notfound lockout.
 		$strings[] = Notfound_Lockout::get_module_name() . ' '
 			. Notfound_Lockout::get_module_state( (bool) ( new Notfound_Lockout() )->enabled );
+		// Global IP lockout.
+		$strings[] = Global_Ip_Lockout::get_module_name() .' '
+			. Global_Ip_Lockout::get_module_state( (bool) ( new Global_Ip_Lockout() )->enabled );
 		// UA lockout.
 		$strings[] = User_Agent_Lockout::get_module_name() . ' '
 			. User_Agent_Lockout::get_module_state( (bool) ( new User_Agent_Lockout() )->enabled );
@@ -577,20 +581,26 @@ class Firewall extends Event {
 			$strings[] = Login_Lockout_Model::get_module_name() . ' '
 				. Login_Lockout_Model::get_module_state( (bool) $config['login_protection'] );
 		}
-		// Notfound lockout.
+		// NF lockout.
 		if ( isset( $config['detect_404'] ) ) {
 			$strings[] = Notfound_Lockout::get_module_name() . ' '
 				. Notfound_Lockout::get_module_state( (bool) $config['detect_404'] );
+		}
+		// Global IP blocker.
+		if ( isset( $config['global_ip_list'] ) ) {
+			$strings[] = Global_Ip_Lockout::get_module_name() . ' '
+			. Global_Ip_Lockout::get_module_state( (bool) $config['global_ip_list'] );
 		}
 		// UA lockout.
 		if ( isset( $config['ua_banning_enabled'] ) ) {
 			$strings[] = User_Agent_Lockout::get_module_name() . ' '
 				. User_Agent_Lockout::get_module_state( (bool) $config['ua_banning_enabled'] );
 		}
-		// Notifications and reports.
+		// Notifications.
 		if ( isset( $config['notification'] ) && 'enabled' === $config['notification'] ) {
 			$strings[] = __( 'Email notifications active', 'wpdef' );
 		}
+		// Report.
 		if ( $is_pro && 'enabled' === $config['report'] ) {
 			$strings[] = sprintf(
 			/* translators: %s: Frequency value. */

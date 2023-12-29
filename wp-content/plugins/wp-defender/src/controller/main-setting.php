@@ -481,6 +481,12 @@ class Main_Setting extends Event {
 		}
 
 		$this->service->make_config_active( $key );
+		// Track.
+		$this->track_feature( 'def_config_applied', [
+			// The check is based on the fact that the Default config cannot be deleted.
+			'Config Type' => isset( $config['is_removable'] ) && false === $config['is_removable'] ? 'Default' : 'Custom',
+		] );
+
 		$message = sprintf(
 			/* translators: %s: Config name. */
 			__(

@@ -9,6 +9,7 @@
 @import '~jquery-ui/dist/themes/base/jquery-ui';
 
 @import '~swiper/css/bundle';
+@import 'fonts/fonts';
 @import 'common/typography';
 @import 'common/bg-colors';
 @import 'common/text-colors';
@@ -64,6 +65,8 @@
 @import 'sections/section-password-block';
 @import 'sections/section-area-map';
 
+@import 'sections/section-expanding-carousel';
+
 @import 'sections/footer';
 
 @import 'cards/card-property-archive';
@@ -105,7 +108,7 @@ html {
 }
 
 #main {
-  padding-top: 80px;
+  /*padding-top: 80px;*/
 }
 .container-fluid {
   padding-left: 7.292vw;

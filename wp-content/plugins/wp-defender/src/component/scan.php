@@ -13,6 +13,7 @@ use WP_Defender\Behavior\WPMUDEV;
 use WP_Defender\Component;
 use WP_Defender\Model\Scan_Item;
 use WP_Defender\Model\Scan as Model_Scan;
+use WP_Defender\Helper\Analytics\Scan as Scan_Analytics;
 
 class Scan extends Component {
 
@@ -56,6 +57,10 @@ class Scan extends Component {
 	public function advanced_scan_actions( $model ) {
 		$this->reindex_ignored_issues( $model );
 		$this->clean_up();
+
+		if ( wd_di()->get( \WP_Defender\Admin::class )->is_wp_org_version()  ) {
+			\WP_Defender\Component\Rate::run_counter_of_completed_scans();
+		}
 	}
 
 	/**
@@ -271,6 +276,18 @@ class Scan extends Component {
 		}
 		$this->clean_up();
 		$this->remove_lock();
+
+		/**
+		 * @var Scan_Analytics
+		 */
+		$scan_analytics = wd_di()->get( Scan_Analytics::class );
+
+		$scan_analytics->track_feature(
+			$scan_analytics::EVENT_SCAN_FAILED,
+			[
+				$scan_analytics::EVENT_SCAN_FAILED_PROP => $scan_analytics::EVENT_SCAN_FAILED_CANCEL,
+			]
+		);
 	}
 
 	/**

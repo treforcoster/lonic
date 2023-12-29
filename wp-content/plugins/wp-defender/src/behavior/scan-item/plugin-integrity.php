@@ -103,6 +103,8 @@ class Plugin_Integrity extends Behavior {
 			$scan->remove_issue( $this->owner->id );
 			$this->log( sprintf( '%s is deleted', $path ), 'scan.log' );
 
+			do_action( 'wpdef_fixed_scan_issue', 'plugin_integrity', 'resolve' );
+
 			return [ 'message' => __( 'This item has been resolved.', 'wpdef' ) ];
 		} else {
 			return new WP_Error(
@@ -144,10 +146,14 @@ class Plugin_Integrity extends Behavior {
 			$scan->remove_issue( $this->owner->id );
 			$this->log( sprintf( '%s is deleted', $data['file'] ), 'scan.log' );
 
+			do_action( 'wpdef_fixed_scan_issue', 'plugin_integrity', 'delete' );
+
 			return [ 'message' => __( 'This item has been permanently removed.', 'wpdef' ) ];
 		} elseif ( 'dir' === $data['type'] && $this->delete_dir( $data['file'] ) ) {
 			$scan->remove_issue( $this->owner->id );
 			$this->log( sprintf( '%s is deleted', $data['file'] ), 'scan.log' );
+
+			do_action( 'wpdef_fixed_scan_issue', 'plugin_integrity', 'delete' );
 
 			return [ 'message' => __( 'This item has been permanently removed.', 'wpdef' ) ];
 		}

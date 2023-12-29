@@ -3,14 +3,14 @@
 Plugin Name: Media Library File Size
 Plugin URI: https://ss88.us/plugins/media-library-file-size?utm_source=wordpress&utm_medium=link&utm_campaign=mlfs
 Description: Creates a new column in your Media Library to show you the file (and collective images) size of files!
-Version: 1.5
+Version: 1.5.1
 Author: SS88 LLC
 Author URI: https://ss88.us/?utm_source=wordpress&utm_medium=link&utm_campaign=author_mlfs
 */
 
 class SS88_MediaLibraryFileSize {
 
-    protected $version = 1.5;
+    protected $version = '1.5.1';
 
     public static function init() {
 
@@ -81,6 +81,8 @@ class SS88_MediaLibraryFileSize {
 
     function index() {
 
+		ini_set('memory_limit', '512M');
+
         $returnData = [];
 		$reindexMedia = isset($_POST['reindex']) ? true : false;
 
@@ -120,6 +122,8 @@ class SS88_MediaLibraryFileSize {
 
                     $CompletedCount++;
 
+					if($CompletedCount>999) continue;
+
                     $returnData[] = [
                         'attachment_id' => $attachment->ID,
                         'html' => $this->outputHTML($attachment->ID)
@@ -158,35 +162,13 @@ class SS88_MediaLibraryFileSize {
 
 		global $wpdb;
 
-        $attachments = get_posts([
-            'post_type' => 'attachment',
-            'numberposts' => -1,
-            'meta_query' => [
-                [
-                    'key' => 'SS88MLFS',
-                    'compare' => 'NOT EXISTS'
-                ],
-            ]
-        ]);
-
-        $attachmentsV = get_posts([
-            'post_type' => 'attachment',
-            'numberposts' => -1,
-            'meta_query' => [
-                [
-                    'key' => 'SS88MLFSV',
-                    'compare' => 'NOT EXISTS'
-                ],
-            ]
-        ]);
-
 		$TotalMLSize = $wpdb->get_var("SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = 'SS88MLFS'");
 		$TotalMLSizeV = $wpdb->get_var("SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = 'SS88MLFSV'");
 		$SpanTitle = ($TotalMLSizeV) ? size_format($TotalMLSize, 2) . ' + ' . size_format($TotalMLSizeV, 2) . '<br>of variants' : '';
 
 		$ReturnData = ['TotalMLSize' => size_format($TotalMLSize + $TotalMLSizeV), 'TotalMLSize_Title' => $SpanTitle];
 
-		if($attachments || $attachmentsV) wp_send_json_success($ReturnData);
+		if($TotalMLSize || $TotalMLSizeV) wp_send_json_success($ReturnData);
 		else return wp_send_json_error($ReturnData);
 
 	}

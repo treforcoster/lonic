@@ -129,6 +129,8 @@ class Two_Factor extends Event {
 					add_action( 'template_redirect', [ $this, 'save_2fa_details' ] );
 				}
 			}
+			// Fires when 2FA methods are enabled.
+			add_action( 'wd_2fa_enabled_provider_slugs', [ $this, 'enable_provider_slugs' ] );
 		}
 	}
 
@@ -343,6 +345,7 @@ class Two_Factor extends Event {
 
 	/**
 	 * Render otp form. Required conditions for the current user:
+	 * - is not logged in,
 	 * - user data is not empty,
 	 * - password matches the user,
 	 * - user role is checked on 2FA settings,
@@ -354,7 +357,8 @@ class Two_Factor extends Event {
 	 */
 	public function maybe_show_otp_form( $user, string $username, string $password ) {
 		if (
-			! empty( $user ) && ! empty( $password ) && $user instanceof WP_User
+			! is_user_logged_in()
+			&& ! empty( $user ) && ! empty( $password ) && $user instanceof WP_User
 			&& wp_check_password( $password, $user->data->user_pass, $user->ID )
 			&& $this->service->is_auth_enable_for( $user, $this->model->user_roles )
 			&& ! empty( $this->service->get_available_providers_for_user( $user ) )
@@ -565,7 +569,7 @@ class Two_Factor extends Event {
 	 *
 	 * @param Request $request
 	 *
-	 * @return Response
+	 * @return Response|void
 	 * @defender_route
 	 * @is_public
 	 */
@@ -709,6 +713,11 @@ class Two_Factor extends Event {
 				}
 			}
 			update_user_meta( $user_id, Two_Fa_Component::ENABLED_PROVIDERS_USER_KEY, $enabled_providers );
+			/**
+			 * Fires when 2fa providers are enabled.
+			 * @since 4.3.0
+			 */
+			do_action( 'wd_2fa_enabled_provider_slugs', $enabled_providers );
 			// Default provider must be enabled.
 			$default_provider = $_POST[ Two_Fa_Component::DEFAULT_PROVIDER_USER_KEY ] ?? '';
 			// The case#1 when all 2fa providers were deactivated before.
@@ -1344,5 +1353,25 @@ class Two_Factor extends Event {
 
 		wp_safe_redirect( wc_get_endpoint_url( $this->slug, '', wc_get_page_permalink( 'myaccount' ) ) );
 		exit;
+	}
+
+	/**
+	 * @param array $provider_slugs
+	 * @since 4.3.0
+	 */
+	public function enable_provider_slugs( array $provider_slugs ) {
+		// Track conditions.
+		if ( ! empty( $provider_slugs) ) {
+			$methods = [];
+			foreach ( $this->service->get_providers() as $slug => $object ) {
+				if ( in_array( $slug, $provider_slugs, true ) ) {
+					$methods[] = $object->get_label();
+				}
+			}
+			// Run track.
+			$this->track_feature( 'def_2fa_method_activated', [
+				'Method name' => $methods,
+			] );
+		}
 	}
 }

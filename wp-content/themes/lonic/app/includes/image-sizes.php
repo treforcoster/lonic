@@ -2,7 +2,7 @@
 
 add_action('after_setup_theme', function () {
     if (function_exists('get_field')) {
-        add_image_size('image-landscape', 1080, 810, true);
+        add_image_size('image-landscape', 1770, 1125, true);
         add_image_size('image-portrait', 670, 765, true);
         add_image_size('featured-image', 1340, 890, true);
         add_image_size('property-info', 1080, 1080, true);

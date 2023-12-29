@@ -658,7 +658,7 @@ class HUB extends Event {
 	public function get_quarantined_files(): void {
 		if ( ! class_exists( 'WP_Defender\Component\Quarantine' ) ) {
 			$result = [
-				'message' => quarantine_pro_only(),
+				'message' => defender_quarantine_pro_only(),
 				'success' => false,
 			];
 
@@ -683,7 +683,7 @@ class HUB extends Event {
 	public function restore_quarantined_file( object $params ): void {
 		if ( ! class_exists( 'WP_Defender\Component\Quarantine' ) ) {
 			$result = [
-				'message' => quarantine_pro_only(),
+				'message' => defender_quarantine_pro_only(),
 				'success' => false,
 			];
 

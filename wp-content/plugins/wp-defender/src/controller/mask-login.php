@@ -64,7 +64,7 @@ class Mask_Login extends Event {
 			$is_tml = $auth_component->is_tml();
 			if ( ! $is_jetpack_sso && ! $is_tml ) {
 				// Never catch if from cli.
-				if ( 'cli' !== php_sapi_name() ) {
+				if ( ! defender_is_wp_cli() ) {
 					add_action( 'init', [ &$this, 'before_mask_login_handle' ], 99 );
 				}
 				// Monitor wp-admin, wp-login.php.
@@ -235,9 +235,8 @@ class Mask_Login extends Event {
 	public function protect_unauthorized_login_redirect( string $location ) {
 		// Make sure that wp-login.php is never used in site URLs or redirects.
 		if ( ! $this->service->is_login_url() ) {
-			$redirect_path = parse_url( $location, PHP_URL_PATH );
-			// Sometimes $redirect_path may not be a string.
-			if ( is_string( $redirect_path ) && trim( $redirect_path, '/' ) === $this->get_model()->mask_url ) {
+			$redirect_path = trim( (string) parse_url( $location, PHP_URL_PATH ), '/' );
+			if ( $redirect_path === $this->get_model()->mask_url ) {
 				$this->maybe_lock();
 			}
 		}
@@ -250,10 +249,15 @@ class Mask_Login extends Event {
 	 * @return null|void
 	 */
 	public function handle_login_request() {
-		// If the current IP is BLC whitelisted, it does not need to be processed.
+		// If the IP is BLC whitelisted, then skip processing URLs other than the Masked Login URL.
 		if ( wd_di()->get( Blacklist_Lockout::class )->is_blc_ip_whitelisted() ) {
+			if ( $this->service->is_land_on_masked_url( $this->model->mask_url ) ) {
+				$this->show_login_page();
+			}
+
 			return;
 		}
+
 		// Doesn't need to handle the login request for bots and crawlers.
 		if ( $this->service->is_bot_request() ) {
 			return;
@@ -405,10 +409,6 @@ class Mask_Login extends Event {
 	 * @return string|void
 	 */
 	public function alter_url( string $current_url, string $source ): string {
-		// If the current IP is BLC whitelisted, it does not need to be processed.
-		if ( wd_di()->get( Blacklist_Lockout::class )->is_blc_ip_whitelisted() ) {
-			return $current_url;
-		}
 		// Doesn't need to alter the URL for bots.
 		// We will not unveil the masked login URL for them, instead show default login URL.
 		if ( $this->service->is_bot_request() ) {
@@ -420,7 +420,11 @@ class Mask_Login extends Event {
 			return $current_url;
 		}
 
-		if ( 'wp_redirect' === $source && ! is_user_logged_in() ) {
+		if (
+			'wp_redirect' === $source &&
+			! is_user_logged_in() &&
+			! wd_di()->get( Blacklist_Lockout::class )->is_blc_ip_whitelisted()
+		) {
 			return $this->protect_unauthorized_login_redirect( $current_url );
 		}
 

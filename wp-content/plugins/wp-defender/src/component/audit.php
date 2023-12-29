@@ -289,7 +289,7 @@ class Audit extends Component {
 	 * Never catch if it runs from WP CLI or CRON.
 	 */
 	public function enqueue_event_listener() {
-		if ( ! wp_doing_cron() && 'cli' !== php_sapi_name() ) {
+		if ( ! wp_doing_cron() && ! defender_is_wp_cli() ) {
 			$events_class = [
 				new Component\Audit\Comment_Audit(),
 				new Component\Audit\Core_Audit(),

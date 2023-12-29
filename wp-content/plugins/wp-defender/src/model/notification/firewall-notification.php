@@ -117,7 +117,7 @@ class Firewall_Notification extends \WP_Defender\Model\Notification {
 	private function send_to_user( string $email, string $name, Lockout_Log $model, string $template, object $service ): void {
 		// Check if this meet the threshold.
 		if ( true === $this->configs['limit'] ) {
-			$count = Email_Track::count( $this->slug, $email, strtotime( '-' . $this->configs['cool_off'] . ' hours' ), time() );
+			$count = Email_Track::count( $this->slug, $email, strtotime( '-' . $this->configs['cool_off'] . ' hours' ), time() );		 			 		 	  		 			  
 			if ( $count >= $this->configs['threshold'] ) {
 				// No send.
 				return;

@@ -17,7 +17,7 @@ abstract class Notification extends Setting {
 	use User, Formats;
 
 	public const STATUS_DISABLED = 'disabled', STATUS_ACTIVE = 'enabled';
-	public const USER_SUBSCRIBED = 'subscribed', USER_SUBSCRIBE_WAITING = 'waiting', USER_SUBSCRIBE_CANCELED = 'cancelled', USER_SUBSCRIBE_NA = 'na';		 			 		 	  		 			  
+	public const USER_SUBSCRIBED = 'subscribed', USER_SUBSCRIBE_WAITING = 'waiting', USER_SUBSCRIBE_CANCELED = 'cancelled', USER_SUBSCRIBE_NA = 'na';
 
 	/**
 	 * Notification title.

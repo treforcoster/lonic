@@ -10,7 +10,13 @@
 
 .h-mobile-fullscreen {
   @include media-breakpoint-down(lg) {
-    height: 100vh;
+    height: calc(100vh - var(--mobile-banner-height));
+
+    .inner {
+      position: relative;
+      padding-top: var(--mobile-banner-height);
+      height: 100%;
+    }
   }
 }
 
@@ -26,9 +32,10 @@
 
 .h-desktop-fullscreen {
   @include media-breakpoint-up(lg) {
-    height: 100vh;
+    height: calc(100vh - var(--banner-height));
     .inner {
       position: relative;
+      padding-top: var(--banner-height);
       height: 100%;
     }
   }

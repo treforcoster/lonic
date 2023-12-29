@@ -4,6 +4,7 @@ namespace WP_Defender\Controller;
 
 use Calotes\Component\Request;
 use Calotes\Component\Response;
+use WP_Defender\Behavior\WPMUDEV;
 use WP_Defender\Component\Config\Config_Hub_Helper;
 use WP_Defender\Event;
 use WP_Defender\Model\Notification\Malware_Report;
@@ -13,6 +14,8 @@ use WP_Defender\Traits\Formats;
 use WP_Defender\Controller\Quarantine;
 use WP_Defender\Component\Quarantine as Quarantine_Component;
 use WP_Defender\Helper\Analytics\Scan as Scan_Analytics;
+use WP_Defender\Model\Scan_Item;
+use WP_Defender\Component\Rate;
 
 class Scan extends Event {
 	use Formats;
@@ -208,6 +211,9 @@ class Scan extends Event {
 	 * @defender_redirect
 	 */
 	public function cancel(): Response {
+		/**
+		 * @var \WP_Defender\Component\Scan
+		 */
 		$component = wd_di()->get( \WP_Defender\Component\Scan::class );
 		$component->cancel_a_scan();
 		$last = Model_Scan::get_last();
@@ -221,6 +227,63 @@ class Scan extends Event {
 				'scan' => $last,
 			]
 		);
+	}
+
+	/**
+	 * Track scan item action analytics.
+	 *
+	 * @param Scan_Item $scan_item Individual item of scan issues list.
+	 * @param string $intention What action is going to be executed.
+	 */
+	private function item_action_analytics( Scan_Item $scan_item, string $intention ) {
+		$allowed_intentions = [
+			'resolve',
+			'ignore',
+			'delete',
+			'unignore',
+			'quarantine',
+		];
+
+		$event_name = 'def_threat_resolved';
+
+		if ( in_array( $intention, $allowed_intentions ) ) {
+			$intention_desc = [
+				'resolve' => 'Safe Repair',
+				'ignore' => 'Ignore',
+				'delete' => 'Delete',
+				'unignore' => 'Unignore',
+				'quarantine' => 'Safe Repair & Quarantine',
+			];
+
+			$resolution_method = $intention_desc[ $intention ];
+			$threat_type = '';
+
+			if ( Scan_Item::TYPE_INTEGRITY === $scan_item->type ) {
+				$threat_type = 'Unknown file in WordPress core';
+			} elseif ( Scan_Item::TYPE_PLUGIN_CHECK === $scan_item->type ) {
+				$raw_data = $scan_item->raw_data;
+
+				if ( isset( $raw_data['type'] ) && 'modified' === $raw_data['type'] ) {
+					$threat_type = 'plugin file modified';
+				}
+			} elseif ( Scan_Item::TYPE_VULNERABILITY === $scan_item->type ) {
+				$threat_type = 'Vulnerability';
+
+				if ( 'resolve' === $intention ) {
+					$resolution_method = 'Update';
+				}
+			} elseif ( Scan_Item::TYPE_SUSPICIOUS === $scan_item->type ) {
+				$threat_type = 'Suspicious function';
+			}
+
+			$this->track_feature(
+				$event_name,
+				[
+					'Resolution Method' => $resolution_method,
+					'Threat type' => $threat_type,
+				]
+			);
+		}
 	}
 
 	/**
@@ -278,6 +341,8 @@ class Scan extends Event {
 				} else {
 					$result = $item->$intention();
 				}
+
+				$this->item_action_analytics( $item, $intention );
 
 				if ( is_wp_error( $result ) ) {
 					return new Response(
@@ -554,6 +619,42 @@ class Scan extends Event {
 	}
 
 	/**
+	 * @param Request $request
+	 *
+	 * @defender_route
+	 * @return Response
+	 */
+	public function handle_notice( Request $request ): Response {
+		update_site_option( Rate::SLUG_FOR_BUTTON_RATE, true );
+
+		return new Response( true, [] );
+	}
+
+	/**
+	 * @param Request $request
+	 *
+	 * @defender_route
+	 * @return Response
+	 */
+	public function postpone_notice( Request $request ): Response {
+		Rate::reset_counters();
+
+		return new Response( true, [] );
+	}
+
+	/**
+	 * @param Request $request
+	 *
+	 * @defender_route
+	 * @return Response
+	 */
+	public function refuse_notice( Request $request ): Response {
+		update_site_option( Rate::SLUG_FOR_BUTTON_THANKS, true );
+
+		return new Response( true, [] );
+	}
+
+	/**
 	 * Render main page.
 	 *
 	 * @return void
@@ -691,8 +792,16 @@ class Scan extends Event {
 				$settings->frequency
 			);
 		}
-		$misc = ( new \WP_Defender\Behavior\WPMUDEV() )->is_pro()
-			? [
+		// Prepare additional data.
+		if ( wd_di()->get( \WP_Defender\Admin::class )->is_wp_org_version() ) {
+			$scan_array = Rate::what_scan_notice_display();
+			$misc = [
+				'rating_is_displayed' => ! Rate::was_rate_request() && ! empty( $scan_array['text'] ),
+				'rating_text' => $scan_array['text'],
+				'rating_type' => $scan_array['slug'],
+			];
+		} else {
+			$misc = [
 				'days_of_week' => $this->get_days_of_week(),
 				'times_of_day' => $this->get_times(),
 				'timezone_text' => sprintf(
@@ -703,8 +812,12 @@ class Scan extends Event {
 				),
 				'show_notice' => ! $settings->scheduled_scanning
 								&& isset( $_GET['enable'] ) && 'scheduled_scanning' === $_GET['enable'],
-			]
-			: [];
+				'rating_is_displayed' => false,
+				'rating_text' => '',
+				'rating_type' => '',
+			];
+		}
+
 		// Todo: add logic for deactivated scan settings. Maybe display some notice.
 		$data = [
 			'scan' => $scan,
@@ -735,9 +848,18 @@ class Scan extends Event {
 	 */
 	public function import_data( $data ): void {
 		$model = $this->model;
-		$model->import( $data );
-		if ( $model->validate() ) {
+		if ( empty( $data ) ) {
+			$model->scheduled_scanning = false;
+			$model->frequency = 'weekly';
+			$model->day_n = '1';
+			$model->day = 'sunday';
+			$model->time = '4:00';
 			$model->save();
+		} else {
+			$model->import( $data );
+			if ( $model->validate() ) {
+				$model->save();
+			}
 		}
 	}
 
@@ -764,7 +886,7 @@ class Scan extends Event {
 	 */
 	public function export_strings(): array {
 		$strings = [];
-		$is_pro = ( new \WP_Defender\Behavior\WPMUDEV() )->is_pro();
+		$is_pro = ( new WPMUDEV() )->is_pro();
 		if ( $this->is_any_active( $is_pro ) ) {
 			$strings[] = __( 'Active', 'wpdef' );
 		} else {

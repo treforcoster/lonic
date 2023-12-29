@@ -6,12 +6,12 @@ use Calotes\Component\Request;
 use Calotes\Component\Response;
 use Calotes\Helper\HTTP;
 use WP_Defender\Component\Config\Config_Hub_Helper;
-use WP_Defender\Controller;
+use WP_Defender\Event;
 use WP_Defender\Traits\Formats;
 use WP_Defender\Traits\User;
 use WP_Defender\Model\Notification as Model_Notification;
 
-class Notification extends Controller {
+class Notification extends Event {
 	use User, Formats;
 
 	public $slug = 'wdf-notification';
@@ -234,6 +234,17 @@ class Notification extends Controller {
 			$model->save();
 			$this->service->send_subscription_confirm_email( $model );
 			Config_Hub_Helper::set_clear_active_flag();
+			// Track.
+			if ( $this->is_tracking_active() ) {
+				$track_data = [ 'Notification type' => $raw_data['title'] ];
+				// For reports. Separated check for 'Security Recommendations - Notification'.
+				if ( 'report' === $raw_data['type'] ) {
+					$track_data['Notification schedule'] = ucfirst( $data['frequency'] );
+				} elseif ( 'tweak-reminder' === $raw_data['slug'] ) {
+					$track_data['Notification schedule'] = ucfirst( $data['configs']['reminder'] );
+				}
+				$this->track_feature( 'def_notification_activated', $track_data );
+			}
 
 			return new Response(
 				true,
@@ -330,6 +341,16 @@ class Notification extends Controller {
 				}
 				$model->save();
 				$this->service->send_subscription_confirm_email( $model );
+				// Track.
+				if ( $this->is_tracking_active() ) {
+					$track_data = [
+						'Notification type' => $model->title,
+						'Notification schedule' => 'tweak-reminder' === $slug
+							? ucfirst( $data['configs']['reminder'] )
+							: ucfirst( $data['frequency'] ),
+					];
+					$this->track_feature( 'def_notification_activated', $track_data );
+				}
 			}
 		}
 	}
@@ -367,6 +388,10 @@ class Notification extends Controller {
 				}
 				$model->save();
 				$this->service->send_subscription_confirm_email( $model );
+				// Track.
+				if ( $this->is_tracking_active() ) {
+					$this->track_feature( 'def_notification_activated', [ 'Notification type' => $model->title ] );
+				}
 			}
 		}
 	}

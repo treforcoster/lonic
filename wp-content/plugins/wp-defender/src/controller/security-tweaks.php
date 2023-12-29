@@ -4,6 +4,7 @@ namespace WP_Defender\Controller;
 
 use Calotes\Component\Request;
 use Calotes\Component\Response;
+use WP_Defender\Model\Setting\Security_Tweaks as Model_Security_Tweaks;
 use WP_Defender\Component\Config\Config_Hub_Helper;
 use WP_Defender\Component\Security_Tweaks\Servers\Server;
 use Calotes\Helper\Array_Cache;
@@ -19,13 +20,14 @@ use WP_Defender\Component\Security_Tweaks\Disable_Trackback;
 use WP_Defender\Component\Security_Tweaks\Prevent_Enum_Users;
 use WP_Defender\Component\Security_Tweaks\Disable_File_Editor;
 use WP_Defender\Component\Security_Tweaks\Protect_Information;
-use WP_Defender\Controller;
+use WP_Defender\Event;
+use WP_Defender\Component\Rate;
 
-class Security_Tweaks extends Controller {
+class Security_Tweaks extends Event {
 	public $slug = 'wdf-hardener';
 
 	/**
-	 * @var \WP_Defender\Model\Setting\Security_Tweaks
+	 * @var Model_Security_Tweaks
 	 */
 	protected $model;
 
@@ -67,7 +69,7 @@ class Security_Tweaks extends Controller {
 			],
 			$this->parent_slug
 		);
-		$this->model = wd_di()->get( \WP_Defender\Model\Setting\Security_Tweaks::class );
+		$this->model = wd_di()->get( Model_Security_Tweaks::class );
 		$this->register_routes();
 
 		// Init all the tweaks, should happen one time.
@@ -151,6 +153,9 @@ class Security_Tweaks extends Controller {
 		if ( true === $ret ) {
 			Config_Hub_Helper::set_clear_active_flag();
 			$this->model->mark( self::STATUS_RESOLVE, $slug );
+			// Track.
+			$this->track_tweak( $tweak->to_array()['title'],'Actioned' );
+			// Response.
 			$this->ajax_response( __( 'Security recommendation successfully resolved.', 'wpdef' ) );
 		}
 		if ( is_wp_error( $ret ) ) {
@@ -211,6 +216,9 @@ class Security_Tweaks extends Controller {
 		if ( true === $ret ) {
 			Config_Hub_Helper::set_clear_active_flag();
 			$this->model->mark( self::STATUS_ISSUES, $slug );
+			// Track.
+			$this->track_tweak( $tweak->to_array()['title'],'Reverted' );
+			// Response.
 			$this->ajax_response( __( 'Security recommendation successfully reverted.', 'wpdef' ) );
 		}
 
@@ -224,7 +232,7 @@ class Security_Tweaks extends Controller {
 	 * Ignore.
 	 * @param Request $request
 	 *
-	 * @return Response
+	 * @return Response|void
 	 * @defender_route
 	 */
 	public function ignore( Request $request ) {
@@ -245,6 +253,8 @@ class Security_Tweaks extends Controller {
 			);
 		}
 		$this->model->mark( self::STATUS_IGNORE, $slug );
+		// Track.
+		$this->track_tweak( $tweak->to_array()['title'],'Ignored' );
 
 		$this->security_key->cron_unschedule();
 
@@ -253,8 +263,9 @@ class Security_Tweaks extends Controller {
 
 	/**
 	 * Restore.
-	 *
 	 * @param Request $request
+	 *
+	 * @return Response|void
 	 * @defender_route
 	 */
 	public function restore( Request $request ) {
@@ -275,6 +286,8 @@ class Security_Tweaks extends Controller {
 			);
 		}
 		$this->model->mark( self::STATUS_RESTORE, $slug );
+		// Track.
+		$this->track_tweak( $tweak->to_array()['title'],'Restored' );
 
 		if ( $this->security_key->get_is_autogenerate_keys() ) {
 			// Mandatory: cron_schedule method bypass scheduling if already a schedule for this job.
@@ -393,7 +406,7 @@ class Security_Tweaks extends Controller {
 	private function ajax_response( $message, $is_success = true, $interval = false ): Response {
 		global $wp_version;
 
-		$settings = new \WP_Defender\Model\Setting\Security_Tweaks();
+		$settings = new Model_Security_Tweaks();
 		$data = [
 			'message' => $message,
 			'summary' => [
@@ -443,11 +456,34 @@ class Security_Tweaks extends Controller {
 			$not_allowed_bulk[] = 'protect-information';
 			$not_allowed_bulk[] = 'prevent-php-executed';
 		}
+
+		$tweak_arr = $this->model->get_tweak_types();
+		$total_tweaks = $tweak_arr['count_fixed'] + $tweak_arr['count_ignored'] + $tweak_arr['count_issues'];
+
+		// Prepare additional data.
+		if ( wd_di()->get( \WP_Defender\Admin::class )->is_wp_org_version() ) {
+			$misc = [
+				'rating_is_displayed' => ! Rate::was_rate_request() && $tweak_arr['count_fixed'] === $total_tweaks,
+				'rating_text' => sprintf(
+					/* translators: %d - Total number. */
+					__( 'You\'ve resolved all %d security recommendations - that\'s impressive! We are happy to be a part of helping you secure your site, and we would appreciate it if you dropped us a rating on wp.org to help us spread the word and boost our motivation.', 'wpdef' ),
+					$total_tweaks
+				),
+				'rating_type' => 'tweak',
+			];
+		} else {
+			$misc = [
+				'rating_is_displayed' => false,
+				'rating_text' => '',
+				'rating_type' => '',
+			];
+		}
+
 		$data = [
 			'summary' => [
-				'fixed_count' => count( $this->model->fixed ),
-				'ignore_count' => count( $this->model->ignore ),
-				'issues_count' => count( $this->model->issues ),
+				'fixed_count' => $tweak_arr['count_fixed'],
+				'ignore_count' => $tweak_arr['count_ignored'],
+				'issues_count' => $tweak_arr['count_issues'],
 				'php_version' => PHP_VERSION,
 				'wp_version' => $wp_version,
 			],
@@ -459,6 +495,7 @@ class Security_Tweaks extends Controller {
 			'is_autogenerate_keys' => $this->security_key->get_is_autogenerate_keys(),
 			'reminder_frequencies' => $this->security_key->reminder_frequencies(),
 			'enabled_user_enums' => $this->prevent_enum_users->get_enabled_user_enums(),
+			'misc' => $misc,
 		];
 
 		return array_merge( $data, $this->dump_routes_and_nonces() );
@@ -489,7 +526,7 @@ class Security_Tweaks extends Controller {
 		$slugs = $data['slugs'] ?? [];
 		$intention = $data['intention'] ?? false;
 		// Get processed and unprocessed tweaks.
-		[$processed, $unprocessed] = $this->security_tweaks_auto_action( $slugs, $intention );
+		[ $processed, $unprocessed ] = $this->security_tweaks_auto_action( $slugs, $intention );
 
 		$message = sprintf(
 		/* translators: 1: Either ignored or resolved, 2: Count security recommendations */
@@ -530,6 +567,8 @@ class Security_Tweaks extends Controller {
 			$tweak = $this->get_tweak( $slug );
 			if ( 'ignore' === $intention ) {
 				$this->model->mark( self::STATUS_IGNORE, $slug );
+				// Track.
+				$this->track_tweak( $tweak->to_array()['title'],'Ignored' );
 			} elseif ( 'resolve' === $intention ) {
 				$wont_do = [
 					'replace-admin-username',
@@ -563,6 +602,8 @@ class Security_Tweaks extends Controller {
 					);
 				}
 				$this->model->mark( self::STATUS_RESOLVE, $slug );
+				// Track.
+				$this->track_tweak( $tweak->to_array()['title'],'Actioned' );
 			}
 			$processed ++;
 		}
@@ -577,7 +618,7 @@ class Security_Tweaks extends Controller {
 	 */
 	public function refresh_tweaks_status() {
 		$tweaks = $this->init_tweaks();
-		$settings = new \WP_Defender\Model\Setting\Security_Tweaks();
+		$settings = new Model_Security_Tweaks();
 		$fixed = [];
 		$issues = [];
 
@@ -614,12 +655,12 @@ class Security_Tweaks extends Controller {
 	/**
 	 * Instance all the tweaks, happen one time in init runtime.
 	 *
-	 * @param null   $type
+	 * @param string $type
 	 * @param string $format Object for internal use, array for frontend use.
 	 *
 	 * @return array
 	 */
-	public function init_tweaks( $type = null, $format = 'object' ): array {
+	public function init_tweaks( $type = '', $format = 'object' ): array {
 		$classes = [
 			Disable_XML_RPC::class,
 			WP_Version::class,
@@ -632,7 +673,7 @@ class Security_Tweaks extends Controller {
 			Prevent_Enum_Users::class,
 			Disable_File_Editor::class,
 		];
-		if ( 'cli' !== php_sapi_name() ) {
+		if ( ! defender_is_wp_cli() ) {
 			// We don't load this in cli, as clearly no server is running.
 			$classes = array_merge(
 				$classes,
@@ -653,10 +694,10 @@ class Security_Tweaks extends Controller {
 			Array_Cache::set( 'tweaks', $tweaks, 'tweaks' );
 		}
 		$tmp = [];
-		if ( is_null( $type ) ) {
+		if ( empty( $type ) ) {
 			$tmp = $tweaks;
 		} else {
-			$settings = new \WP_Defender\Model\Setting\Security_Tweaks();
+			$settings = new Model_Security_Tweaks();
 			$compare = $settings->$type;
 			foreach ( $compare as $slug ) {
 				if ( isset( $tweaks[ $slug ] ) ) {
@@ -695,7 +736,7 @@ class Security_Tweaks extends Controller {
 	 */
 	public function to_array(): array {
 		$this->refresh_tweaks_status();
-		$settings = new \WP_Defender\Model\Setting\Security_Tweaks();
+		$settings = new Model_Security_Tweaks();
 
 		return [
 			'rules' => array_slice( $this->init_tweaks( self::STATUS_ISSUES, 'array' ), 0, 5 ),
@@ -720,7 +761,7 @@ class Security_Tweaks extends Controller {
 			}
 		}
 
-		( new \WP_Defender\Model\Setting\Security_Tweaks() )->delete();
+		( new Model_Security_Tweaks() )->delete();
 
 		delete_site_transient( 'defender_current_server' );
 		delete_site_transient( 'defender_apache_version' );
@@ -749,6 +790,9 @@ class Security_Tweaks extends Controller {
 				'php-version',
 				'protect-information',
 			];
+			if ( 'hub' === $request_reason ) {
+				$manual_done[] = 'security-key';
+			}
 
 			$diff_keys = array_diff( $data['fixed'], $this->model->fixed, $manual_done );
 			if ( ! empty( $diff_keys ) ) {
@@ -776,7 +820,7 @@ class Security_Tweaks extends Controller {
 
 					$this->model->mark( self::STATUS_RESOLVE, $slug );
 				}
-				if ( in_array( ( new Security_Key )->slug, $diff_keys, true ) ) {
+				if ( in_array( 'security-key', $diff_keys, true ) ) {
 					$need_reauth = true;
 				}
 			}
@@ -838,7 +882,7 @@ class Security_Tweaks extends Controller {
 			$this->security_key->update_all_option( $data['security_key'] );
 		}
 
-		$model = new \WP_Defender\Model\Setting\Security_Tweaks();
+		$model = new Model_Security_Tweaks();
 
 		$model->import( $data );
 		if ( $model->validate() ) {
@@ -846,9 +890,12 @@ class Security_Tweaks extends Controller {
 		}
 	}
 
+	/**
+	 * @return array
+	 */
 	public function export_strings(): array {
 		$this->refresh_tweaks_status();
-		$settings = new \WP_Defender\Model\Setting\Security_Tweaks();
+		$settings = new Model_Security_Tweaks();
 		$strings = [];
 		$count_all = count( $settings->fixed ) + count( $settings->issues ) + count( $settings->ignore );
 
@@ -964,5 +1011,49 @@ class Security_Tweaks extends Controller {
 			$is_success,
 			[ 'message' => $message ]
 		);
+	}
+
+
+	/**
+	 * @param Request $request
+	 *
+	 * @defender_route
+	 * @return Response
+	 */
+	public function handle_notice( Request $request ): Response {
+		update_site_option( Rate::SLUG_FOR_BUTTON_RATE, true );
+
+		return new Response( true, [] );
+	}
+
+	/**
+	 * Attention: Tweaks rating notice doesn't have postpone_notice route.
+	 * @param Request $request
+	 *
+	 * @defender_route
+	 * @return Response
+	 */
+	public function refuse_notice( Request $request ): Response {
+		update_site_option( Rate::SLUG_FOR_BUTTON_THANKS, true );
+
+		return new Response( true, [] );
+	}
+
+	/**
+	 * Track.
+	 *
+	 * @param string $title
+	 * @param string $status
+	 */
+	private function track_tweak( string $title, string $status ) {
+		if ( ! defender_is_wp_cli() ) {
+			$this->track_feature(
+				'def_recommendation_applied',
+				[
+					'Recommendation Name' => $title,
+					'Status' => $status,
+				]
+			);
+		}
 	}
 }

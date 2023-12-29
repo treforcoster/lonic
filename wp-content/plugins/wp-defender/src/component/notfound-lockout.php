@@ -255,7 +255,16 @@ class Notfound_Lockout extends Component {
 			do_action( 'wd_blacklist_this_ip', $model->ip );
 		}
 
-		do_action( 'wd_404_lockout', $model, $scenario );
+		/**
+		 * Action hook triggered when a user is locked due to a 404 lockout.
+		 *
+		 * @since 4.3.0 The `$uri` parameter was added.
+		 *
+		 * @param Lockout_Ip $model The Lockout_Ip object representing the IP address being locked.
+		 * @param string $scenario The scenario of the IP lockout ("normal" or "blacklist").
+		 * @param string $uri The URI associated with the 404 lockout.
+		 */
+		do_action( 'wd_404_lockout', $model, $scenario, $uri );
 	}
 
 	/**

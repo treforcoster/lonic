@@ -3,10 +3,10 @@
  * Plugin Name: ActiveCampaign Postmark (Official)
  * Plugin URI: https://postmarkapp.com/
  * Description: Overrides wp_mail to send emails through ActiveCampaign Postmark
- * Version: 1.19.1
+ * Version: 1.20.0
  * Requires PHP: 7.0
  * Requires at least: 5.3
- * Tested up to: 6.2
+ * Tested up to: 6.4
  * Author: Andrew Yates & Matt Gibbs
  */
 
@@ -41,7 +41,7 @@ class Postmark_Mail {
 	 *
 	 * @var string
 	 */
-	public static $POSTMARK_VERSION = '1.19.1';
+	public static $POSTMARK_VERSION = '1.20.0';
 
 	/**
 	 * ActiveCampaign Postmark Plugin Directory.

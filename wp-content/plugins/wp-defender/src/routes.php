@@ -30,6 +30,8 @@ function defender_init_routes() {
 			'update_security_reminder' => 'update_security_reminder',
 			'update_autogenerate_flag' => 'update_autogenerate_flag',
 			'update_enabled_user_enums' => 'update_enabled_user_enums',
+			'handle_notice' => 'handle_notice',
+			'refuse_notice' => 'refuse_notice',
 		],
 		'ip_lockout' => [
 			'update_settings' => 'save_settings',
@@ -55,6 +57,9 @@ function defender_init_routes() {
 			'item_action' => 'item_action',
 			'update_settings' => 'save_settings',
 			'bulk_action' => 'bulk_action',
+			'handle_notice' => 'handle_notice',
+			'postpone_notice' => 'postpone_notice',
+			'refuse_notice' => 'refuse_notice',
 		],
 		'audit' => [
 			'update_settings' => 'save_settings',

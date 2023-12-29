@@ -3,7 +3,6 @@
 namespace WP_Defender;
 
 use Calotes\Helper\HTTP;
-use Calotes\Model\Setting;
 use WP_Defender\Traits\Permission;
 
 abstract class Controller extends \Calotes\Base\Controller {

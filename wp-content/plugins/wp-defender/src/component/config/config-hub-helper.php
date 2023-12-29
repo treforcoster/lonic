@@ -323,11 +323,11 @@ class Config_Hub_Helper {
 		}
 
 		// If page is not config.
-		if ( ! ( 'wdf-setting' === $_GET['page'] && 'configs' === $_GET['view'] ) ) {
+		if ( ! ( 'wdf-setting' === defender_get_current_page() && 'configs' === sanitize_text_field( $_GET['view'] ) ) ) {
 			return;
 		}
 
-		if ( 'clear' === $_GET['transient'] ) {
+		if ( 'clear' === sanitize_text_field( $_GET['transient'] ) ) {
 			delete_site_transient( self::CONFIGS_TRANSIENT_KEY );
 		}
 	}
@@ -498,12 +498,12 @@ class Config_Hub_Helper {
 		foreach ( $configs as $key => $config ) {
 			$need_update = false;
 			// Remove previous active status.
-			if ( $config['is_active'] ) {
+			if ( isset( $config['is_active'] ) && $config['is_active'] ) {
 				$config['is_active'] = false;
 				$need_update = true;
 			}
 			// Add current active status.
-			if ( (int) $config['hub_id'] === $hub_id ) {
+			if ( isset( $config['hub_id'] ) && (int) $config['hub_id'] === $hub_id ) {
 				$config['is_active'] = true;
 				$need_update = true;
 			}

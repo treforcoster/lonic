@@ -30,6 +30,7 @@
   "dependencies": {
     "@selectize/selectize": "^0.15.2",
     "aos": "^2.3.4",
+    "caniuse-lite": "^1.0.30001572",
     "gsap": "./gsap-bonus.tgz",
     "imagesloaded": "^5.0.0",
     "jquery-ui": "^1.13.2",
