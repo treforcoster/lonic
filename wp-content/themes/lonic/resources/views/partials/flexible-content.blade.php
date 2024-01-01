@@ -22,6 +22,10 @@
 @include('components.sections.section-text-stats')
 @endif
 
+@if(get_row_layout() == 'clients')     
+    @include('components.sections.section-clients-carousel')
+@endif
+
 @if(get_row_layout() == 'testimonials')
 @include('components.sections.section-quotes-carousel')
 @endif
