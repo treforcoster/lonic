@@ -3,15 +3,15 @@
 @while (have_rows('content')) @php(the_row())
 
 @if(get_row_layout() == 'intro_text_links')
-
 @include('components.sections.section-text-links')
-
 @endif
 
 @if(get_row_layout() == 'text_&_image')
-
 @include('components.sections.section-text-image')
+@endif
 
+@if(get_row_layout() == 'title_&_text')     
+@include('components.sections.section-text-title')
 @endif
 
 @if(get_row_layout() == 'carousel')

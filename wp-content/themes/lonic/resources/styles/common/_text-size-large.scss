@@ -21,9 +21,9 @@
   --text-size-large-h2-w: 400;
   --text-size-large-h2-t: none;
 
-  --text-size-large-h3-min: 1rem;
-  --text-size-large-h3: 1rem;
-  --text-size-large-h3-max: 1rem;
+  --text-size-large-h3-min: 1.375rem;
+  --text-size-large-h3: 1.146vw;
+  --text-size-large-h3-max: 5rem;
   --text-size-large-h3-p-min: 1rem;
   --text-size-large-h3-p: 1rem;
   --text-size-large-h3-p-max: 1rem;
@@ -86,6 +86,14 @@
   --text-size-large-c-ls: normal;
   --text-size-large-c-w: 400;
   --text-size-large-c-t: none;
+
+  --text-size-large-links-min: 1.375rem;
+  --text-size-large-links: 1.146vw;
+  --text-size-large-links-max: 5rem;
+
+  --text-size-large-number-min: 1rem;
+  --text-size-large-number: 3.542vw;
+  --text-size-large-number-max: 5rem;
 }
 
 .large {
@@ -213,6 +221,40 @@
       letter-spacing: var(--text-size-large-c-ls);
       font-weight: var(--text-size-large-c-w);
       text-transform: var(--text-size-large-c-t);
+    }
+  }
+
+  .links {
+    a {
+      font-size: clamp(
+        var(--text-size-large-links-min),
+        var(--text-size-large-links),
+        var(--text-size-large-links-max)
+      );
+
+      svg {
+        width: clamp(
+          var(--text-size-large-links-min),
+          var(--text-size-large-links),
+          var(--text-size-large-links-max)
+        );
+        height: auto;
+
+        margin-left: clamp(
+          var(--text-size-large-links-min),
+          var(--text-size-large-links),
+          var(--text-size-large-links-max)
+        );
+      }
+    }
+  }
+  .stat {
+    .number {
+      font-size: clamp(
+        var(--text-size-large-number-min),
+        var(--text-size-large-number),
+        var(--text-size-large-number-max)
+      );
     }
   }
 

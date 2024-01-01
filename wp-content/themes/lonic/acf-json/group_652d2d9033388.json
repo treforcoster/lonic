@@ -18,7 +18,8 @@
             },
             "choices": {
                 "dark": "Dark",
-                "light": "Light"
+                "light": "Light",
+                "white": "White"
             },
             "default_value": "dark",
             "return_format": "value",
@@ -56,5 +57,5 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1698038863
+    "modified": 1704090194
 }

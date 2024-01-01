@@ -1,32 +1,35 @@
 .down-arrow {
-  display: inline-block;
-  width: 3.958vw;
-  height: 3.958vw;
+  display: flex;
+  flex-direction: column;
+  width: 200px;
   position: absolute;
-  bottom: 3.958vw;
+  bottom: 30px;
   left: 50%;
-  margin-left: -1.979vw;
+  margin-left: -100px;
   z-index: 5000;
   cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
 
   svg {
-    width: 100%;
-    height: auto;
-    .line {
-      stroke: #ca385b;
-      stroke-width: 1.5px;
-      fill: none;
-    }
+    width: auto;
+    height: 1.25vw;
+  }
 
-    .circle {
-      stroke: #d1d7d8;
-      fill: none;
-    }
+  .arrow {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2px;
   }
 
   &:hover {
-    .circle {
-      fill: rgba(255, 255, 255, 0.5);
+    color: #fc8061;
+
+    .arrow {
+      fill: none;
+      stroke: #fc8061;
+      stroke-width: 2px;
     }
   }
 }

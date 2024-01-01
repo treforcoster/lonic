@@ -2,33 +2,33 @@
   /* --- */
   --text-color-black-headings: #0f272d;
   --text-color-black-copy: #0f272d;
-  --text-color-black-links: #0f272d;
-  --text-color-black-links-hover: #0f272d;
-  --text-color-black-alt: #0f272d;
+  --text-color-black-links: #fc8061;
+  --text-color-black-links-hover: #fc8061;
+  --text-color-black-alt: #fc8061;
   --text-color-black-overlay: #fff;
 
   /* --- */
   --text-color-white-headings: #fff;
   --text-color-white-copy: #fff;
   --text-color-white-links: #fff;
-  --text-color-white-links-hover: #d5a65a;
-  --text-color-white-alt: #d5a65a;
+  --text-color-white-links-hover: #fc8061;
+  --text-color-white-alt: #fc8061;
   --text-color-white-overlay: #000;
 
   /* --- */
   --text-color-dark-headings: #05282d;
-  --text-color-dark-copy: #687f82;
-  --text-color-dark-links: #0f272d;
-  --text-color-dark-links-hover: #d5a65a;
-  --text-color-dark-alt: #d5a65a;
+  --text-color-dark-copy: #032c33;
+  --text-color-dark-links: #fc8061;
+  --text-color-dark-links-hover: #fc8061;
+  --text-color-dark-alt: #fc8061;
   --text-color-dark-overlay: #687f82;
 
   /* --- */
   --text-color-light-headings: #fff;
   --text-color-light-copy: #9eb6b9;
-  --text-color-light-links: #9eb6b9;
-  --text-color-light-links-hover: #d5a65a;
-  --text-color-light-alt: #d5a65a;
+  --text-color-light-links: #fc8061;
+  --text-color-light-links-hover: #fc8061;
+  --text-color-light-alt: #fc8061;
   --text-color-light-overlay: #9eb6b9;
   --text-color-light-quote: #efefeb;
 }
@@ -84,6 +84,10 @@
   .bg-overlay {
     background: var(--text-color-black-overlay);
   }
+
+  .number {
+    color: var(--text-color-black-alt);
+  }
 }
 
 .text-white {
@@ -122,14 +126,6 @@
     color: var(--text-color-white-alt);
   }
 
-  .red {
-    color: #ca385b;
-  }
-
-  .gold {
-    color: #d5a65a;
-  }
-
   .seperator-inner {
     &::before {
       background: var(--text-color-white-copy);
@@ -138,6 +134,10 @@
 
   .bg-overlay {
     background: var(--text-color-white-overlay);
+  }
+
+  .number {
+    color: var(--text-color-white-alt);
   }
 }
 
@@ -199,6 +199,10 @@
 
   .bg-overlay {
     background: var(--text-color-light-overlay);
+  }
+
+  .number {
+    color: var(--text-color-light-alt);
   }
 }
 
@@ -335,5 +339,9 @@
 
   .bg-overlay {
     background: var(--text-color-dark-overlay);
+  }
+
+  .number {
+    color: var(--text-color-dark-alt);
   }
 }

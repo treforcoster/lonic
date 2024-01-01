@@ -38,25 +38,20 @@
 
   <div class="inner">
     <div class="container full-height">
-      <div class="row full-height align-items-center text-white large">
+      <div class="row full-height align-items-center text-white x-large">
         <div class="col-12"><?php the_sub_field('text') ?></div>
       </div>
     </div>
 
-    <a href="#content" class="down-arrow">
-      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="81" height="81" viewBox="0 0 81 81">
+    <a href="#content" class="down-arrow medium">
+      <span>SCROLL DOWN</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="17.843" height="24.978" viewBox="0 0 17.843 24.978">
+        <defs>
 
-        <g id="Ellipse_20" data-name="Ellipse 20" class="" transform="translate(2 2)">
-          <circle class="circle" cx="38.5" cy="38.5" r="38.5" />
-        </g>
-        <g id="Group_13541" data-name="Group 13541" transform="translate(51.098 20) rotate(90)">
-          <path id="Path_1391" data-name="Path 1391" class="line" d="M0,0H0Z" transform="translate(0 10.548)" />
-          <g id="Group_13046" data-name="Group 13046" transform="translate(0 0)">
-            <g id="Group_13045" data-name="Group 13045" class="line">
-              <line id="Line_22" data-name="Line 22" class="line" x2="39.416" transform="translate(0 10.548)" />
-              <path id="Path_1392" data-name="Path 1392" class="line" d="M0,0,9.854,9.854,0,19.707" transform="translate(29.561 0.694)" />
-            </g>
-          </g>
+        </defs>
+        <g id="Group_103" data-name="Group 103" transform="translate(1567.641 -514.5) rotate(90)">
+          <line id="Line_3" data-name="Line 3" class="arrow" x2="23.029" transform="translate(514.5 1558.725)" />
+          <path id="Path_2" data-name="Path 2" class="arrow" d="M533.163,1550.505l8.215,8.215-8.215,8.214" transform="translate(-3.314)" />
         </g>
       </svg>
 
