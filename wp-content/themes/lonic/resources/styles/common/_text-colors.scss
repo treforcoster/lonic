@@ -10,9 +10,9 @@
   /* --- */
   --text-color-white-headings: #fff;
   --text-color-white-copy: #fff;
-  --text-color-white-links: #fff;
+  --text-color-white-links: #66ffd0;
   --text-color-white-links-hover: #fc8061;
-  --text-color-white-alt: #fc8061;
+  --text-color-white-alt: #fff;
   --text-color-white-overlay: #000;
 
   /* --- */
@@ -88,6 +88,33 @@
   .number {
     color: var(--text-color-black-alt);
   }
+
+  .text-border {
+    border: 1px solid var(--text-color-black-alt);
+    border-radius: clamp(
+      var(--element-min),
+      var(--element),
+      var(--element-max)
+    );
+  }
+
+  .arrow-link {
+    .arrow-colour {
+      stroke: var(--text-color-black-links);
+    }
+
+    &:hover {
+      .arrow-colour {
+        stroke: var(--text-color-black-links-hover);
+      }
+    }
+  }
+
+  h2 {
+    &:after {
+      background: var(--text-color-black-alt) !important;
+    }
+  }
 }
 
 .text-white {
@@ -138,6 +165,33 @@
 
   .number {
     color: var(--text-color-white-alt);
+  }
+
+  .text-border {
+    border: 1px solid var(--text-color-white-alt);
+    border-radius: clamp(
+      var(--element-min),
+      var(--element),
+      var(--element-max)
+    );
+  }
+
+  .arrow-link {
+    .arrow-colour {
+      stroke: var(--text-color-white-links);
+    }
+
+    &:hover {
+      .arrow-colour {
+        stroke: var(--text-color-white-links-hover);
+      }
+    }
+  }
+
+  h2 {
+    &:after {
+      background: var(--text-color-white-alt) !important;
+    }
   }
 }
 
@@ -203,6 +257,33 @@
 
   .number {
     color: var(--text-color-light-alt);
+  }
+
+  .text-border {
+    border: 1px solid var(--text-color-light-alt);
+    border-radius: clamp(
+      var(--element-min),
+      var(--element),
+      var(--element-max)
+    );
+  }
+
+  .arrow-link {
+    .arrow-colour {
+      stroke: var(--text-color-light-links);
+    }
+
+    &:hover {
+      .arrow-colour {
+        stroke: var(--text-color-light-links-hover);
+      }
+    }
+  }
+
+  h2 {
+    &:after {
+      background: var(--text-color-light-alt) !important;
+    }
   }
 }
 
@@ -343,5 +424,32 @@
 
   .number {
     color: var(--text-color-dark-alt);
+  }
+
+  .text-border {
+    border: 1px solid var(--text-color-dark-alt);
+    border-radius: clamp(
+      var(--element-min),
+      var(--element),
+      var(--element-max)
+    );
+  }
+
+  .arrow-link {
+    .arrow-colour {
+      stroke: var(--text-color-dark-links);
+    }
+
+    &:hover {
+      .arrow-colour {
+        stroke: var(--text-color-dark-links-hover);
+      }
+    }
+  }
+
+  h2 {
+    &:after {
+      background: var(--text-color-dark-alt) !important;
+    }
   }
 }

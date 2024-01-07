@@ -11,12 +11,12 @@
   },
   "proxy": {
     "protocol": "http:",
-    "hostname": "lionic.test",
+    "hostname": "lonic.test",
     "hash": "",
     "search": "",
     "pathname": "/",
     "path": "/",
-    "href": "http://lionic.test/"
+    "href": "http://lonic.test/"
   },
-  "publicPath": "/app/themes/lionic/public/"
+  "publicPath": "/app/themes/lonic/public/"
 }

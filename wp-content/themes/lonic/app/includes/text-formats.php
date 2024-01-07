@@ -10,7 +10,7 @@ add_filter('mce_buttons_2', 'wpb_mce_buttons_2');
 function my_mce_before_init_insert_formats($init_array)
 {
 
-// Define the style_formats array
+    // Define the style_formats array
 
     $style_formats = array(
         /*
@@ -21,63 +21,70 @@ function my_mce_before_init_insert_formats($init_array)
         * Classes allows you to define CSS classes
         * Wrapper whether or not to add a new block-level element around any selected elements
         */
+        // array(
+        //     'title' => 'Button CTA',
+        //     'block' => 'span',
+        //     'classes' => 'button-cta',
+        //     'wrapper' => true,
+        // ),
+
+        // array(
+        //     'title' => 'Inline Button CTA',
+        //     'block' => 'span',
+        //     'classes' => 'inline-button-cta',
+        //     'wrapper' => true,
+        // ),
+
+        // array(
+        //     'title' => 'Span',
+        //     'block' => 'span',
+        //     'classes' => 'span-wrapper',
+        //     'wrapper' => true,
+        // ),
+
+        // array(
+        //     'title' => 'Text CTA',
+        //     'block' => 'span',
+        //     'classes' => 'text-cta',
+        //     'wrapper' => true,
+        // ),
+
         array(
-            'title' => 'Button CTA',
+            'title' => 'Large Text',
             'block' => 'span',
-            'classes' => 'button-cta',
-            'wrapper' => true,
-        ),
-
-        array(
-            'title' => 'Inline Button CTA',
-            'block' => 'span',
-            'classes' => 'inline-button-cta',
-            'wrapper' => true,
-        ),
-
-        array(
-            'title' => 'Span',
-            'block' => 'span',
-            'classes' => 'span-wrapper',
-            'wrapper' => true,
-        ),
-
-        array(
-            'title' => 'Text CTA',
-            'block' => 'span',
-            'classes' => 'text-cta',
+            'classes' => 'large-text',
             'wrapper' => true,
         ),
 
 
-        array(
-            'title' => 'Heading - Lead In',
-            'inline' => 'span',
-            'classes' => 'lead-in-heading',
-            'wrapper' => true,
-        ),
-        array(
-            'title' => 'Heading - Sub Heading',
-            'inline' => 'span',
-            'classes' => 'sub-heading',
-            'wrapper' => true,
-        ),
+        // array(
+        //     'title' => 'Intro - Lead In',
+        //     'inline' => 'span',
+        //     'classes' => 'intro-in-heading',
+        //     'wrapper' => true,
+        // ),
+        // array(
+        //     'title' => 'Heading - Sub Heading',
+        //     'inline' => 'span',
+        //     'classes' => 'sub-heading',
+        //     'wrapper' => true,
+        // ),
 
-        array(
-            'title' => 'Block Text link',
-            'inline' => 'span',
-            'classes' => 'block-text-link',
-            'wrapper' => true,
-        ),
+        // array(
+        //     'title' => 'Block Text link',
+        //     'inline' => 'span',
+        //     'classes' => 'block-text-link',
+        //     'wrapper' => true,
+        // ),
 
-        array(
-            'title' => 'Block Text link',
-            'inline' => 'span',
-            'classes' => 'block-text-link',
-            'wrapper' => true,
-        ),
+        // array(
+        //     'title' => 'Block Text link',
+        //     'inline' => 'span',
+        //     'classes' => 'block-text-link',
+        //     'wrapper' => true,
+        // ),
 
-      
+
 
     );
     // Insert the array, JSON ENCODED, into 'style_formats'

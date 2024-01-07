@@ -10,22 +10,22 @@
   --text-size-medium-h1-w: 400;
   --text-size-medium-h1-t: none;
 
-  --text-size-medium-h2-min: 1rem;
-  --text-size-medium-h2: 1rem;
-  --text-size-medium-h2-max: 1rem;
+  --text-size-medium-h2-min: 2.1875rem;
+  --text-size-medium-h2: 1.823vw;
+  --text-size-medium-h2-max: 6rem;
   --text-size-medium-h2-p-min: 1rem;
-  --text-size-medium-h2-p: 1rem;
-  --text-size-medium-h2-p-max: 1rem;
+  --text-size-medium-h2-p: 3.646vw;
+  --text-size-medium-h2-p-max: 6rem;
   --text-size-medium-h2-lh: 1.2;
   --text-size-medium-h2-ls: normal;
   --text-size-medium-h2-w: 400;
   --text-size-medium-h2-t: none;
 
-  --text-size-medium-h3-min: 1.8rem;
-  --text-size-medium-h3: 1.823vw;
+  --text-size-medium-h3-min: 1.3rem;
+  --text-size-medium-h3: 1.25vw;
   --text-size-medium-h3-max: 5rem;
-  --text-size-medium-h3-p-min: 1.8rem;
-  --text-size-medium-h3-p: 1.823vw;
+  --text-size-medium-h3-p-min: 1.3rem;
+  --text-size-medium-h3-p: 1.25vw;
   --text-size-medium-h3-p-max: 5rem;
   --text-size-medium-h3-lh: 1.2;
   --text-size-medium-h3-ls: normal;
@@ -122,12 +122,27 @@
     padding-bottom: clamp(
       var(--text-size-medium-h2-p-min),
       var(--text-size-medium-h2-p),
-      var(--text-size-medium-h2-p-min)
+      var(--text-size-medium-h2-p-max)
     );
     line-height: var(--text-size-medium-h2-lh);
     letter-spacing: var(--text-size-medium-h2-ls);
     font-weight: var(--text-size-medium-h2-w);
     text-transform: var(--text-size-medium-h2-t);
+    position: relative;
+
+    &:after {
+      content: '';
+      height: 1px;
+      width: 157px;
+      bottom: clamp(
+        var(--text-size-medium-h2-min),
+        var(--text-size-medium-h2),
+        var(--text-size-medium-h2-max)
+      );
+      left: 0;
+      position: absolute;
+      background: #000;
+    }
   }
 
   h3,

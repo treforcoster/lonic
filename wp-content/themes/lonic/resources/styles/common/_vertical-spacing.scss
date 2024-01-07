@@ -29,6 +29,10 @@
   padding-bottom: 0;
 }
 
+.padding-section {
+  padding: clamp(var(--section-min), var(--section), var(--section-max));
+}
+
 .padding-top-section {
   padding-top: clamp(var(--section-min), var(--section), var(--section-max));
 }
@@ -37,12 +41,20 @@
   padding-bottom: clamp(var(--section-min), var(--section), var(--section-max));
 }
 
+.padding-intro {
+  padding: clamp(var(--intro-min), var(--intro), var(--intro-max));
+}
+
 .padding-top-intro {
   padding-top: clamp(var(--intro-min), var(--intro), var(--intro-max));
 }
 
 .padding-bottom-intro {
   padding-bottom: clamp(var(--intro-min), var(--intro), var(--intro-max));
+}
+
+.padding-element {
+  padding: clamp(var(--element-min), var(--element), var(--element-max));
 }
 
 .padding-top-element {

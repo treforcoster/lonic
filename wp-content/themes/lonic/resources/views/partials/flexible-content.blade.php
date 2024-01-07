@@ -14,12 +14,16 @@
 @include('components.sections.section-text-title')
 @endif
 
-@if(get_row_layout() == 'carousel')
-@include('components.sections.section-expanding-carousel')
+@if(get_row_layout() == 'text_&_video')
+@include('components.sections.section-text-video')
 @endif
 
 @if(get_row_layout() == 'text_&_stats')
 @include('components.sections.section-text-stats')
+@endif
+
+@if(get_row_layout() == 'carousel')
+@include('components.sections.section-expanding-carousel')
 @endif
 
 @if(get_row_layout() == 'clients')     
@@ -46,9 +50,7 @@
 @include('components.sections.section-contact-form')
 @endif
 
-@if(get_row_layout() == 'text_video')
-@include('components.sections.section-text-video')
-@endif
+
 
 @if(get_row_layout() == 'values_carousel')
 @include('components.sections.section-values-carousel')

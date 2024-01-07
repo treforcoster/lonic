@@ -22,6 +22,8 @@ export default async (app) => {
      * Directory contents to be included in the compilation
      * @see {@link https://bud.js.org/docs/bud.assets/}
      */
+    .assets(['fonts'])
+
     .assets(['images'])
 
     /**
@@ -34,7 +36,7 @@ export default async (app) => {
      * Proxy origin (`WP_HOME`)
      * @see {@link https://bud.js.org/docs/bud.proxy/}
      */
-    .proxy('http://lionic.test/')
+    .proxy('http://lonic.test/')
 
     /**
      * Development origin
@@ -46,7 +48,7 @@ export default async (app) => {
      * URI of the `public` directory
      * @see {@link https://bud.js.org/docs/bud.setPublicPath/}
      */
-    .setPublicPath('/app/themes/lionic/public/')
+    .setPublicPath('/app/themes/lonic/public/')
 
     /**
      * Generate WordPress `theme.json`

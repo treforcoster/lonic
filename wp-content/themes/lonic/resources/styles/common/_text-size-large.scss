@@ -90,6 +90,7 @@
   --text-size-large-links-min: 1.375rem;
   --text-size-large-links: 1.146vw;
   --text-size-large-links-max: 5rem;
+  --text-size-large-links-t: uppercase;
 
   --text-size-large-number-min: 1rem;
   --text-size-large-number: 3.542vw;
@@ -226,6 +227,7 @@
 
   .links {
     a {
+      text-transform: var(--text-size-large-links-t);
       font-size: clamp(
         var(--text-size-large-links-min),
         var(--text-size-large-links),
@@ -240,11 +242,11 @@
         );
         height: auto;
 
-        margin-left: clamp(
-          var(--text-size-large-links-min),
-          var(--text-size-large-links),
-          var(--text-size-large-links-max)
-        );
+        margin-left: clamp(1.2375rem, 1.03vw, 5rem);
+
+        // --text-size-large-links-min: 1.375rem;
+        // --text-size-large-links: 1.146vw;
+        // --text-size-large-links-max: 5rem;
       }
     }
   }

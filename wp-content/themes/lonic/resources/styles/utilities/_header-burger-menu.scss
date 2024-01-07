@@ -14,14 +14,14 @@
   --banner-logo-v-padding: 20px;
 
   /* --- */
-  --banner-background-hover: #ffc800;
+  --banner-background-hover: #fff;
   --banner-background-active: #fff;
   --banner-text-colour: #0f272d;
-  --banner-hover-colour: #ffc800;
+  --banner-hover-colour: #fff;
   --banner-active-colour: #fff;
 
   /* --- */
-  --banner-font-weight: 500;
+  --banner-font-weight: 300;
   --banner-text-letter-spacing: normal;
   --banner-text-transform: none;
 
@@ -221,7 +221,9 @@
       z-index: 600;
       .inner {
         position: relative;
-
+        background: var(--mobile-menu-dropdown-background);
+        border-bottom-left-radius: 20vh 20vh;
+        overflow: hidden;
         @include media-breakpoint-up(lg) {
           width: 65.104vw;
         }
@@ -386,6 +388,14 @@
                   font-size: var(--banner-link-xxl-text-size);
                 }
 
+                &:before {
+                  content: '\2013';
+                  position: static;
+                  left: 0;
+                  top: 0;
+                  margin-right: 1.7vw;
+                }
+
                 &:hover {
                   color: var(--banner-hover-colour);
                   -webkit-transition: all $transition ease-out;
@@ -403,7 +413,7 @@
           @include media-breakpoint-up(lg) {
             padding: 3.646vw 7.292vw 3.646vw 7.292vw;
           }
-          background: #f5f5f2;
+          //background: #f5f5f2;
 
           // p::first-line {
           //   color: #d5a65a;

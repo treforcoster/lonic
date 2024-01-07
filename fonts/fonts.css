@@ -1,0 +1,28 @@
+/**
+ * @license
+ * MyFonts Webfont Build ID 3867246, 2020-12-16T11:57:38-0500
+ * 
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are 
+ * explicitly restricted from using the Licensed Webfonts(s).
+ * 
+ * You may obtain a valid license at the URLs below.
+ * 
+ * Webfont: undefined by undefined
+ * URL: https://www.myfonts.com/products/medium-faktum-213159
+ * Copyright: Copyright © 2023 Monotype Imaging Inc. All rights reserved.
+ *
+ * Webfont: undefined by undefined
+ * URL: https://www.myfonts.com/products/regular-faktum-213129
+ * Copyright: Copyright © 2023 Monotype Imaging Inc. All rights reserved.
+ * 
+ * © 2023 MyFonts Inc. */
+
+@font-face {
+  font-family: "FaktumMedium";
+  src: url('FaktumMedium/font.woff2') format('woff2'), url('FaktumMedium/font.woff') format('woff');
+}
+@font-face {
+  font-family: "FaktumRegular";
+  src: url('FaktumRegular/font.woff2') format('woff2'), url('FaktumRegular/font.woff') format('woff');
+}
