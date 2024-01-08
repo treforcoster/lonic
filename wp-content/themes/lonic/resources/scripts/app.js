@@ -18,6 +18,7 @@ import Accordion from './util/accordion.js';
 import DownArrow from './util/downArrow.js';
 import PropertyAreaMap from './util/propertyAreaMap.js';
 import ExpandingCarousel from './util/expandingCarousel.js';
+import ClientsCarousel from './util/clientsCarousel.js';
 
 /**
  * Application entrypoint
@@ -45,6 +46,7 @@ domReady(async () => {
   const downArrow = new DownArrow();
   const propertyAreaMap = new PropertyAreaMap();
   const expandingCarousel = new ExpandingCarousel();
+  const clientsCarousel = new ClientsCarousel();
 
   //const classFile = new ClassFile();
   // }

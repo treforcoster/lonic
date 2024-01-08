@@ -1,58 +1,81 @@
 import $ from 'jquery';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger.js';
+// import { ScrollTrigger } from 'gsap/ScrollTrigger.js';
 
 class ClientsCarousel {
   constructor() {
-    let wrapper = $('.wrapper');
-    let wrapperWidth = wrapper.width();
-    let viewableBoxes = 7;
-    let boxWidth = wrapperWidth / viewableBoxes;
-    let targetX = boxWidth * 4;
+    let imageWidth = window.innerWidth / 5;
+    let images = $('.animated-content-left .image').length;
+    let rowWidth = images * imageWidth;
 
-    $(window).resize(function () {
-      setInitialSizes();
+    gsap.set('.animated-content-left .image', {
+      x: (i) => i * imageWidth,
+      width: imageWidth,
     });
 
-    setInitialSizes();
+    let height = $('.animated-content-left .image').height();
 
-    function setInitialSizes() {
-      gsap.set('#beer-info', { scaleX: 0, scaleY: 0 });
-      gsap.to('.can', { scaleX: 1, scaleY: 1 });
+    gsap.set('.animated-content-left', {
+      height: height,
+    });
 
-      if (window.innerWidth < 768) {
-        wrapperWidth = wrapper.width();
-        viewableBoxes = 3;
-        boxWidth = wrapperWidth / viewableBoxes;
-        targetX = boxWidth * 2;
-        selectedID = '#box-2';
-      } else if (window.innerWidth < 960) {
-        wrapperWidth = wrapper.width();
-        viewableBoxes = 5;
-        boxWidth = wrapperWidth / viewableBoxes;
-        targetX = boxWidth * 3;
-        selectedID = '#box-3';
-      } else {
-        wrapperWidth = wrapper.width();
-        viewableBoxes = 7;
-        boxWidth = wrapperWidth / viewableBoxes;
-        targetX = boxWidth * 4;
-        selectedID = '#box-4';
-      }
+    gsap.set('.animated-banner-left', {
+      height: height,
+    });
 
-      iniBeerSlider();
-    }
+    $('.animated-banner-left .animated-content-left')
+      .clone()
+      .appendTo('.animated-banner-left');
 
-    function iniBeerSlider() {
-      gsap.set('.boxes', {
-        x: -boxWidth,
-      });
+    gsap.set('.animated-banner-left .animated-content-left', {
+      x: (i) => i * rowWidth,
+      width: rowWidth,
+      y: (i) => -1 * (i * height),
+    });
 
-      gsap.set('.box', {
-        x: (i) => i * boxWidth,
-        width: boxWidth,
-      });
-    }
+    let distanceLeft = -1 * rowWidth;
+
+    gsap.fromTo(
+      '.animated-banner-left',
+      { x: 0 },
+      { x: distanceLeft, ease: 'none', duration: 20, repeat: -1 }
+    );
+
+    ///////////////////////////////
+    let imageWidthR = window.innerWidth / 5;
+    let imagesR = $('.animated-content-right .image').length;
+    let rowWidthR = imagesR * imageWidthR;
+
+    gsap.set('.animated-content-right .image', {
+      x: (i) => i * imageWidthR,
+      width: imageWidthR,
+    });
+
+    gsap.set('.animated-content-right', {
+      height: height,
+    });
+
+    gsap.set('.animated-banner-right', {
+      height: height,
+    });
+
+    $('.animated-banner-right .animated-content-right')
+      .clone()
+      .appendTo('.animated-banner-right');
+
+    gsap.set('.animated-banner-right .animated-content-right', {
+      x: (i) => i * rowWidthR,
+      width: rowWidthR,
+      y: (i) => -1 * (i * height),
+    });
+
+    let distance = -1 * rowWidth;
+
+    gsap.fromTo(
+      '.animated-banner-right',
+      { x: distance },
+      { x: 0, ease: 'none', duration: 20, repeat: -1 }
+    );
   }
 }
 

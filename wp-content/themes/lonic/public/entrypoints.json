@@ -1,16 +1,13 @@
 {
   "app": {
     "js": [
-      "js/runtime.js",
-      "js/app.js"
+      "js/runtime.0b941e.js",
+      "js/259.6cf96b.js",
+      "js/881.42bd24.js",
+      "js/app.dfca51.js"
     ],
-    "png": [
-      "../node_modules/jquery-ui/dist/themes/base/images/ui-icons_444444_256x240.png",
-      "../node_modules/jquery-ui/dist/themes/base/images/ui-icons_555555_256x240.png",
-      "../node_modules/jquery-ui/dist/themes/base/images/ui-icons_777620_256x240.png",
-      "../node_modules/jquery-ui/dist/themes/base/images/ui-icons_777777_256x240.png",
-      "../node_modules/jquery-ui/dist/themes/base/images/ui-icons_cc0000_256x240.png",
-      "../node_modules/jquery-ui/dist/themes/base/images/ui-icons_ffffff_256x240.png"
+    "css": [
+      "css/app.31b137.css"
     ],
     "dependencies": [
       "jquery"
@@ -18,8 +15,12 @@
   },
   "editor": {
     "js": [
-      "js/runtime.js",
-      "js/editor.js"
+      "js/runtime.0b941e.js",
+      "js/259.6cf96b.js",
+      "js/editor.4cc705.js"
+    ],
+    "css": [
+      "css/editor.3a6c70.css"
     ],
     "dependencies": [
       "wp-blocks"

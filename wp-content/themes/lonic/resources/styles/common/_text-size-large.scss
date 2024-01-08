@@ -65,20 +65,20 @@
   --text-size-large-p-w: 400;
   --text-size-large-p-t: none;
 
-  --text-size-large-q-min: 2.25;
+  --text-size-large-q-min: 2.25rem;
   --text-size-large-q: 2.5vw;
   --text-size-large-q-max: 5rem;
-  --text-size-large-q-p-min: 1rem;
-  --text-size-large-q-p: 1rem;
-  --text-size-large-q-p-max: 1rem;
+  --text-size-large-q-p-min: 2.25rem;
+  --text-size-large-q-p: 2.5vw;
+  --text-size-large-q-p-max: 5rem;
   --text-size-large-q-lh: 1.2;
   --text-size-large-q-ls: normal;
   --text-size-large-q-w: 400;
   --text-size-large-q-t: none;
 
-  --text-size-large-c-min: 1rem;
-  --text-size-large-c: 1rem;
-  --text-size-large-c-max: 1rem;
+  --text-size-large-c-min: 1.188rem;
+  --text-size-large-c: 0.99vw;
+  --text-size-large-c-max: 5rem;
   --text-size-large-c-p-min: 1rem;
   --text-size-large-c-p: 1rem;
   --text-size-large-c-p-max: 1rem;
@@ -86,6 +86,7 @@
   --text-size-large-c-ls: normal;
   --text-size-large-c-w: 400;
   --text-size-large-c-t: none;
+  --text-size-large-c-style: normal;
 
   --text-size-large-links-min: 1.375rem;
   --text-size-large-links: 1.146vw;
@@ -196,6 +197,21 @@
   }
 
   blockquote {
+    &:before {
+      content: '';
+      height: 1px;
+      width: 157px;
+      top: 0;
+      left: 0;
+      position: absolute;
+    }
+    position: relative;
+    padding-top: clamp(
+      var(--text-size-large-q-p-min),
+      var(--text-size-large-q-p),
+      var(--text-size-large-q-p-min)
+    );
+    margin-bottom: 0;
     p {
       margin: 0;
       font-size: clamp(
@@ -203,6 +219,7 @@
         var(--text-size-large-q),
         var(--text-size-large-q-max)
       );
+
       padding-bottom: clamp(
         var(--text-size-large-q-p-min),
         var(--text-size-large-q-p),
@@ -222,6 +239,7 @@
       letter-spacing: var(--text-size-large-c-ls);
       font-weight: var(--text-size-large-c-w);
       text-transform: var(--text-size-large-c-t);
+      font-style: var(--text-size-large-c-style);
     }
   }
 

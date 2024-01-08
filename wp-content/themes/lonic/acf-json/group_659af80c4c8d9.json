@@ -1,9 +1,9 @@
 {
-    "key": "group_6536daeacae7e",
-    "title": "316. Clients",
+    "key": "group_659af80c4c8d9",
+    "title": "306. Our Story 2",
     "fields": [
         {
-            "key": "field_6536daeada48d",
+            "key": "field_659af80c4fc77",
             "label": "anc",
             "name": "anc",
             "aria-label": "",
@@ -30,7 +30,7 @@
             "acfe_clone_modal_size": "large"
         },
         {
-            "key": "field_6536daeada492",
+            "key": "field_659af80c4fc7c",
             "label": "bg",
             "name": "bg",
             "aria-label": "",
@@ -57,7 +57,7 @@
             "acfe_clone_modal_size": "large"
         },
         {
-            "key": "field_6536daeada49b",
+            "key": "field_659af80c4fc81",
             "label": "txt",
             "name": "txt",
             "aria-label": "",
@@ -84,23 +84,42 @@
             "acfe_clone_modal_size": "large"
         },
         {
-            "key": "field_6536db271df4a",
-            "label": "Logos",
-            "name": "row_1",
+            "key": "field_659af80c4fc91",
+            "label": "Text",
+            "name": "text",
             "aria-label": "",
-            "type": "gallery",
+            "type": "wysiwyg",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "",
+                "width": "50",
+                "class": "small-label",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_659af80c4fc85",
+            "label": "Image",
+            "name": "image_1",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
                 "class": "",
                 "id": ""
             },
+            "uploader": "",
             "return_format": "array",
-            "library": "all",
-            "min": "",
-            "max": "",
+            "acfe_thumbnail": 0,
             "min_width": "",
             "min_height": "",
             "min_size": "",
@@ -108,8 +127,71 @@
             "max_height": "",
             "max_size": "",
             "mime_types": "",
-            "insert": "append",
-            "preview_size": "medium"
+            "preview_size": "medium",
+            "library": "all"
+        },
+        {
+            "key": "field_659af80c4fc89",
+            "label": "Quote",
+            "name": "quote",
+            "aria-label": "",
+            "type": "group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "small-label",
+                "id": ""
+            },
+            "layout": "block",
+            "acfe_seamless_style": 0,
+            "acfe_group_modal": 0,
+            "sub_fields": [
+                {
+                    "key": "field_659af80d4f694",
+                    "label": "Quote",
+                    "name": "quote",
+                    "aria-label": "",
+                    "type": "wysiwyg",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "tabs": "all",
+                    "toolbar": "full",
+                    "media_upload": 1,
+                    "delay": 0
+                },
+                {
+                    "key": "field_659af80d4f69c",
+                    "label": "Author",
+                    "name": "author",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                }
+            ],
+            "acfe_group_modal_close": 0,
+            "acfe_group_modal_button": "",
+            "acfe_group_modal_size": "large"
         }
     ],
     "location": [
@@ -137,5 +219,5 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1704752063
+    "modified": 1704654902
 }

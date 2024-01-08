@@ -1,10 +1,11 @@
 :root {
-  --font-headings: 'FaktumMedium', sans-serif;
+  --font-headings: 'FaktumRegular', sans-serif;
   --font-copy: 'FaktumRegular', sans-serif;
   --font-nav: 'FaktumRegular', sans-serif;
   --font-buttons: 'FaktumRegular', sans-serif;
   --font-quotes: 'FaktumRegular', sans-serif;
   --font-cite: "FaktumRegular'", sans-serif;
+  --font-strong: 'FaktumMedium', sans-serif;
 }
 
 h1,
@@ -37,6 +38,10 @@ blockquote {
   cite {
     font-family: var(--font-cite);
   }
+}
+
+strong {
+  font-family: var(--font-strong);
 }
 
 body,

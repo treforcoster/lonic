@@ -1,12 +1,10 @@
-<section id="<?php the_sub_field('anchor'); ?>" class="section section-team-grid  bg-<?php the_sub_field('background_colour'); ?> text-<?php the_sub_field('text_colour'); ?> ">
+<section id="<?php the_sub_field('anchor'); ?>" class="section section-team-grid padding-top-intro padding-bottom-section bg-<?php the_sub_field('background_colour'); ?> text-<?php the_sub_field('text_colour'); ?> ">
 
-  <?php $background = get_sub_field('background'); ?>
-  <div class="background" style="background-image:url('<?php echo $background; ?>');"></div>
-  <div class="content p-t-mobile-section p-b-mobile-section p-t-desktop-section ">
+  
 
     <div class="container-fluid">
       <div class="row align-items-center">
-        <div class="col-lg-6 medium text-dark p-b-mobile-intro p-b-desktop-intro">
+        <div class="col-lg-12 medium text-dark padding-bottom-intro">
           <?php the_sub_field('text') ?>
         </div>
       </div>
@@ -39,7 +37,5 @@
       // Reset the global post object so that the rest of the page works correctly.
       wp_reset_postdata(); ?>
     <?php endif; ?>
-  </div>
-
-  </div>
+ 
 </section>

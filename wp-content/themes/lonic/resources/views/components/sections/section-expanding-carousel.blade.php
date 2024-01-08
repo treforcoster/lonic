@@ -25,7 +25,7 @@
                         $title = $image['title'];
                         $alt = $image['alt'];
                         $caption = $image['caption'];
-                        $size = 'image-landscape';
+                        $size = 'image-carousel';
                         $thumb = $image['sizes'][$size]; ?>
                         <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr($alt); ?>" />
                     <?php endif; ?>

@@ -12,7 +12,7 @@
   --text-color-white-copy: #fff;
   --text-color-white-links: #66ffd0;
   --text-color-white-links-hover: #fc8061;
-  --text-color-white-alt: #fff;
+  --text-color-white-alt: #66ffd0;
   --text-color-white-overlay: #000;
 
   /* --- */
@@ -50,7 +50,7 @@
   }
 
   cite {
-    color: var(--text-color-black-alt);
+    color: var(--text-color-black-copy);
   }
 
   a {
@@ -98,6 +98,12 @@
     );
   }
 
+  blockquote {
+    &:before {
+      background: var(--text-color-black-alt);
+    }
+  }
+
   .arrow-link {
     .arrow-colour {
       stroke: var(--text-color-black-links);
@@ -138,7 +144,7 @@
   }
 
   cite {
-    color: var(--text-color-white-alt);
+    color: var(--text-color-white-copy);
   }
 
   a {
@@ -174,6 +180,12 @@
       var(--element),
       var(--element-max)
     );
+  }
+
+  blockquote {
+    &:before {
+      background: var(--text-color-white-alt);
+    }
   }
 
   .arrow-link {
@@ -222,7 +234,7 @@
   }
 
   cite {
-    color: var(--text-color-light-alt);
+    color: var(--text-color-light-copy);
   }
 
   a {
@@ -266,6 +278,12 @@
       var(--element),
       var(--element-max)
     );
+  }
+
+  blockquote {
+    &:before {
+      background: var(--text-color-light-alt);
+    }
   }
 
   .arrow-link {
@@ -386,12 +404,6 @@
     color: var(--text-color-dark-copy);
   }
 
-  .property-description {
-    p {
-      color: var(--text-color-dark-headings);
-    }
-  }
-
   cite {
     color: var(--text-color-dark-copy);
 
@@ -433,6 +445,12 @@
       var(--element),
       var(--element-max)
     );
+  }
+
+  blockquote {
+    &:before {
+      background: var(--text-color-dark-alt);
+    }
   }
 
   .arrow-link {

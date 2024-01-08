@@ -18,6 +18,7 @@
             },
             "choices": {
                 "bright-green": "Lonic Bright Green",
+                "mid-green": "Lonic Mid Green",
                 "dark-green": "Lonic Dark Green",
                 "cream": "Lonic Cream",
                 "white": "White",
@@ -60,5 +61,5 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1704094134
+    "modified": 1704658206
 }

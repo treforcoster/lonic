@@ -2,17 +2,18 @@
 
 add_action('after_setup_theme', function () {
     if (function_exists('get_field')) {
-        add_image_size('image-landscape', 1770, 1125, true);
-        add_image_size('image-portrait', 670, 765, true);
-        add_image_size('featured-image', 1340, 890, true);
-        add_image_size('property-info', 1080, 1080, true);
-        add_image_size('gallery-image', 1920, 1080, true);
-       
-        add_image_size('gallery-image-portrait', 1080, 610, true);
-        add_image_size('location-image', 695, 560, true);
-        add_image_size('team-image', 480, 370, true);
-        add_image_size('gallery-grid', 480, 370, true);
-        add_image_size('gallery-grid-large', 1270, 970, true);
+        add_image_size('image-carousel', 1770, 1125, true);
+        add_image_size('image-landscape', 1090, 745, true);
+        // add_image_size('image-portrait', 670, 765, true);
+        // add_image_size('featured-image', 1340, 890, true);
+        // add_image_size('property-info', 1080, 1080, true);
+        // add_image_size('gallery-image', 1920, 1080, true);
+
+        // add_image_size('gallery-image-portrait', 1080, 610, true);
+        // add_image_size('location-image', 695, 560, true);
+        // add_image_size('team-image', 480, 370, true);
+        // add_image_size('gallery-grid', 480, 370, true);
+        // add_image_size('gallery-grid-large', 1270, 970, true);
         // $acf_image_sizes = get_field("image_sizes", "options");
 
         // if ($acf_image_sizes) {

@@ -43,6 +43,11 @@
           height: auto;
         }
 
+        .more {
+          fill: none;
+          stroke: #fc8061;
+        }
+
         @include media-breakpoint-up(lg) {
           width: 3.125vw;
           height: 2.813vw;
@@ -55,7 +60,12 @@
         }
 
         &:hover {
-          background: rgb(15, 39, 45, 0.95);
+          background: #fc8061;
+
+          .more {
+            fill: none;
+            stroke: #fff;
+          }
         }
       }
 
@@ -79,6 +89,11 @@
           height: auto;
         }
 
+        .close {
+          fill: none;
+          stroke: #fc8061;
+        }
+
         @include media-breakpoint-up(lg) {
           width: 3.125vw;
           height: 2.813vw;
@@ -94,14 +109,18 @@
 
     .meta {
       position: relative;
-      .lead-in-heading {
-        text-transform: uppercase;
-        color: #d5a65a !important;
-      }
 
       h3 {
         text-decoration: none;
-        color: #05282d !important;
+        margin: 0;
+        padding: 0;
+        padding-bottom: 0.3rem;
+      }
+
+      .position {
+        margin: 0;
+        padding: 0;
+        padding-bottom: 0.15rem;
       }
 
       .v-card {
@@ -124,25 +143,35 @@
         }
       }
 
-      .contact {
+      .contacts {
         display: flex;
         align-items: center;
         position: relative;
-        padding-bottom: 0.5vw !important;
 
-        svg {
-          width: 15px;
-
-          @include media-breakpoint-up(lg) {
-            width: 1.042vw;
-          }
-          height: auto;
+        a {
+          color: #032c33 !important;
+          position: relative;
+          text-decoration: none;
+          padding-right: clamp(
+            var(--text-size-medium-p-p-min),
+            var(--text-size-medium-p-p),
+            var(--text-size-medium-p-p-min)
+          );
         }
 
-        span {
-          padding-left: 10px;
-          @include media-breakpoint-up(lg) {
-            padding-left: 0.5vw;
+        a + a {
+          padding-left: clamp(
+            var(--text-size-medium-p-p-min),
+            var(--text-size-medium-p-p),
+            var(--text-size-medium-p-p-min)
+          );
+          &:after {
+            content: '';
+            background: #032c33;
+            height: 100%;
+            width: 1px;
+            position: absolute;
+            left: 0;
           }
         }
       }

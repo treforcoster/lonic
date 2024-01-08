@@ -113,6 +113,9 @@
 
   h2,
   .h2 {
+    &:after {
+      display: none;
+    }
     margin: 0;
     font-size: clamp(
       var(--text-size-medium-h2-min),

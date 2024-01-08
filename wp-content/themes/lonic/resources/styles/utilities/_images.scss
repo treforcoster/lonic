@@ -1,4 +1,9 @@
 img {
   width: 100%;
   height: auto;
+
+  &.rounded-image {
+    border-radius: clamp(1.875rem, 1.563vw, 10rem);
+    overflow: hidden;
+  }
 }

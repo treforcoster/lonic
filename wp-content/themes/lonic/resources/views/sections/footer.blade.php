@@ -1,4 +1,4 @@
-<footer class="footer padding-top-section padding-bottom-section small bg-dark-green text-white">
+<footer class="footer section-footer padding-top-section padding-bottom-section small bg-dark-green text-white">
 
     <div class="container-fluid">
 

@@ -37,7 +37,7 @@
   <div class="overlay"></div>
 
   <div class="inner">
-    <div class="container full-height">
+    <div class="container-fluid full-height">
       <div class="row full-height align-items-center text-white x-large">
         <div class="col-12"><?php the_sub_field('text') ?></div>
       </div>

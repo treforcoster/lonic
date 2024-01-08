@@ -7,7 +7,7 @@
   --text-size-x-large-h1-p-max: 1rem;
   --text-size-x-large-h1-lh: 1.2;
   --text-size-x-large-h1-ls: normal;
-  --text-size-x-large-h1-w: 400;
+  --text-size-x-large-h1-w: 300;
   --text-size-x-large-h1-t: none;
 
   --text-size-x-large-h2-min: 1rem;
@@ -18,7 +18,7 @@
   --text-size-x-large-h2-p-max: 1rem;
   --text-size-x-large-h2-lh: 1.2;
   --text-size-x-large-h2-ls: normal;
-  --text-size-x-large-h2-w: 400;
+  --text-size-x-large-h2-w: 300;
   --text-size-x-large-h2-t: none;
 
   --text-size-x-large-h3-min: 1rem;
@@ -29,7 +29,7 @@
   --text-size-x-large-h3-p-max: 1rem;
   --text-size-x-large-h3-lh: 1.2;
   --text-size-x-large-h3-ls: normal;
-  --text-size-x-large-h3-w: 400;
+  --text-size-x-large-h3-w: 300;
   --text-size-x-large-h3-t: none;
 
   --text-size-x-large-h4-min: 1rem;
@@ -40,7 +40,7 @@
   --text-size-x-large-h4-p-max: 1rem;
   --text-size-x-large-h4-lh: 1.2;
   --text-size-x-large-h4-ls: normal;
-  --text-size-x-large-h4-w: 400;
+  --text-size-x-large-h4-w: 300;
   --text-size-x-large-h4-t: none;
 
   --text-size-x-large-h5-min: 1rem;
@@ -96,6 +96,7 @@
   h1,
   .h1 {
     margin: 0;
+    font-family: var(--font-copy) !important;
     font-size: clamp(
       var(--text-size-x-large-h1-min),
       var(--text-size-x-large-h1),
