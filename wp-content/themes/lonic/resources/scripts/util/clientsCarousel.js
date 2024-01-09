@@ -34,11 +34,12 @@ class ClientsCarousel {
     });
 
     let distanceLeft = -1 * rowWidth;
+    let time = images * 2;
 
     gsap.fromTo(
       '.animated-banner-left',
       { x: 0 },
-      { x: distanceLeft, ease: 'none', duration: 20, repeat: -1 }
+      { x: distanceLeft, ease: 'none', duration: time, repeat: -1 }
     );
 
     ///////////////////////////////
@@ -74,7 +75,7 @@ class ClientsCarousel {
     gsap.fromTo(
       '.animated-banner-right',
       { x: distance },
-      { x: 0, ease: 'none', duration: 20, repeat: -1 }
+      { x: 0, ease: 'none', duration: time, repeat: -1 }
     );
   }
 }
