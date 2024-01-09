@@ -34,7 +34,7 @@ class ClientsCarousel {
     });
 
     let distanceLeft = -1 * rowWidth;
-    let time = images * 2;
+    let time = images * 3;
 
     gsap.fromTo(
       '.animated-banner-left',
