@@ -21,8 +21,8 @@
   --text-size-large-h2-w: 400;
   --text-size-large-h2-t: none;
 
-  --text-size-large-h3-min: 1.375rem;
-  --text-size-large-h3: 1.146vw;
+  --text-size-large-h3-min: 1.125rem;
+  --text-size-large-h3: 0.938vw;
   --text-size-large-h3-max: 5rem;
   --text-size-large-h3-p-min: 1rem;
   --text-size-large-h3-p: 1rem;
@@ -138,6 +138,7 @@
 
   h3,
   .h3 {
+    font-family: var(--font-strong);
     margin: 0;
     font-size: clamp(
       var(--text-size-large-h3-min),
@@ -245,6 +246,7 @@
 
   .links {
     a {
+      font-family: var(--font-strong);
       text-transform: var(--text-size-large-links-t);
       font-size: clamp(
         var(--text-size-large-links-min),

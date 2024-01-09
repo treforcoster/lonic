@@ -1,9 +1,3 @@
-.property-post {
-  &.hidden {
-    display: none;
-  }
-}
-
 .card-propery-archive {
   display: block;
   text-decoration: none;
@@ -11,45 +5,63 @@
   .inner {
     .featured-image {
       position: relative;
-      border-radius: 5px;
       overflow: hidden;
       img {
         width: 100%;
         height: auto;
       }
-      .hover-image {
+
+      .sold {
         position: absolute;
-        top: 0;
-        opacity: 0;
-        -webkit-transition: opacity $transition * 2 ease-out;
-        -moz-transition: opacity $transition * 2 ease-out;
-        -ms-transition: opacity $transition * 2 ease-out;
-        -o-transition: opacity $transition * 2 ease-out;
-        transition: opacity $transition * 2 ease-out;
+        right: 18px;
+        bottom: 18px;
+        padding-left: 5px;
+        padding-right: 5px;
+        font-size: clamp(1.1875rem, 0.99vw, 10rem);
+        border-radius: clamp(0.6rem, 0.521vw, 10rem);
       }
     }
 
-    .lead-in-heading {
-      text-transform: uppercase;
-      padding-bottom: 0.4vw;
+    h3 {
+      font-size: clamp(1.1875rem, 0.99vw, 10rem);
+      padding-top: clamp(1.3rem, 1.042vw, 10rem);
+      padding-top: clamp(1.6rem, 1.302vw, 10rem);
+      color: #ff664d !important;
     }
 
-    h3 {
-      text-decoration: none;
+    .address {
+      font-size: clamp(1.563rem, 1.458vw, 10rem);
     }
-  }
-  @include media-breakpoint-up(lg) {
-    &:hover {
-      .inner {
-        .featured-image {
-          .hover-image {
-            opacity: 1;
-            -webkit-transition: opacity $transition * 2 ease-out;
-            -moz-transition: opacity $transition * 2 ease-out;
-            -ms-transition: opacity $transition * 2 ease-out;
-            -o-transition: opacity $transition * 2 ease-out;
-            transition: opacity $transition * 2 ease-out;
-          }
+    .area {
+      font-size: clamp(1.125rem, 0.938vw, 10rem);
+      display: block;
+    }
+
+    .property-links {
+      display: block;
+      padding-top: clamp(2.188rem, 1.823vw, 10rem);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      a {
+        font-family: var(--font-strong);
+        text-transform: uppercase;
+        font-size: clamp(0.938rem, 0.781vw, 10rem);
+        text-decoration: none;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        svg {
+          width: clamp(0.938rem, 0.781vw, 10rem);
+          height: auto;
+
+          margin-left: clamp(0.813rem, 0.677vw, 10rem);
+
+          // --text-size-large-links-min: 1.375rem;
+          // --text-size-large-links: 1.146vw;
+          // --text-size-large-links-max: 5rem;
         }
       }
     }

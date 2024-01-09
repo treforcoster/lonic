@@ -3,10 +3,20 @@
     // display: flex;
     // overflow: hidden;
     // width: 100%;
+    //border-top: 1px solid #fff;
+  }
+
+  .animated-banner-right {
+    // display: flex;
+    // overflow: hidden;
+    // width: 100%;
+    // border-top: 1px solid #fff;
+    // border-bottom: 1px solid #fff;
   }
 
   .animated-content-left,
   .animated-content-right {
+    border-top: 1px solid #ffa38d;
     position: relative;
     top: 0;
     // display: flex;
@@ -21,6 +31,12 @@
     .image {
       position: absolute;
       top: 0;
+
+      //border-right: 1px solid #fff;
     }
+  }
+
+  .animated-content-right {
+    border-bottom: 1px solid #ffa38d;
   }
 }

@@ -50,6 +50,7 @@
 
         .h4 {
           position: relative;
+          font-family: var(--font-strong);
           padding-bottom: clamp(
             calc(var(--text-size-medium-h4-p-min) * 2),
             calc(var(--text-size-medium-h4-p) * 2),
@@ -74,6 +75,7 @@
 
         .inner {
           h3 {
+            font-family: var(--font-strong);
             padding-bottom: clamp(
               calc(var(--text-size-medium-h3-p-min) / 2),
               calc(var(--text-size-medium-h3-p) / 2),

@@ -1,4 +1,4 @@
-<section id="<?php the_sub_field('anchor'); ?>" class="section section-clients-carousel large padding-top-section padding-bottom-section bg-<?php the_sub_field('background_colour'); ?> text-<?php the_sub_field('text_colour'); ?>
+<section id="<?php the_sub_field('anchor'); ?>" class="section section-clients-carousel large padding-top-intro padding-bottom-intro bg-<?php the_sub_field('background_colour'); ?> text-<?php the_sub_field('text_colour'); ?>
 
   ">
     <div class="animated-banner-left">
