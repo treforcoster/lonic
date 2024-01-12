@@ -1,9 +1,6 @@
 <div class="card-propery-archive">
   <div class="inner text-dark">
     <div class="featured-image ">
-
-      
-
       <?php $img_id = get_post_thumbnail_id(get_the_ID());
       $image = wp_get_attachment_image_src($img_id, "featured-image");
       $alt_text = get_post_meta($img_id, '_wp_attachment_image_alt', true); ?>
@@ -14,8 +11,6 @@
       <?php if ($status == "Sold") { ?>
         <span class='sold bg-orange text-white'>SOLD</span>
       <?php } ?>
-
-    
     </div>
 
     <div class='info'>

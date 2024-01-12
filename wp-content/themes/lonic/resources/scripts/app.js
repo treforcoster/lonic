@@ -11,7 +11,7 @@ import SinglePropertyCarousel from './util/singlePropertyCarousel.js';
 import SingleTestimonialCarousel from './util/singleTestimonialCarousel.js';
 import ExpandingText from './util/expandingText.js';
 import LandingGallery from './util/landingGallery.js';
-import PropertyArchiveMap from './util/propertyArchiveMap.js';
+import PropertyArchive from './util/propertyArchive.js';
 import TeamMember from './util/teamMember.js';
 import PropertyFilters from './util/propertyFilters.js';
 import Accordion from './util/accordion.js';
@@ -39,7 +39,7 @@ domReady(async () => {
   const singleTestimonialCarousel = new SingleTestimonialCarousel();
   const expandingText = new ExpandingText();
   const landingGallery = new LandingGallery();
-  const propertyArchiveMap = new PropertyArchiveMap();
+  const propertyArchive = new PropertyArchive();
   const teamMember = new TeamMember();
   const propertyFilters = new PropertyFilters();
   const accordion = new Accordion();

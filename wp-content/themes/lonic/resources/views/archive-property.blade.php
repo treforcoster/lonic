@@ -17,11 +17,20 @@
 
 
   <div class="container-fluid  padding-bottom-intro bg-colour-light">
-    <div id="property-grid" class="row g-5">
+    {{-- <div id="property-grid" class="row g-5"> --}}
+      <div id="property-grid" >
 
   @while(have_posts()) @php(the_post())
 
-    <div class="property-post col-md-4 ">
+  <?php $size = get_field('post_size', get_the_ID()); ?>
+  <?php $colSize = "";?>
+  <?php if($size ==="large"){
+    $colSize = "col-large";
+  } else {
+    $colSize = "col-small";
+  } ?>
+
+    <div class="property-post <?php echo $colSize;?>">
    
       
       @include('components.cards.card-property-archive')
