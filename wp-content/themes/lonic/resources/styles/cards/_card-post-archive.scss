@@ -1,0 +1,22 @@
+.card-post-archive {
+  display: block;
+  text-decoration: none;
+
+  .inner {
+    position: relative;
+    .featured-image {
+      position: relative;
+      overflow: hidden;
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    h3 {
+      font-size: clamp(1.1875rem, 0.99vw, 10rem);
+      padding-top: clamp(1.3rem, 1.042vw, 10rem);
+      padding-top: clamp(1.6rem, 1.302vw, 10rem);
+    }
+  }
+}

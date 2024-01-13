@@ -74,9 +74,10 @@
 @import 'sections/footer';
 
 @import 'cards/card-property-archive';
-@import 'cards/card-testimonial-archive';
+@import 'cards/card-post-archive';
+// @import 'cards/card-testimonial-archive';
 @import 'cards/card-team-member';
-@import 'cards/card-approach';
+// @import 'cards/card-approach';
 
 // @import 'sections/section-carousel';
 // @import 'sections/section-floor-selector-gallery';
@@ -96,10 +97,11 @@
 
 @import 'utilities/socials';
 
+@import 'pages/blog';
 @import 'pages/post-type-archive-property';
-@import 'pages/single-property';
-@import 'pages/post-type-archive-testimonial';
-@import 'pages/single-testimonial';
+// @import 'pages/single-property';
+// @import 'pages/post-type-archive-testimonial';
+// @import 'pages/single-testimonial';
 
 @import 'bespoke';
 

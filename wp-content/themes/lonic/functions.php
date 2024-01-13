@@ -386,3 +386,15 @@ function be_enable_vcard_upload($mime_types)
     return $mime_types;
 }
 add_filter('upload_mimes', 'be_enable_vcard_upload');
+
+add_filter('next_posts_link_attributes', 'posts_link_attributes_1');
+add_filter('previous_posts_link_attributes', 'posts_link_attributes_2');
+
+function posts_link_attributes_1()
+{
+    return 'class="next-page"';
+}
+function posts_link_attributes_2()
+{
+    return 'class="prev-posts"';
+}

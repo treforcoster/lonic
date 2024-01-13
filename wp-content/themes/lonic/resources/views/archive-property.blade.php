@@ -1,7 +1,7 @@
 @extends('layouts.full-width-dark')
 
 @section('content')
-  @include('components.headers.header-property-archive')
+  @include('components.headers.header-archive')
 
   @if (! have_posts())
     <x-alert type="warning">
