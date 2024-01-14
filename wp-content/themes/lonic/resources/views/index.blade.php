@@ -28,7 +28,7 @@
     <?php if($size ==="large"){
       $colSize = "col-large";
     } elseif($size ==="medium"){
-      $colSize = "col-large";
+      $colSize = "col-medium";
     } else {
       $colSize = "col-small";
     } ?>

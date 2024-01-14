@@ -3,6 +3,7 @@
   text-decoration: none;
 
   .inner {
+    padding-bottom: 60px;
     position: relative;
     .featured-image {
       position: relative;
@@ -14,9 +15,41 @@
     }
 
     h3 {
-      font-size: clamp(1.1875rem, 0.99vw, 10rem);
-      padding-top: clamp(1.3rem, 1.042vw, 10rem);
-      padding-top: clamp(1.6rem, 1.302vw, 10rem);
+      font-size: clamp(2.125rem, 1.771vw, 10rem);
+      padding-top: clamp(3.438rem, 2.865vw, 10rem);
+      padding-bottom: clamp(3.75rem, 3.125vw, 10rem);
+      position: relative;
+
+      &:after {
+        content: '';
+        height: 1px;
+        width: 157px;
+        bottom: clamp(1.875rem, 1.5625vw, 10rem);
+        left: 0;
+        position: absolute;
+        background: #ff664d;
+      }
+    }
+
+    p {
+      font-size: clamp(1.5rem, 1.25vw, 10rem);
+    }
+  }
+
+  .medium {
+    position: relative;
+
+    .featured-image {
+      width: 100%;
+      padding-right: 48px;
+      height: auto;
+      flex: none;
+    }
+    .info {
+      padding-bottom: 48px;
+      h3 {
+        padding-top: 0;
+      }
     }
   }
 }

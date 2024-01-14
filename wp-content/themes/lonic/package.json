@@ -34,6 +34,7 @@
     "gsap": "./gsap-bonus.tgz",
     "imagesloaded": "^5.0.0",
     "infinite-scroll": "^4.0.1",
+    "jquery-bridget": "^3.0.1",
     "jquery-ui": "^1.13.2",
     "masonry-layout": "^4.2.2",
     "select2": "^4.1.0-rc.0",

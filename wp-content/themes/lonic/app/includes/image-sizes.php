@@ -4,6 +4,7 @@ add_action('after_setup_theme', function () {
     if (function_exists('get_field')) {
         add_image_size('image-carousel', 1770, 1125, true);
         add_image_size('image-landscape', 1090, 745, true);
+        add_image_size('image-portrait', 1090, 1590, true);
         add_image_size('property-image', 1080, 820, true);
         //add_image_size('property-gallery', 1080, 765, true);
         // add_image_size('image-portrait', 670, 765, true);

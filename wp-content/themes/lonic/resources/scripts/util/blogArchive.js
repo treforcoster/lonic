@@ -1,6 +1,7 @@
 // import 'infinite-scroll/dist/infinite-scroll.pkgd.js';
 //import 'imagesloaded/imagesloaded.pkgd.js'
-import imagesLoaded from '../util/imagesloaded.pkgd.js';
+// import imagesLoaded from '../util/imagesloaded.pkgd.js';
+import imagesLoaded from '../../../scripts/imagesloaded.pkgd.js';
 import $ from 'jquery';
 
 class BlogArchive {
@@ -15,7 +16,7 @@ class BlogArchive {
         //columnWidth: '.grid__col-sizer',
         //gutter: '.grid__gutter-sizer',
         percentPosition: true,
-        stagger: 300,
+        stagger: 200,
         // nicer reveal transition
         transitionDuration: '0.8s',
         visibleStyle: { transform: 'translateY(0)', opacity: 1 },
