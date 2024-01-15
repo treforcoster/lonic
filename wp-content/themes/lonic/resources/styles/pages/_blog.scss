@@ -13,7 +13,7 @@
 
     &:before {
       content: '';
-      height: calc(100% - 96px);
+      height: calc(100% - 58px);
       position: absolute;
       left: calc(33.3333333% - 0.5px);
       background: #fc8061;
@@ -22,7 +22,7 @@
 
     &:after {
       content: '';
-      height: calc(100% - 96px);
+      height: calc(100% - 58px);
       position: absolute;
       left: calc(66.6666666% - 0.5px);
       background: #fc8061;
