@@ -50,9 +50,9 @@ function my_mce_before_init_insert_formats($init_array)
         // ),
 
         array(
-            'title' => 'Large Text',
+            'title' => 'Intro',
             'block' => 'span',
-            'classes' => 'large-text',
+            'classes' => 'intro',
             'wrapper' => true,
         ),
 

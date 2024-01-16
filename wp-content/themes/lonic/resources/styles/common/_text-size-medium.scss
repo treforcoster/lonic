@@ -60,7 +60,7 @@
   --text-size-medium-p-p-min: 1rem;
   --text-size-medium-p-p: 1.042vw;
   --text-size-medium-p-p-max: 5rem;
-  --text-size-medium-p-lh: 1.2;
+  --text-size-medium-p-lh: 1.3;
   --text-size-medium-p-ls: normal;
   --text-size-medium-p-w: 400;
   --text-size-medium-p-t: none;
@@ -146,7 +146,8 @@
   }
 
   h3,
-  .h3 {
+  .h3,
+  .intro {
     margin: 0;
     font-size: clamp(
       var(--text-size-medium-h3-min),

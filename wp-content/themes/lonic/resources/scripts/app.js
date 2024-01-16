@@ -7,7 +7,7 @@ import BurgerMenu from './util/burgerMenu.js';
 // import MapSingle from './util/mapSingle.js';
 // import LocationsCarousel from './util/locationsCarousel.js';
 // import ValuesCarousel from './util/valuesCarousel.js';
-// import SinglePropertyCarousel from './util/singlePropertyCarousel.js';
+import BlogGallery from './util/blogGallery.js';
 // import SingleTestimonialCarousel from './util/singleTestimonialCarousel.js';
 import ExpandingText from './util/expandingText.js';
 // import LandingGallery from './util/landingGallery.js';
@@ -36,7 +36,7 @@ domReady(async () => {
   const videoPlayer = new VideoPlayer();
   const burgerMenu = new BurgerMenu();
   //const mapSingle = new MapSingle();
-  //const singlePropertyCarousel = new SinglePropertyCarousel();
+  const blogGallery = new BlogGallery();
   //const singleTestimonialCarousel = new SingleTestimonialCarousel();
   const expandingText = new ExpandingText();
   //const landingGallery = new LandingGallery();

@@ -58,6 +58,23 @@
 @include('components.sections.section-contact-form')
 @endif
 
+@if(get_row_layout() == 'blog_text_image')
+@include('components.sections.section-blog-text-image')
+@endif
+
+@if(get_row_layout() == 'blog_text')
+@include('components.sections.section-blog-text')
+@endif
+
+@if(get_row_layout() == 'blog_quote')
+@include('components.sections.section-blog-quote')
+@endif
+
+@if(get_row_layout() == 'blog_gallery')
+@include('components.sections.section-blog-gallery')
+@endif
+
+
 
 
 @if(get_row_layout() == 'values_carousel')

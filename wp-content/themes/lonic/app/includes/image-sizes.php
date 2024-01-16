@@ -6,6 +6,7 @@ add_action('after_setup_theme', function () {
         add_image_size('image-landscape', 1090, 745, true);
         add_image_size('image-portrait', 1090, 1590, true);
         add_image_size('property-image', 1080, 820, true);
+        add_image_size('gallery-image', 2000, 1110, true);
         //add_image_size('property-gallery', 1080, 765, true);
         // add_image_size('image-portrait', 670, 765, true);
         // add_image_size('featured-image', 1340, 890, true);

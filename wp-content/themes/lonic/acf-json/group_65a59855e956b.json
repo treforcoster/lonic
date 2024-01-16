@@ -1,9 +1,9 @@
 {
-    "key": "group_658ee7ae51d6f",
-    "title": "301. Title & Text",
+    "key": "group_65a59855e956b",
+    "title": "301. Text",
     "fields": [
         {
-            "key": "field_658ee7ae59ab1",
+            "key": "field_65a598560185b",
             "label": "Anchor",
             "name": "anchor",
             "aria-label": "",
@@ -30,7 +30,7 @@
             "acfe_clone_modal_size": "large"
         },
         {
-            "key": "field_658ee7ae59ab7",
+            "key": "field_65a5985601860",
             "label": "Background",
             "name": "background",
             "aria-label": "",
@@ -57,7 +57,7 @@
             "acfe_clone_modal_size": "large"
         },
         {
-            "key": "field_658ee7ae59abe",
+            "key": "field_65a5985601865",
             "label": "Text Colour",
             "name": "text_colour",
             "aria-label": "",
@@ -84,27 +84,7 @@
             "acfe_clone_modal_size": "large"
         },
         {
-            "key": "field_658ee7c92be14",
-            "label": "Title",
-            "name": "title",
-            "aria-label": "",
-            "type": "text",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "maxlength": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": ""
-        },
-        {
-            "key": "field_658ee7ae59ac6",
+            "key": "field_65a598560186d",
             "label": "Text",
             "name": "text",
             "aria-label": "",
@@ -149,5 +129,5 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1705351153
+    "modified": 1705351279
 }

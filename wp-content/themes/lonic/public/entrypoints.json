@@ -3,11 +3,11 @@
     "js": [
       "js/runtime.0b941e.js",
       "js/259.6cf96b.js",
-      "js/881.8a1ac4.js",
-      "js/app.7b9c4c.js"
+      "js/881.e92800.js",
+      "js/app.c15c57.js"
     ],
     "css": [
-      "css/app.6f5b28.css"
+      "css/app.94a0af.css"
     ],
     "dependencies": [
       "jquery"
@@ -20,7 +20,7 @@
       "js/editor.4cc705.js"
     ],
     "css": [
-      "css/editor.3a6c70.css"
+      "css/editor.e92f75.css"
     ],
     "dependencies": [
       "wp-blocks"
