@@ -25,7 +25,8 @@
 
 
 
-        <a class="arrow-link" href="<?php echo $link; ?>" target="<?php echo $target; ?>"><?php echo $link_text; ?> <svg xmlns="http://www.w3.org/2000/svg" width="24.978" height="17.843" viewBox="0 0 24.978 17.843">
+        <a class="arrow-link d-flex" href="<?php echo $link; ?>" target="<?php echo $target; ?>"><?php echo $link_text; ?> 
+          <svg  xmlns="http://www.w3.org/2000/svg" width="24.978" height="17.843" viewBox="0 0 24.978 17.843">
             <defs>
               <style>
                 .arrow-colour {

@@ -255,6 +255,7 @@
       );
 
       svg {
+        flex: none;
         width: clamp(
           var(--text-size-large-links-min),
           var(--text-size-large-links),

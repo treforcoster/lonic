@@ -26,6 +26,10 @@
 @include('components.sections.section-our-story-1')
 @endif
 
+@if(get_row_layout() == 'offices')
+@include('components.sections.section-offices')
+@endif
+
 @if(get_row_layout() == 'our_story_2')
 @include('components.sections.section-our-story-2')
 @endif

@@ -73,6 +73,7 @@
 
 @import 'sections/section-expanding-carousel';
 @import 'sections/section-clients-carousel';
+@import 'cards/card-office';
 
 @import 'sections/footer';
 
@@ -130,7 +131,7 @@ html {
 .page-template-template-master,
 .page-template-template-landing {
   #main {
-    padding-top: 80px;
+    // padding-top: 80px;
   }
 }
 #infinite-handle {
