@@ -2,15 +2,16 @@
 /*
 Plugin Name: Media Library File Size
 Plugin URI: https://ss88.us/plugins/media-library-file-size?utm_source=wordpress&utm_medium=link&utm_campaign=mlfs
-Description: Creates a new column in your Media Library to show you the file (and collective images) size of files!
-Version: 1.5.1
+Description: Creates a new column in your Media Library to show you the file (and collective images) size of files plus more!
+Version: 1.6.1
 Author: SS88 LLC
 Author URI: https://ss88.us/?utm_source=wordpress&utm_medium=link&utm_campaign=author_mlfs
 */
 
 class SS88_MediaLibraryFileSize {
 
-    protected $version = '1.5.1';
+    protected $version = '1.6.1';
+	protected $variantJSON = [];
 
     public static function init() {
 
@@ -32,6 +33,7 @@ class SS88_MediaLibraryFileSize {
             add_action('manage_upload_sortable_columns', [$this, 'manage_upload_sortable_columns']);
             add_action('pre_get_posts', [$this, 'pre_get_posts']);
             add_action('admin_enqueue_scripts', [$this, 'admin_enqueue_scripts']);
+			add_action('admin_footer', [$this, 'admin_footer_view_variants_json']);
 
         }
 
@@ -258,10 +260,32 @@ class SS88_MediaLibraryFileSize {
         $ExtaHTML = ($VariantSize) ? '<small>(+'. size_format($VariantSize) .')</small>' : '';
         $MetaSize = get_post_meta($attachment_id, 'SS88MLFS', true);
         $FinalSize = isset($Variants['filesize']) ? $Variants['filesize'] : $MetaSize;
+		$ViewVariants = isset($Variants['sizes']) ? '<button class="ss88MLFS_VV" data-aid="'. $attachment_id .'">View Variants</button>' : '';
 
         if($FinalSize) {
 
-            $html = size_format($FinalSize) . $ExtaHTML;
+            $html = size_format($FinalSize) . $ExtaHTML . $ViewVariants;
+
+			if(isset($Variants['sizes'])) {
+
+				$AttachmentURL = wp_get_attachment_url($attachment_id);
+				
+				foreach($Variants['sizes'] as $v_size=>$v_data) {
+
+					$VSize = (!isset($v_data['filesize'])) ? filesize(pathinfo($file, PATHINFO_DIRNAME) . '/' . $v_data['file']) : $v_data['filesize'];
+					$VSize = (empty($VSize)) ? 'Unknown' : $VSize;
+
+					$this->variantJSON[$attachment_id][] = [
+						'size' => $v_size,
+						'width' => intval($v_data['width']),
+						'height' => intval($v_data['height']),
+						'filesize_hr' => size_format($VSize),
+						'filename' => pathinfo($AttachmentURL, PATHINFO_DIRNAME) . '/' . $v_data['file']
+					];
+
+				}
+	
+			}
 
         }
 
@@ -288,6 +312,12 @@ class SS88_MediaLibraryFileSize {
         }
 
 		return intval($VariantSize);
+
+	}
+
+	function admin_footer_view_variants_json() {
+
+		echo '<script> const ss88MLFS_VV = '. json_encode($this->variantJSON) .'; </script>';
 
 	}
 

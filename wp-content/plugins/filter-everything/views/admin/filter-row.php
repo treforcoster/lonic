@@ -48,7 +48,7 @@ $rowClass           = ( $filterID === \FilterEverything\Filter\FilterFields::FLR
                 </tr>
                 <?php
 
-                    $first_filters = flrt_extract_vars($filter, array( 'entity', 'instead-entity', 'e_name', 'label', 'slug', 'view', 'show_term_names' ) );
+                    $first_filters = flrt_extract_vars($filter, array( 'entity', 'instead-entity', 'e_name', 'label', 'slug', 'view', 'date_type', 'show_term_names' ) );
 
                     foreach( $first_filters as $field_key => $field_attributes ){
 

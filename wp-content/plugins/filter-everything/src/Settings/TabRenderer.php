@@ -44,6 +44,9 @@ class TabRenderer
 
     public function current()
     {
+        /**
+         * string
+         */
         $get = Container::instance()->getTheGet();
         return isset($get['tab']) ? sanitize_key($get['tab']) : null;
     }

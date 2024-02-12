@@ -35,9 +35,11 @@ class FilterFields
     {
         if ( ! $this->hooksRegistered ) {
             add_filter( 'wpc_input_type_select', [ $this, 'addSpinnerToSelect' ], 10, 2 );
+            add_filter( 'wpc_input_type_radio', [ $this, 'addSpinnerToDateFormats' ], 10, 2 );
 
             add_action( 'wp_ajax_wpc-delete-filter',  [ $this, 'ajaxDeleteFilter' ] );
             add_action( 'wp_ajax_wpc-load-exclude-terms', [ $this, 'sendExcludedTerms' ] );
+            add_action( 'wp_ajax_wpc_get_date_formats', [ $this, 'sendDateFormats' ] );
             add_action( 'wp_ajax_wpc-validate-filters', [ $this, 'ajaxValidateFilters' ] );
             add_action( 'after_delete_post', [ $this, 'deleteRelatedFilters' ], 10, 2 );
 
@@ -105,6 +107,33 @@ class FilterFields
                 'options'       => $this->getViewOptions(),
                 'default'       => 'checkboxes',
                 'instructions'  => '',
+            ),
+            'date_type'         => array(
+                'type'          => 'Select',
+                'label'         => esc_html__( 'Date Type', 'filter-everything' ),
+                'class'         => 'wpc-date-type',
+                'options'       => array(
+                    'date'      => esc_html__( 'Date', 'filter-everything' ),
+                    'datetime'  => esc_html__( 'Date Time', 'filter-everything' ),
+                    'time'      => esc_html__( 'Time', 'filter-everything' ),
+                ),
+                'default'       => 'date',
+                'instructions'  => '',
+            ),
+            'date_format'         => array(
+                'type'          => 'Radio',
+                'label'         => esc_html__( 'Date Format', 'filter-everything' ),
+                'class'         => 'wpc-date-format',
+                'options'       => $this->getDateFormatOptions(),
+                'default'       => __( 'F j, Y' ),
+                'instructions'  => esc_html__(  'How the date will be displayed in the Filters widget', 'filter-everything' ),
+                'tooltip'       => wp_kses(
+                    sprintf( __( 'More PHP date formats can be found on <a href="%1$s" target="_blank">this page</a>.', 'filter-everything' ), 'https://wordpress.org/documentation/article/customize-date-and-time-format/' ),
+                    array(
+                        'a' => array(
+                            'href'     => true,
+                        ) )
+                )
             ),
             'show_term_names' => array(
                 'type'          => 'Checkbox',
@@ -250,10 +279,53 @@ class FilterFields
             'radio'         => esc_html__('Radio buttons', 'filter-everything'),
             'labels'        => esc_html__('Labels list', 'filter-everything'),
             'dropdown'      => esc_html__('Dropdown', 'filter-everything'),
-            'range'         => esc_html__('Range', 'filter-everything')
+            'range'         => esc_html__('Numeric range', 'filter-everything'),
+            'date'          => esc_html__('Date range', 'filter-everything'),
         );
 
         return $viewOptions;
+    }
+
+    public static function getDateFormatOptions( $type = 'date' )
+    {
+        switch( $type ){
+            case 'date':
+                $F_j_Y = date_i18n( __( 'F j, Y' ) );
+                $d_m_Y = date_i18n( 'd/m/Y' );
+                $m_d_Y = date_i18n( 'm/d/Y' );
+
+                $formatOptions = array(
+                    __( 'F j, Y' ) => '<span>' . $F_j_Y . '</span><code>'.__( 'F j, Y' ).'</code>',
+                    'd/m/Y'  => '<span>' . $d_m_Y . '</span><code>d/m/Y</code>',
+                    'm/d/Y'  => '<span>' . $m_d_Y . '</span><code>m/d/Y</code>',
+                );
+
+                break;
+            case 'datetime':
+                $F_j_Y = date_i18n( __('F j, Y g:i a') );
+                $d_m_Y = date_i18n( 'd/m/Y g:i a' );
+                $m_d_Y = date_i18n( 'm/d/Y g:i a' );
+
+                $formatOptions = array(
+                    __('F j, Y g:i a') => '<span>' . $F_j_Y . '</span><code>'.__('F j, Y g:i a').'</code>',
+                    'd/m/Y g:i a'  => '<span>' . $d_m_Y . '</span><code>d/m/Y g:i a</code>',
+                    'm/d/Y g:i a'  => '<span>' . $m_d_Y . '</span><code>m/d/Y g:i a</code>',
+                );
+                break;
+            case 'time':
+                $g_i_a = date_i18n( __('g:i a') );
+                $H_i_s = date_i18n( 'H:i:s' );
+
+                $formatOptions = array(
+                    __('g:i a') => '<span>' . $g_i_a . '</span><code>'.__('g:i a').'</code>',
+                    'H:i:s' => '<span>' . $H_i_s . '</span><code>H:i:s</code>',
+                );
+                break;
+        }
+
+        $formatOptions['other'] = '<span>' . esc_html__( 'Custom:', 'filter-everything' ) . '</span>';
+
+        return $formatOptions;
     }
 
     public function getOrderByOptions()
@@ -307,7 +379,7 @@ class FilterFields
 
             foreach ( $filters as $filter ) {
 
-                if ( in_array( $filter['entity'], [ 'post_meta_num', 'tax_numeric' ] ) ) {
+                if ( in_array( $filter['entity'], [ 'post_meta_num', 'tax_numeric', 'post_date' ] ) ) {
                     continue;
                 }
 
@@ -410,22 +482,22 @@ class FilterFields
 
         foreach( $this->getFieldsMapping() as $fieldKey => $fieldData ){
 
-            if( isset( $filter[$fieldKey] ) ){
+            if ( isset( $filter[$fieldKey] ) ) {
 
-                if( $fieldKey === 'parent_filter' ){
+                if ( $fieldKey === 'parent_filter' ) {
                     // Exclude current filter
-                    if( isset( $filternames[ $filter['ID'] ] ) ){
+                    if ( isset( $filternames[ $filter['ID'] ] ) ) {
                         unset( $filternames[ $filter['ID'] ] );
                     }
 
-                    if( ! empty( $filternames ) ){
+                    if ( ! empty( $filternames ) ) {
                         $fieldData['options'] = $filternames;
                     }
                 }
 
                 $default_value = isset( $fieldData['default'] ) ? $fieldData['default'] : '';
 
-                $multiple = ( $fieldKey === 'exclude' && ! in_array( $filter['entity'], [ 'post_meta_num', 'tax_numeric' ] ) );
+                $multiple = ( $fieldKey === 'exclude' && ! in_array( $filter['entity'], [ 'post_meta_num', 'tax_numeric', 'post_date' ] ) );
 
                 $fieldData['name']     = $this->generateInputName( $filter['ID'], $fieldKey, $multiple );
                 $fieldData['id']       = $this->generateInputID( $filter['ID'], $fieldKey );
@@ -506,7 +578,7 @@ class FilterFields
                     // We always add terms even they are empty array to fill Select2 with related terms.
                     $fieldData['options'] = $terms;
 
-                    if( in_array( $filter['entity'], [ 'post_meta_num', 'tax_numeric' ] ) ) {
+                    if( in_array( $filter['entity'], [ 'post_meta_num', 'tax_numeric', 'post_date' ] ) ) {
                         $fieldData['options'] = [];
                     }
                 }
@@ -516,20 +588,61 @@ class FilterFields
                     $fieldData['disabled'] = array('and');
                 }
 
-                if( in_array( $filter['entity'], [ 'post_meta_num', 'tax_numeric' ] ) && $fieldKey === 'logic' ){
+                if( in_array( $filter['entity'], [ 'post_meta_num', 'tax_numeric', 'post_date' ] ) && $fieldKey === 'logic' ){
                     $fieldData['disabled'] = array('or');
                 }
 
-                if( in_array( $filter['entity'], [ 'post_meta_num', 'tax_numeric' ] ) && $fieldKey === 'view' ){
-                    $fieldData['disabled'] = array('checkboxes', 'dropdown', 'radio', 'labels', 'colors', 'image');
-                } else if ( ! in_array( $filter[ 'entity' ], [ 'post_meta_num', 'tax_numeric' ] ) && $fieldKey === 'view' ) {
-                    $fieldData['disabled'] = array( 'range' );
+                if ( $fieldKey === 'view' ) {
+                    if ( in_array( $filter['entity'], [ 'post_meta_num', 'tax_numeric' ] ) ) {
+                        $fieldData['disabled'] = array(
+                            'checkboxes',
+                            'dropdown',
+                            'radio',
+                            'labels',
+                            'date',
+                            'colors',
+                            'image',
+                        );
+                    } else if ( in_array( $filter['entity'], [ 'post_date' ] ) ) {
+                        $fieldData['disabled'] = array(
+                            'checkboxes',
+                            'dropdown',
+                            'radio',
+                            'labels',
+                            'range',
+                            'colors',
+                            'image',
+                        );
+                    } else {
+                        $fieldData['disabled'] = array(
+                            'range',
+                            'date',
+                        );
+                    }
                 }
 
                 if( $fieldKey === 'orderby' ) {
                     if ( $filter['entity'] !== 'taxonomy_product_cat' && ( mb_strpos( $filter['entity'], 'taxonomy_pa' ) === false ) ){
                         $fieldData['disabled'] = ['menuasc', 'menudesc'];
                     }
+                }
+
+                if ( ( $filter['ID'] === self::FLRT_NEW_FILTER_ID || $filter['entity'] === 'post_date' ) && $fieldKey === 'date_format' ) {
+                    // This can be new filter or existing
+                    $date_type         = $filter['date_type'] ? $filter['date_type'] : 'date';
+                    $dateFormatOptions = $this->getDateFormatOptions( $date_type );
+                    $disabled_custom = true;
+                    $value_to_custom = $fieldData['value'];
+
+                    if ( ! in_array( $value_to_custom, self::getPossibleDateFormats( $date_type ) ) ) {
+                        $disabled_custom    = false;
+                        $fieldData['value'] = 'other';
+                    }
+
+                    $customFormatField = '</label><label>' . $this->addCustomDateFormatField( $fieldData['name'], $value_to_custom, $disabled_custom );
+                    $dateFormatOptions['other'] = str_replace( '</span>', '</span>' . $customFormatField, $dateFormatOptions['other'] );
+
+                    $fieldData['options'] = $dateFormatOptions;
                 }
             }
 
@@ -792,6 +905,37 @@ class FilterFields
                         }
                     }
                 }
+
+                if ( in_array( $filter['e_name'], array( 'post_date', 'post_meta_date' ) ) ) {
+
+                    if ( isset( $filter['date_format'] ) && isset( $filter['date_type'] ) ) {
+
+                        $date_time = flrt_split_date_time( $filter['date_format'] );
+
+                        switch ( $filter['date_type'] ) {
+                            case 'date':
+                                // check for date
+                                if ( ! $date_time['date'] ) {
+                                    $this->pushError(  60, $filterID, 'date_format' ); // Invalid date_format.
+                                    $valid = false;
+                                }
+                                break;
+                            case 'datetime':
+                                if ( ! $date_time['date'] || ! $date_time['time'] ) {
+                                    $this->pushError(  62, $filterID, 'date_format' ); // Invalid date_format.
+                                    $valid = false;
+                                }
+                                break;
+                            case 'time':
+                                if ( ! $date_time['time'] ) {
+                                    $this->pushError(  61, $filterID, 'date_format' ); // Invalid date_format.
+                                    $valid = false;
+                                }
+                                break;
+                        }
+
+                    }
+                }
             }
 
         }else{
@@ -816,6 +960,16 @@ class FilterFields
         }
 
         /**
+         * Date Type validations
+         */
+        if ( isset( $filter['date_type'] ) ) {
+            if( ! in_array( $filter['date_type'], array( 'date', 'datetime', 'time' ), true ) ){
+                $this->pushError( 411, $filterID, 'date_type' ); // Invalid Data Type
+                $valid = false;
+            }
+        }
+
+        /**
          * Logic validations
          */
         if( isset( $filter['logic'] ) ){
@@ -834,7 +988,7 @@ class FilterFields
             }
 
             // For author entity logic can be only OR
-            if ( in_array( $filter['entity'], [ 'post_meta_num', 'tax_numeric' ] ) ) {
+            if ( in_array( $filter['entity'], [ 'post_meta_num', 'tax_numeric', 'post_date' ] ) ) {
                 if( $filter['logic'] !== 'and' ){
                     $this->pushError( 47, $filterID, 'logic' ); // Not acceptable logic.
                     $valid = false;
@@ -884,7 +1038,7 @@ class FilterFields
 
         // In case when checkbox is not checked there is no $_POST['in_path'] parameter
         if( isset( $filter['in_path'] ) ){
-            if( in_array( $filter['entity'], [ 'post_meta_num', 'tax_numeric' ] ) && $filter['in_path'] === 'yes' ){
+            if( in_array( $filter['entity'], [ 'post_meta_num', 'tax_numeric', 'post_date' ] ) && $filter['in_path'] === 'yes' ){
                 $this->pushError( 46, $filterID, 'in_path' ); // Invalid In Path for Post meta num.
                 $valid = false;
             }
@@ -935,7 +1089,7 @@ class FilterFields
                 // To avoid few filters with the same meta key
                 if ( in_array( $filter['entity'], array( 'post_meta', 'post_meta_num', 'post_meta_exists' ), true ) ) {
                     $keys[] = 'post_meta' . $filter['e_name'];
-                } elseif ( $filter['entity'] === 'tax_numeric' ) {
+                } elseif ( $filter['entity'] === 'tax_numeric' || $filter['entity'] === 'post_date' ) {
                     $keys[] = $filter['entity'] .'_'. $filter['e_name'];
                 } else {
                     $keys[] = $filter['entity'] . $filter['e_name'];
@@ -1140,6 +1294,101 @@ class FilterFields
         }
     }
 
+    public static function getPossibleDateFormats( $date_type )
+    {
+        $possibleFormats = [
+            'date' => array(
+                'd/m/Y',
+                'm/d/Y',
+                __('F j, Y'),
+            ),
+            'datetime' => array(
+                'd/m/Y g:i a',
+                'm/d/Y g:i a',
+                __('F j, Y g:i a'),
+            ),
+            'time' => array(
+                __('g:i a'),
+                'H:i:s',
+            )
+        ];
+
+        if ( isset( $possibleFormats[$date_type] ) ) {
+            return $possibleFormats[$date_type];
+        }
+
+        return [];
+    }
+
+    private function addCustomDateFormatField( $name, $value, $disabled = false )
+    {
+        $html = '<input type="text" name="'.$name.'" value="'.$value.'"';
+        if ( $disabled ) {
+            $html .= ' disabled="disabled"';
+        }
+
+        $html .= ' class="wpc-date-custom-format" />';
+
+        return $html;
+    }
+
+    public function sendDateFormats()
+    {
+        $postData   = Container::instance()->getThePost();
+        $filterId   = isset( $postData['fid'] ) ? $postData['fid'] : false;
+        $setId      = isset( $postData['setId'] ) ? $postData['setId'] : false;
+        $dateType   = isset( $postData['dateType'] ) ? $postData['dateType'] : false;
+
+        $errorResponse  = array(
+            'fid' => $filterId,
+            'message' => esc_html__('An error occurred. Please, refresh the page and try again.', 'filter-everything')
+        );
+
+        if ( ! $filterId || ! $dateType ) {
+            wp_send_json_error( $errorResponse );
+        }
+
+        $response = [];
+
+        $savedValue = $this->em->getFilterBy( 'ID', $filterId, array( 'date_format', 'date_type' ), array( array( 'ID' => $setId ) ) );
+        $formatoptions = self::getDateFormatOptions( $dateType );
+
+        $field = [
+            'type'          => 'Radio',
+            'class'         => 'wpc-date-format',
+            'default'       => __( 'F j, Y' ),
+        ];
+
+        $default_formats = [
+            'date'     => __( 'F j, Y' ),
+            'datetime' => __('F j, Y g:i a'),
+            'time'     => __('g:i a'),
+        ];
+
+        $disabled_custom = true;
+        $value_to_custom = ( $savedValue['date_format'] && $dateType === $savedValue['date_type'] ) ? $savedValue['date_format'] : $default_formats[$dateType];
+        if ( $value_to_custom && ! in_array( $value_to_custom, self::getPossibleDateFormats( $dateType ) ) ) {
+            $disabled_custom = false;
+            $field['value']  = 'other';
+        }
+
+        $customFormatField = '</label><label>' . $this->addCustomDateFormatField( $this->generateInputName( $filterId, 'date_format' ), $value_to_custom, $disabled_custom );
+        $formatoptions['other'] = str_replace( '</span>', '</span>' . $customFormatField, $formatoptions['other'] );
+
+        $field['name']      = $this->generateInputName( $filterId, 'date_format' );
+        $field['id']        = $this->generateInputID( $filterId, 'date_format' );
+        $field['options']   = $formatoptions;
+
+        ob_start();
+
+        echo flrt_render_input( $field );
+
+        $response['html'] = ob_get_clean();
+
+        wp_send_json_success( $response );
+        die();
+    }
+
     public function sendExcludedTerms()
     {
         $container  = Container::instance();
@@ -1183,6 +1432,33 @@ class FilterFields
             wp_send_json_error( $errorResponse );
         }
 
+    }
+
+    public function addSpinnerToDateFormats( $html, $attributes )
+    {
+        if ( isset( $attributes['class'] ) && $attributes['class'] === 'wpc-date-format' ) {
+            $spinner        = '<span class="spinner"></span>'."\r\n";
+            $openContainer  = '<div class="wpc-after-spinner-container">'."\r\n";
+
+            $closeContainer = '</div>'."\r\n";
+
+            if ( isset( $attributes['options']['d/m/Y'] ) ) {
+                $date_type = 'wpc-type-date';
+            }
+
+            if ( isset( $attributes['options']['d/m/Y g:i a'] ) ) {
+                $date_type = 'wpc-type-datetime';
+            }
+
+            if ( isset( $attributes['options']['H:i:s'] ) ) {
+                $date_type = 'wpc-type-time';
+            }
+
+            $html = str_replace( 'wpc-radio-list', 'wpc-radio-list ' . $date_type, $html );
+
+            $html = $spinner . $openContainer . $html . $closeContainer;
+        }
+        return $html;
     }
 
     public function addSpinnerToSelect( $html, $attributes )
@@ -1258,9 +1534,10 @@ class FilterFields
 
         if( in_array( $entity, array(
             'author',
-            'date',
+            'post_date',
             'post_meta',
             'post_meta_num',
+            'post_date',
             ) ) ){
             return true;
         }
@@ -1430,6 +1707,7 @@ class FilterFields
             401 => esc_html__( 'Error: you must enter Meta Key', 'filter-everything' ),
             402 => esc_html__( 'Error: invalid Taxonomy', 'filter-everything' ),
             41 => esc_html__( 'Error: invalid View parameter.', 'filter-everything' ),
+            411 => esc_html__( 'Error: invalid Date Type parameter.', 'filter-everything' ),
             42 => esc_html__( 'Error: invalid Logic parameter', 'filter-everything' ),
             43 => esc_html__( 'Error: invalid the Sort Terms by parameter', 'filter-everything' ),
             44 => esc_html__( 'Error: invalid exclude terms', 'filter-everything' ),
@@ -1444,6 +1722,9 @@ class FilterFields
             53 => esc_html__( 'Error: invalid or forbidden filter presents.', 'filter-everything' ),
             54 => esc_html__( 'Error: invalid SEO Rule ID.', 'filter-everything' ),
             55 => esc_html__( 'Error: SEO rule with selected Filters Combination already exists.', 'filter-everything' ),
+            60 => esc_html__( 'Error: Invalid date format.', 'filter-everything' ),
+            61 => esc_html__( 'Error: Invalid time format.', 'filter-everything' ),
+            62 => esc_html__( 'Error: Invalid date or time format.', 'filter-everything' ),
             90 => wp_kses(
                 sprintf(
                     __('Error: you can not update settings because the Filter Everything Pro plugin is locked. Please, enter your <a href="%1$s" target="_blank">license key</a> to unlock it.', 'filter-everything' ),

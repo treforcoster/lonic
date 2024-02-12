@@ -43,7 +43,7 @@ class FiltersWidget extends \WP_Widget
         $set_id              = isset( $instance['id'] ) ? preg_replace('/[^\d]?/', '', $instance['id'] ) : 0;
         $popup_title         = esc_html__('Filters', 'filter-everything');
 
-        if( ! empty( $title ) ){
+        if ( ! empty( $title ) ) {
             $popup_title = $title;
         }
 
@@ -137,19 +137,19 @@ class FiltersWidget extends \WP_Widget
 
             $base_permalink = '';
 
-            if( defined('FLRT_FILTERS_PRO') && FLRT_FILTERS_PRO ){
+            if ( defined('FLRT_FILTERS_PRO') && FLRT_FILTERS_PRO ) {
                 $base_permalink  = flrt_get_location_permalink( $set );
             }
 
-            $queried_filters = $wpManager->getQueryVar('queried_values', []);
+            $queried_filters = $wpManager->getQueryVar( 'queried_values', [] );
             $apply_url       = $urlManager->getFiltersUrl( $queried_filters, $base_permalink );
             $reset_url       = $urlManager->getResetUrl();
         }
 
         do_action( 'wpc_before_display_filters_widget', $setId, $args, $instance );
 
-        if( empty( $related_filters ) ){
-            if( $debug_mode ){
+        if ( empty( $related_filters ) ) {
+            if ( $debug_mode ) {
 
                 echo '<p class="wpc-debug-message">';
                 echo sprintf(
@@ -172,11 +172,11 @@ class FiltersWidget extends \WP_Widget
         $widgetContentClass = flrt_filters_widget_content_class($setId);
         $widgetContentClass .= ' wpc-show-counts-' . $set['show_count']['value'];
 
-        if( flrt_get_experimental_option('disable_buttons') !== 'on' ) {
-            flrt_filters_button($setId, $widgetContentClass);
+        if ( flrt_get_experimental_option('disable_buttons') !== 'on' ) {
+            flrt_filters_button( $setId, $widgetContentClass );
         }
 
-        if( $use_apply_button ){
+        if ( $use_apply_button ) {
             $widgetContentClass .= ( $theSet['query_on_the_page'] ) ? ' wpc-query-on-the-page' : ' wpc-query-not-on-the-page';
         }
 
@@ -224,11 +224,9 @@ class FiltersWidget extends \WP_Widget
 
         $to = count( $related_filters );
         if ( $use_apply_button ) {
-//            $to++;
             $to += 2;
         }
         if ( $use_search_field ) {
-//            $to++;
             $to += 2;
         }
 
@@ -381,17 +379,20 @@ class FiltersWidget extends \WP_Widget
                 if (
                     ($set['hide_empty']['value'] === 'yes' || $set['hide_empty']['value'] === 'initial')
                     &&
-                    !in_array($filter['entity'], ['post_meta_num', 'tax_numeric'])
+                    ! in_array( $filter['entity'], ['post_meta_num', 'tax_numeric', 'post_date'] )
                 ) {
                     $terms = $checkTerms;
                 }
-
+                /**
+                 * @todo we have to check this for Dates and consider if we need to hide
+                 * filter by dates at all
+                 */
                 // Hide entire Filter if there are no posts in its terms
                 if (isset($set['hide_empty_filter'])
                     &&
                     $set['hide_empty_filter']['value'] === 'yes') {
 
-                    if (in_array($filter['entity'], ['post_meta_num', 'tax_numeric'])) {
+                    if ( in_array( $filter['entity'], ['post_meta_num', 'tax_numeric'] ) ) {
                         // Temporary not ideal solution
                         // Sometimes it is $terms[0] sometimes $terms['max']
                         if (isset($terms[0])) {
@@ -408,6 +409,11 @@ class FiltersWidget extends \WP_Widget
                             }
                         }
 
+                    } else if ( in_array( $filter['entity'], ['post_date', 'post_meta_date'] ) ) {
+                        if ( $found_posts < 1 ) {
+                            // Huh, finally
+                            continue;
+                        }
                     } else {
                         $checkTerms = flrt_remove_empty_terms($terms, $filter, $has_not_empty_children_flipped);
                         if (empty($checkTerms)) {
@@ -416,7 +422,9 @@ class FiltersWidget extends \WP_Widget
                         }
                     }
                 }
-
+                /**
+                 * Extract only needed values without extra fields
+                 */
                 $terms = flrt_extract_objects_vars( $terms, array(
                         'term_id',
                         'slug',
@@ -425,8 +433,10 @@ class FiltersWidget extends \WP_Widget
                         'cross_count',
                         'max',
                         'min',
-                        'absMax',
-                        'absMin',
+                        'from',
+                        'to',
+                        'time_to',
+                        'time_from',
                         'parent',
                         'wp_queried'
                     )
@@ -434,7 +444,6 @@ class FiltersWidget extends \WP_Widget
 
                 // Hook terms before display to allow developers modify them.
                 $terms = apply_filters('wpc_terms_before_display', $terms, $filter, $set, $urlManager);
-
                 $templateManager->includeFrontView(
                 /**
                  * Allows you to include your own filters template

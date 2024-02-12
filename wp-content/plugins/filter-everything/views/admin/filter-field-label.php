@@ -7,7 +7,7 @@ if ( ! defined('ABSPATH') ) {
 ?><td class="wpc-filter-label-td"><?php
     $label = esc_html( $attributes['label'] );
     if( $label ) :
-        ?><label for="<?php if( isset( $attributes['id'] ) ){ echo esc_attr( $attributes['id'] ); } ?>" class="wpc-filter-label"><?php
+        ?><label <?php if( isset( $attributes['id'] ) && $attributes['type'] !== 'Radio' ){ echo 'for="'. esc_attr( $attributes['id'] ).'"'; } ?> class="wpc-filter-label"><?php
         echo '<span class="wpc-label-text">'.$label.'</span>';
         if( isset( $attributes['required'] ) && $attributes['required'] ){
             echo '<span class="wpc-field-required">*</span>'."\n";

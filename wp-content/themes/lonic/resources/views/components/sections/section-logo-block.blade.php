@@ -1,5 +1,4 @@
-<section id="<?php //echo $section['section_id'];
-              ?>" class="section section-line section-logo-block marker-title-h2 bg-colour-dark  ">
+<section id="<?php the_sub_field('anchor'); ?>" class="section section-logo-block marker-title-h2 bg-colour-dark  ">
 
   <?php $background = get_sub_field('background'); ?>
   <div class="background" style="background-image:url('<?php echo $background; ?>');"></div>

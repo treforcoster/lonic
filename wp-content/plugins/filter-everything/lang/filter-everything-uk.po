@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: Filter Everything PRO\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-23 21:45+0000\n"
-"PO-Revision-Date: 2023-07-19 09:50+0000\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2024-01-08 10:23+0000\n"
+"Last-Translator: Administrator\n"
 "Language-Team: Українська\n"
 "Language: uk\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.6.4; wp-6.2.2\n"
+"X-Loco-Version: 2.6.6; wp-6.4.2\n"
 "X-Domain: filter-everything"
 
 msgid "%s #%s"
@@ -240,6 +240,9 @@ msgstr "Додати нове"
 msgid "Adds a search field that allows you to quickly find filter terms"
 msgstr "Додає швидкий пошук по термам фільтра"
 
+msgid "After"
+msgstr "Після"
+
 #: src/Settings/Tabs/ExperimentalTab.php:26
 #: src/Settings/Tabs/SettingsTab.php:45
 msgid "AJAX"
@@ -269,6 +272,13 @@ msgstr ""
 
 msgid "Allows you to search by text among filtered posts"
 msgstr "Дозволяє шукати серед відфільтрованих дописів"
+
+msgid ""
+"Also hides variable products, if their variations are out of stock. Please "
+"do not use at the same time with the filter by Stock status."
+msgstr ""
+"Приховує також варіативні продукти, якщо їхні варіації не в наявності. Будь "
+"ласка, не використовуйте одночасно з фільтром по наявності."
 
 msgid "Alternative Location"
 msgstr "Альтернативне розміщення"
@@ -385,6 +395,9 @@ msgstr "Доступно в PRO"
 #: pro/PluginPro.php:399
 msgid "Available on"
 msgstr "Доступний на сторінці"
+
+msgid "Before"
+msgstr "До"
 
 msgid "Blog page"
 msgstr "Сторінка блогу"
@@ -569,6 +582,9 @@ msgstr "Мета поле, тип «Числа»‎"
 msgid "Custom URL prefixes for filters"
 msgstr "Кастомні URL префікси для фільтрів"
 
+msgid "Custom:"
+msgstr "Свій:"
+
 #: src/Settings/Tabs/ExperimentalTab.php:55
 msgid "Customization"
 msgstr "Кастомізація"
@@ -576,6 +592,85 @@ msgstr "Кастомізація"
 #: src/Settings/Tabs/ExperimentalTab.php:42
 msgid "Dark Overlay (on desktop only)"
 msgstr "Темний фон (лише для десктопів)"
+
+msgid "Date"
+msgstr "Дата"
+
+msgid "Date Format"
+msgstr "Формат дати"
+
+msgctxt "Date Picker closeText"
+msgid "Filter"
+msgstr "Фільтрувати"
+
+msgctxt "Date Picker currentText"
+msgid "Today"
+msgstr "Сьогодні"
+
+msgctxt "Date Picker nextText"
+msgid "Next"
+msgstr "Наст."
+
+msgctxt "Date Picker prevText"
+msgid "Prev"
+msgstr "Попер."
+
+msgctxt "Date Picker weekHeader"
+msgid "Wk"
+msgstr "Тиж."
+
+msgid "Date range"
+msgstr "Діапазон дат"
+
+msgid "Date Time"
+msgstr "Дата і час"
+
+msgctxt "Date Time Picker amText"
+msgid "AM"
+msgstr "АМ"
+
+msgctxt "Date Time Picker amTextShort"
+msgid "A"
+msgstr "А"
+
+msgctxt "Date Time Picker hourText"
+msgid "Hour"
+msgstr "Год."
+
+msgctxt "Date Time Picker minuteText"
+msgid "Minute"
+msgstr "Хв."
+
+msgctxt "Date Time Picker pmText"
+msgid "PM"
+msgstr "PM"
+
+msgctxt "Date Time Picker pmTextShort"
+msgid "P"
+msgstr "P"
+
+msgctxt "Date Time Picker secondText"
+msgid "Second"
+msgstr "Секунда"
+
+msgctxt "Date Time Picker selectText"
+msgid "Select"
+msgstr "Виберіть"
+
+msgctxt "Date Time Picker timeOnlyTitle"
+msgid "Choose Time"
+msgstr "Оберіть час"
+
+msgctxt "Date Time Picker timeText"
+msgid "Time"
+msgstr "Час"
+
+msgctxt "Date Time Picker timezoneText"
+msgid "Time Zone"
+msgstr "Часовий пояс"
+
+msgid "Date Type"
+msgstr "Тип дати"
 
 msgid "Deactivate License"
 msgstr "Видалити ліцензію"
@@ -676,6 +771,9 @@ msgid ""
 msgstr ""
 "Не показувати цей фільтр доки не буде вибраний батьківський. Корисно для "
 "покрокового фільтрування"
+
+msgid "Dokan vendors"
+msgstr "Продавці Dokan"
 
 #: src/Admin/FilterFields.php:247
 msgid "Dropdown"
@@ -802,6 +900,15 @@ msgstr "Помилка: URL префікс не може бути пустим."
 msgid "Error: for filter Post Author logic OR is acceptable only."
 msgstr "Помилка: фільтр за автором підтримує лише логіку \"АБО\""
 
+msgid "Error: Invalid date format."
+msgstr "Помилка: некоректний формат дати."
+
+msgid "Error: Invalid date or time format."
+msgstr "Помилка: некоректний формат дати або часу."
+
+msgid "Error: invalid Date Type parameter."
+msgstr "Помилка: некоректний тип дати."
+
 #: src/Admin/FilterFields.php:1271
 msgid "Error: invalid exclude terms"
 msgstr "Помилка: некоректні терміни в полі Залучити/Вилучити терми."
@@ -861,6 +968,9 @@ msgstr "Помилка: некоректне значення поля «Пок�
 #| msgid "Error: invalid Orderby parameter"
 msgid "Error: invalid the Sort Terms by parameter"
 msgstr "Помилка: некоректне значення поля «Сортувати терми за»"
+
+msgid "Error: Invalid time format."
+msgstr "Помилка: некоректний формат часу."
 
 #: src/Admin/FilterFields.php:1252
 msgid "Error: invalid value of the Where to filter? field."
@@ -1271,6 +1381,9 @@ msgstr "Приховувати тільки в початкових фільтр
 msgid "Hide opening widget buttons"
 msgstr "Приховати кнопки відкривання віджетів"
 
+msgid "Hide out of stock items from filtering results"
+msgstr "Приховати товари не в наявності з результатів фільтрування"
+
 #: pro/PluginPro.php:268
 #| msgid "Hide entire Filter if no one term contains posts"
 msgid "Hide the Entire Filter if no one term contains posts"
@@ -1288,6 +1401,9 @@ msgstr "Приховати звичайне сортування WooCommerce"
 
 msgid "Horizontal layout"
 msgstr "Відображати горизонтально"
+
+msgid "How the date will be displayed in the Filters widget"
+msgstr "Як буде відображатися дата у віджеті фільтрів"
 
 #: src/Settings/Tabs/SettingsTab.php:55
 msgid "HTML id or class of the Posts Container"
@@ -1323,7 +1439,7 @@ msgid ""
 "If specified, current Filter terms become available only after the parent "
 "Filter selected"
 msgstr ""
-"Якщо вказаний, то терми даного фільтра стануть доступні лише після вибору "
+"Якщо вибраний, то терми даного фільтра стануть доступні лише після вибору "
 "батьківського"
 
 msgid "Image"
@@ -1465,6 +1581,16 @@ msgstr "Мобільні пристрої"
 msgid "More options"
 msgstr "Більше налаштувань"
 
+#| msgid ""
+#| "More PHP date formats can be found on <a href=\"%1$s\" target=\"%2$s\">"
+#| "this page</a>."
+msgid ""
+"More PHP date formats can be found on <a href=\"%1$s\" target=\"_blank\">"
+"this page</a>."
+msgstr ""
+"Більше PHP форматів дати можна знайти на <a href=\"%1$s\" target=\"_blank\">"
+"цій сторінці</a>."
+
 msgid "More/Less"
 msgstr "Розгорнути/Згорнути"
 
@@ -1593,6 +1719,10 @@ msgstr ""
 "Примітка: якщо ви зміните WP_Query на обраній сторінці, будь ласка оновіть "
 "цей набір фільтрів"
 
+#: src/Admin/FilterFields.php:248
+msgid "Numeric range"
+msgstr "Числовий діапазон"
+
 msgid "On backorder"
 msgstr "Доступні по замовленню"
 
@@ -1618,6 +1748,9 @@ msgstr "Інші фільтри"
 
 msgid "Out of stock"
 msgstr "Закінчилися"
+
+msgid "Out of stock visibility"
+msgstr "Видимість наявності запасів"
 
 msgid "Overview"
 msgstr "Огляд"
@@ -1690,6 +1823,9 @@ msgstr ""
 #: src/Entities/EntityManager.php:126
 msgid "Post Author"
 msgstr "Автор"
+
+msgid "Post Date"
+msgstr "Дата публікації"
 
 #: pro/Admin/SeoRules.php:159 src/Admin/FilterSet.php:30
 #: views/admin/filters-seo-rules.php:22
@@ -1765,10 +1901,6 @@ msgstr "Радіокнопки"
 msgid "Random"
 msgstr "У випадковому порядку"
 
-#: src/Admin/FilterFields.php:248
-msgid "Range"
-msgstr "Числовий діапазон"
-
 msgid "Read more"
 msgstr "Дізнатися більше"
 
@@ -1839,7 +1971,7 @@ msgid "Search SEO Rule"
 msgstr "Шукати SEO правило"
 
 msgid "search: %s"
-msgstr "пошук : %s"
+msgstr "пошук: %s"
 
 msgid "See less"
 msgstr "Показати менше"
@@ -2328,6 +2460,9 @@ msgid ""
 msgstr ""
 "Цей фільтр неактивний, тому що він не пов'язаний з обраним типом допису."
 
+msgid "Time"
+msgstr "Час"
+
 #: views/admin/filters-set.php:30
 msgid "Title"
 msgstr "Назва"
@@ -2636,3 +2771,6 @@ msgstr "— Оберіть WP Query —"
 
 msgid "— There is no any %s yet —"
 msgstr "— Ще поки не створено жодного %s —"
+
+msgid "— There is no any vendors yet —"
+msgstr "— Ще поки не створено жодного продавця —"

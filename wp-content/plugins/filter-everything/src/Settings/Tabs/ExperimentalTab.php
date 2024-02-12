@@ -94,6 +94,16 @@ class ExperimentalTab extends BaseSettings
                     ),
                 )
             );
+
+            if( defined('FLRT_FILTERS_PRO') && FLRT_FILTERS_PRO ){
+                $settings['woocommerce_settings']['fields']['hide_out_of_stock'] = array(
+                    'type'  => 'checkbox',
+                    'title' => esc_html__('Out of stock visibility', 'filter-everything'),
+                    'id'    => 'hide_out_of_stock',
+                    'label' => esc_html__('Hide out of stock items from filtering results', 'filter-everything'),
+                    'description'   => esc_html__( 'Also hides variable products, if their variations are out of stock. Please do not use at the same time with the filter by Stock status.', 'filter-everything' ),
+                );
+            }
         }
 
         $settings['experimental_other'] = array(

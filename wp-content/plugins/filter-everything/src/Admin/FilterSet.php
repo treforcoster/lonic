@@ -199,6 +199,11 @@ class FilterSet
             $convertedExistingSlugs[$newEntityKey] = $slug;
         }
 
+        if( isset( $convertedExistingSlugs['post_date_post_date'] ) ){
+            $convertedExistingSlugs['post_date'] = $convertedExistingSlugs['post_date_post_date'];
+            unset($convertedExistingSlugs['post_date_post_date']);
+        }
+
         return $convertedExistingSlugs;
     }
 

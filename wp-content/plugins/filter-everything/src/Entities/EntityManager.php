@@ -60,13 +60,18 @@ class EntityManager
         $name   = $parts[1];
 
         $storeKey = $key;
-
+        /**
+         * We add post_type suffix to the key for filters
+         * which terms depend from post_type
+         * */
         if ( in_array( $entity, array(
                 'post_meta_num',
                 'post_meta_exists',
                 'post_meta',
                 'tax_numeric',
-                'author' )
+                'author',
+                'post_date',
+                )
             ) && $postType ) {
             $storeKey = $key.'_'.$postType;
         }
@@ -109,6 +114,10 @@ class EntityManager
                     $this->storeData($storeKey, new DefaultEntity( $name ) );
                 }
 
+            break;
+
+            case 'post_date':
+                $this->storeData( $storeKey, new PostDateEntity( $name, $postType ) );
             break;
         }
 
@@ -175,6 +184,7 @@ class EntityManager
             'other' => array(
                 'group_label' => esc_html__( 'Other Filters', 'filter-everything' ),
                 'entities' => array(
+                    'post_date'     => esc_html__( 'Post Date', 'filter-everything' ),
                     'author_author' => esc_html__( 'Post Author', 'filter-everything' ),
                     'tax_numeric'   => esc_html__( 'Taxonomy Numeric - Available in Pro', 'filter-everything' ),
                     )
@@ -590,7 +600,7 @@ class EntityManager
             }
         }
 
-        return $slugs;
+        return array_unique( $slugs );
     }
 
     public function prepareFilter( $filter_post )
@@ -675,11 +685,15 @@ class EntityManager
         /**
          * @todo we have to change this. Not page related, but Set related filters.
          */
-        $subkey = '';
-        $wpManager = Container::instance()->getWpManager();
+        $subkey     = '';
+        $wpManager  = Container::instance()->getWpManager();
 
-        if( ! empty( $sets ) ){
-            foreach ( $sets as $set ){
+        if ( empty( $sets ) ) {
+            $sets = $wpManager->getQueryVar( 'wpc_page_related_set_ids' );
+        }
+
+        if ( ! empty( $sets ) ) {
+            foreach ( $sets as $set ) {
                 $subkey .= '_' . $set['ID'];
             }
         }
@@ -688,12 +702,7 @@ class EntityManager
 
         if ( ! $actual = Container::instance()->getParam( $key ) ) {
 
-            if( empty( $sets ) ){
-                $sets = $wpManager->getQueryVar( 'wpc_page_related_set_ids' );
-            }
-
-            $requested  = $wpManager->getQueryVar( 'queried_values', [] );
-
+            $queried  = $wpManager->getQueryVar( 'queried_values', [] );
             $configured = $this->getOnlyBelongsFilters( $sets );
             $actual     = $configured;
 
@@ -703,7 +712,7 @@ class EntityManager
              */
             foreach ( $configured as $k => $filter ) {
                 // Merge with queried values
-                $values = isset($requested[$filter['slug']]['values']) ? $requested[$filter['slug']]['values'] : [];
+                $values = isset( $queried[$filter['slug']]['values'] ) ? $queried[$filter['slug']]['values'] : [];
                 $actual[$k]['values'] = $values;
             }
 
@@ -778,6 +787,9 @@ class EntityManager
             $set_filter_query = $wpManager->getQueryVar( 'wpc_set_filter_query_' . $setId );
 
             if( ! $set_filter_query ){
+                /**
+                 * string
+                 */
                 $theGet         = Container::instance()->getTheGet();
                 $savedQueryVars = get_post_meta( $setId, 'wpc_filter_set_query_vars', true );
 
@@ -826,32 +838,46 @@ class EntityManager
     // This method must be executed before output
     public function prepareEntitiesToDisplay( $sets )
     {
-        $container = Container::instance();
-        $wpManager = $container->getWpManager();
-        $subkey = '';
+        $container  = Container::instance();
+        $wpManager  = $container->getWpManager();
+        $subkey     = '';
 
         $post_type      = $sets[0]['filtered_post_type'];
         $setId          = $sets[0]['ID'];
-        $current_set =    $sets[0];
+        $current_set    = $sets[0];
 
-        $all_sets = $wpManager->getQueryVar('wpc_page_related_set_ids');
+        $all_sets         = $wpManager->getQueryVar( 'wpc_page_related_set_ids' );
         $queryRelatedSets = flrt_get_sets_with_the_same_query( $all_sets, $current_set );
 
+        $filter_by_stock_exists = false;
+
         $relatedSets = [];
-        foreach ( $queryRelatedSets as $set_id ){
+        foreach ( $queryRelatedSets as $set_id ) {
             $relatedSets[] = array( 'ID' => $set_id );
         }
 
         $subkey = implode( '_', $queryRelatedSets );
-        $key = 'wpc_entities_prepared_' . $subkey;
+        $key    = 'wpc_entities_prepared_' . $subkey;
 
-        if( ! $container->getParam( $key )) {
+        if( ! $container->getParam( $key ) ) {
 
             $relatedFilters = $this->getSetsRelatedFilters( $relatedSets );
-            $allPostsIds    = $this->getAllSetWpQueriedPostIds( $setId );
 
-            if (!empty($allPostsIds)) {
-                $allPostsIds = array_flip($allPostsIds);
+            if ( $post_type === 'product' && ! empty( $relatedFilters )  ) {
+                foreach ($relatedFilters as $filter) {
+                    if (isset($filter['e_name']) && $filter['e_name'] === '_stock_status') {
+                        $filter_by_stock_exists = true;
+                        break;
+                    }
+                }
+            }
+
+            $relatedFilters = apply_filters( 'wpc_related_filters_before_terms_count', $relatedFilters, $sets );
+
+            $allPostsIds = $this->getAllSetWpQueriedPostIds( $setId );
+
+            if ( ! empty( $allPostsIds ) ) {
+                $allPostsIds = array_flip( $allPostsIds );
             }
 
             $allEntities = [];
@@ -862,31 +888,41 @@ class EntityManager
                     // Part 1 collect all entities
                     $entity = $this->getEntityByFilter( $filter, $post_type );
 
-                    if ($entity instanceof PostMetaExistsEntity) {
+                    if ( $entity instanceof PostMetaExistsEntity ) {
                         $entity->setPostTypes( array( $post_type ) );
                     }
 
-                    $entity->populateTermsWithPostIds( /*$setId*/ $filter['parent'], $post_type );
+                    $entity->populateTermsWithPostIds( $filter['parent'], $post_type );
 
                     $allEntities[$entity->getName()] = $entity;
                 }
-
             }
 
             // Post IDs with variations instead of parent products
+            // This must be called here, after the $entity->populateTermsWithPostIds(); method called
             $filteredAllPostsIds = $this->collectFilteredPostsIds( $setId );
+
+            /**
+             * Allows to modify filtered post ids
+             */
+            $filteredAllPostsIds = apply_filters( 'wpc_filtered_all_posts_before_terms_count', $filteredAllPostsIds, $allEntities );
+
+            /**
+             * Allows to modify all post ids
+             */
             $allPostsIds         = apply_filters( 'wpc_from_products_to_variations', $allPostsIds );
 
             foreach ( $allEntities as $entityName => $entity ) {
-
-                $filter = $this->getFilterBy('e_name', $entityName, array('logic', 'e_name', 'orderby', 'used_for_variations'), $relatedSets);
-
-                foreach ($entity->items as $index => $term) {
-                    $entity->items[$index]->count = count($entity->items[$index]->posts);
+                if ( $entityName === '_stock_status' && ! $filter_by_stock_exists && $post_type === 'product' ) {
+                    $filter = flrt_get_stock_status_filter_emulation();
+                } else {
+                    $filter = $this->getFilterBy('e_name', $entityName, array('logic', 'e_name', 'orderby', 'used_for_variations'), $relatedSets);
+                }
+                foreach ( $entity->items as $index => $term ) {
+                    $entity->items[$index]->count = count( $entity->items[$index]->posts );
                 }
 
-                //@todo the same should be done for TaxonomyNum entity
-                if ( $entity instanceof PostMetaNumEntity || $entity instanceof TaxonomyNumEntity ) {
+                if ( $entity instanceof PostMetaNumEntity || $entity instanceof TaxonomyNumEntity || $entity instanceof PostDateEntity ) {
                     $postsIn = apply_filters( 'wpc_min_and_max_values_numeric_filters', $this->getAlreadyFilteredPostIds( $setId, $entity ), $entity );
                     $entity->updateMinAndMaxValues( $postsIn );
                 }
@@ -901,8 +937,8 @@ class EntityManager
                     }
                 }
 
-                if( $filter['orderby'] !== 'default' ){
-                    $entity->items = $this->sortTerms($entity->items, $filter['orderby']);
+                if ( $filter['orderby'] !== 'default' ) {
+                    $entity->items = $this->sortTerms( $entity->items, $filter['orderby'] );
                 }
 
                 /**
@@ -911,8 +947,8 @@ class EntityManager
                 $used_for_variations = isset( $filter['used_for_variations'] ) ? $filter['used_for_variations'] : false;
                 $entity->items = apply_filters( 'wpc_items_before_calc_term_count', $entity->items, $entity, $used_for_variations );
 
-                foreach ($entity->items as $index => $term) {
-                    $entity->items[$index]->cross_count = $this->calcTermCount(array_flip($term->posts), $filteredAllPostsIds, $allPostsIds, $filter );
+                foreach ( $entity->items as $index => $term ) {
+                    $entity->items[$index]->cross_count = $this->calcTermCount( array_flip($term->posts), $filteredAllPostsIds, $allPostsIds, $filter );
                 }
             }
 
@@ -1083,7 +1119,7 @@ class EntityManager
 
             foreach ($users as $user) {
                 if ($optionGroup) {
-                    $authors["author:" . $user->ID] = $user->data->display_name;
+                    $authors['author:' . $user->ID] = $user->data->display_name;
                 } else {
                     $authors[$user->ID] = $user->data->display_name;
                 }
@@ -1158,40 +1194,39 @@ class EntityManager
 
         $allSetPostsIds = apply_filters( 'wpc_from_products_to_variations', $allSetPostsIds );
 
-        if( ! $wpManager->getQueryVar('wpc_is_filter_request') ){
+        if ( ! $wpManager->getQueryVar('wpc_is_filter_request') ) {
             return [];
         }
 
         $queriedAllPosts = [];
 
-        $all_sets = $wpManager->getQueryVar('wpc_page_related_set_ids');
+        $all_sets = $wpManager->getQueryVar( 'wpc_page_related_set_ids' );
         $queryRelatedSets = flrt_get_sets_with_the_same_query( $all_sets, $current_set );
 
         $set_filter_keys = $this->getSetFilterKeys( $queryRelatedSets );
 
-        foreach( $queriedFilters as $slug => $queriedFilter ){
+        foreach ( $queriedFilters as $slug => $queriedFilter ) {
 
             $queried_value_key = $queriedFilter['entity'].'#'.$queriedFilter['e_name'];
-            $do_filter_request = apply_filters( 'wpc_do_filter_request', true, $queriedFilter, null);
+            $do_filter_request = apply_filters( 'wpc_do_filter_request', true, $queriedFilter, null );
 
             if( ! in_array( $queried_value_key, $set_filter_keys ) || ! $do_filter_request ) {
                 continue;
             }
 
             $entity = $this->getEntityByFilter( $queriedFilter, $postType );
-
             $e_name = $queriedFilter['e_name'];
             $queriedAllPosts[$e_name] = [];
 
             // Allows to replace product IDs with their variation IDs
             $entity->items = apply_filters( 'wpc_items_before_calc_term_count', $entity->items, $entity, $queriedFilter['used_for_variations'] );
-            foreach( $entity->items as $term ){
+            foreach ( $entity->items as $term ) {
 
-                if( ! isset( $term->posts ) ){
+                if ( ! isset( $term->posts ) ) {
                     continue;
                 }
 
-                if ( in_array( $queriedFilter['entity'], [ 'post_meta_num', 'tax_numeric' ] ) ) {
+                if ( in_array( $queriedFilter['entity'], [ 'post_meta_num', 'tax_numeric', 'post_date' ] ) ) {
                     $doCalculate = in_array( $term->slug, array_keys( $queriedFilter['values'] ) );
                 } else {
                     $doCalculate = in_array( $term->slug, $queriedFilter['values'] );
@@ -1202,7 +1237,7 @@ class EntityManager
                     // Intersection for logic OR between filter terms
                     if ( $queriedFilter['logic'] === 'or' ) {
 
-                        $queriedAllPosts[$e_name] += array_flip($term->posts);
+                        $queriedAllPosts[$e_name] += array_flip( $term->posts );
 
                     // Intersection for logic AND between filter terms
                     } elseif ( $queriedFilter['logic'] === 'and' ) {

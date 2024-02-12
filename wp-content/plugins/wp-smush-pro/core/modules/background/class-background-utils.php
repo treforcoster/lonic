@@ -26,7 +26,7 @@ class Background_Utils {
 			$value_column = 'meta_value';
 		}
 
-		return $this->get_value_from_db( $table, $column, $key_column, $option_id, $value_column, $default );		  	   				 	    	 	
+		return $this->get_value_from_db( $table, $column, $key_column, $option_id, $value_column, $default );
 	}
 
 	public function get_option( $option_id, $default = false ) {

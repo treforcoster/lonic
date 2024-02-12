@@ -33,7 +33,7 @@ class ExpandingCarousel {
           scrub: 1,
           pin: '#main',
           // anticipatePin:1,
-          markers: true,
+          //markers: true,
           // start: "center bottom",
           // end: "+=300%"
           scrub: true,
@@ -116,6 +116,13 @@ class ExpandingCarousel {
           { opacity: 1, duration: duration, ease: ease },
           spacing * 3
         );
+
+      window.addEventListener('resize', resize);
+
+      function resize() {
+        console.log('resize');
+        ScrollTrigger.refresh(true);
+      }
 
       //   // tl.to('#someThing', { x: 300, duration: 0.5 });
     });

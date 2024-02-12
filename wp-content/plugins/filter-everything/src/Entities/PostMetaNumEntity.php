@@ -51,9 +51,9 @@ class PostMetaNumEntity implements Entity
         $this->getAllExistingTerms();
     }
 
-    public static function inputName( $metaKey, $edge = 'min' )
+    public static function inputName( $slug, $edge = 'min' )
     {
-        return $edge . '_' . $metaKey;
+        return $edge . '_' . $slug;
     }
 
     public function setExcludedTerms( $excludedTerms, $isInclude )
@@ -69,30 +69,6 @@ class PostMetaNumEntity implements Entity
 
     function excludeTerms( $terms )
     {
-        $exclude = [];
-
-        if( ! empty( $this->excludedTerms ) ){
-            $exclude = $this->excludedTerms;
-        }
-
-        $exclude_flipped = array_flip( $exclude );
-
-        if( $this->isInclude ){
-            $included_terms = [];
-            foreach( $terms as $index => $term ){
-                if( isset( $exclude_flipped[$term->slug] ) ){
-                    $included_terms[$index] = $term;
-                }
-            }
-            $terms = $included_terms;
-        }else{
-            foreach( $terms as $index => $term ){
-                if(  isset( $exclude_flipped[$term->slug] ) ){
-                    unset( $terms[$index] );
-                }
-            }
-        }
-
         return $terms;
     }
 
@@ -176,7 +152,11 @@ class PostMetaNumEntity implements Entity
         // Does nothing. It was already done before.
     }
 
-    public function selectTerms( $alreadyFilteredPosts = [] ){
+    /**
+     * @param array $alreadyFilteredPosts
+     * @return array
+     */
+    public function selectTerms( $alreadyFilteredPosts = [] ) {
         global $wpdb;
 
         $IN             = false;
@@ -187,9 +167,11 @@ class PostMetaNumEntity implements Entity
             'max' => 0
         ];
         $post_and_types = [];
-
         $translatable_post_type_exists = false;
 
+        /**
+         * Set Post types
+         */
         if( ! empty( $this->postTypes ) && isset($this->postTypes[0]) && $this->postTypes[0] ){
             foreach ( $this->postTypes as $postType ){
                 $key_in .= '_' . $postType;
@@ -199,14 +181,20 @@ class PostMetaNumEntity implements Entity
             $IN = implode(", ", $pieces );
         }
 
+        /**
+         * Set transient key
+         */
         $transient_key = flrt_get_terms_transient_key( 'post_meta_num_'. $this->getName() . $key_in );
 
         if ( false === ( $result = get_transient( $transient_key ) ) ) {
-
+            // Get all post meta values
             $sql[] = "SELECT {$wpdb->postmeta}.post_id,{$wpdb->postmeta}.meta_value,{$wpdb->posts}.post_type";
             $sql[] = "FROM {$wpdb->postmeta}";
             $sql[] = "LEFT JOIN {$wpdb->posts} ON ({$wpdb->postmeta}.post_id = {$wpdb->posts}.ID)";
 
+            /**
+             * If post type is translatable with WPML, get post meta values only with current language
+             */
             if( flrt_wpml_active() && defined( 'ICL_LANGUAGE_CODE' ) ){
 
                 $wpml_settings = get_option( 'icl_sitepress_settings' );
@@ -237,7 +225,7 @@ class PostMetaNumEntity implements Entity
                     }
                 }
             }
-            /*
+            /**
              * There is NULL problem because posts with meta_value = '' are also included in the list
              * And condition (NULL <= 0) is true
              * */
@@ -284,6 +272,9 @@ class PostMetaNumEntity implements Entity
             $queried_values = $wpManager->getQueryVar( 'queried_values', [] );
             $filter_slug    = false;
 
+            /**
+             * Check if this filter was queried
+             */
             foreach ( $queried_values as $slug => $filter ) {
                 if ( $filter[ 'e_name' ] === $this->getName() ) {
                     $filter_slug = $slug;
@@ -294,6 +285,9 @@ class PostMetaNumEntity implements Entity
             $max = false;
             $min = false;
 
+            /**
+             * If this filter was queried we have to receive its $max and $min values
+             */
             if ( $filter_slug ) {
                 if ( isset( $queried_values[ $filter_slug ][ 'values' ][ 'max' ] ) ) {
                     $max  = (float) $queried_values[ $filter_slug ][ 'values' ][ 'max' ];
@@ -307,13 +301,21 @@ class PostMetaNumEntity implements Entity
             }
 
             foreach ( $result as $single_post ) {
-
+                /**
+                 * If there are already filtered posts, we have to skip posts
+                 * that are out of the queried list
+                 */
                 if( ! empty( $alreadyFilteredPosts ) ) {
                     if( ! isset( $postsIn_flipped[ $single_post['post_id'] ] ) ) {
                         continue;
                     }
                 }
 
+                /**
+                 * We have to generate and fill two arrays
+                 * First to detect $min and $max values
+                 * Second to map post_types with post IDs
+                 */
                 $new_result[] = (float) $single_post['meta_value'];
 
                 if ( $min !== false && $single_post['meta_value'] < $min ){
@@ -380,7 +382,7 @@ class PostMetaNumEntity implements Entity
         return apply_filters( 'wpc_filter_post_meta_num_term_name', $name, $this->getName() );
     }
 
-    public function convertSelectResult($result, $post_and_types = [] ){
+    public function convertSelectResult( $result, $post_and_types = [] ){
         $return = [];
 
         if( ! is_array( $result ) ){

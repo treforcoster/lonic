@@ -138,6 +138,9 @@ class AdminHooks
     {
         $forbiddenPrefixes  = flrt_get_forbidden_prefixes();
         $savedPrefixes      = get_option( 'wpc_filter_permalinks', [] );
+//        if( ! $savedPrefixes || ! is_array( $savedPrefixes ) ) {
+//            $savedPrefixes = [];
+//        }
         $warningPrefixes    = [];
 
         foreach( $forbiddenPrefixes as $prefix ){
@@ -180,7 +183,9 @@ class AdminHooks
     public function adminNotices()
     {
         $get = Container::instance()->getTheGet();
-
+        /**
+         * string
+         */
         if( ! isset( $get['message'] ) ){
             return false;
         }

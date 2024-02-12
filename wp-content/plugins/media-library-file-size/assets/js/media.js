@@ -8,6 +8,7 @@ function SS88_MediaLibraryFileSize_init_MediaLibrary() {
 
             SB.indexCheck();
 			SB.addReindexButton();
+			SB.initVariantsModal();
 			
 		},
 		indexCheck: ()=> {
@@ -172,6 +173,56 @@ function SS88_MediaLibraryFileSize_init_MediaLibrary() {
 					tr.querySelector('.SS88_MediaLibraryFileSize').innerHTML = post.html;
 
 				}
+			
+			});
+
+		},
+		initVariantsModal: () => {
+
+			document.querySelectorAll('.ss88MLFS_VV').forEach(button => { 
+
+				button.addEventListener('click', (e) => {
+
+					e.preventDefault();
+
+					let attachment_id = button.dataset.aid;
+					let attachment_data = ss88MLFS_VV[attachment_id];
+					if(!attachment_id || !attachment_data) return;
+						
+					let overlay = document.createElement('div'); overlay.classList.add('ss88MLFS_VV_overlay');
+					let modal = document.createElement('div'); modal.classList.add('ss88MLFS_VV_modal');
+
+					overlay.addEventListener('click', (e) => {
+
+						if(e.target.classList.contains('ss88MLFS_VV_overlay')) overlay.remove();
+
+					});
+
+					overlay.appendChild(modal); document.body.appendChild(overlay);
+
+					attachment_data.sort((a, b) => a.width - b.width);
+
+					attachment_data.forEach(function(data, index) {
+
+						document.querySelector('.ss88MLFS_VV_modal').innerHTML += `
+						
+							<div class="ss88MLFS_VV_box">
+								<span class="img">
+									${data.width}
+									<br>x<br>
+									${data.height}
+									<a href="${data.filename}" target="_blank">Click to View Image</a>
+								</span>
+								<span class="name">${data.filename.split(/[\\/]/).pop()}</span>
+								<span class="size">Filesize: ${data.filesize_hr}</span>
+								<span class="name2">Name: ${data.size}</span>
+							</div>
+						
+						`;
+
+					})
+	
+				});
 			
 			});
 

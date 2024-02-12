@@ -4,6 +4,8 @@ if ( ! defined('ABSPATH') ) {
     exit;
 }
 
+use \FilterEverything\Filter\PostDateEntity;
+
 // Make post type name lowercase in posts found message
 add_filter( 'wpc_label_singular_posts_found_msg', 'mb_strtolower' );
 add_filter( 'wpc_label_plural_posts_found_msg', 'mb_strtolower' );
@@ -305,7 +307,7 @@ if( ! function_exists('wpc_term_brand_logo') ) {
 
         $link_attributes .= ' title="'.$term->name.'"';
         if ( $src ) {
-            $img = '<span class="wpc-term-image-wrapper"><img src="' . $src . '" /></span>';
+            $img = '<span class="wpc-term-image-wrapper"><img src="' . $src . '" alt="'.$term->name.'" /></span>';
             $html = '<a ' . $link_attributes . '>' . $img . ' <span class="wpc-term-name">' . $term->name . '</span></a>';
         }
 

@@ -584,6 +584,9 @@ function flrt_remove_product_query_post_clauses( $wp_query, $WC_query ) {
     return $wp_query;
 }
 
+function flrt_is_dokan() {
+    return function_exists('dokan');
+}
 
 //@todo check this with PLL support
 //function flrt_add_cpt_to_pll_tmp( $post_types, $is_settings ) {

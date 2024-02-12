@@ -386,13 +386,7 @@ class Forminator_Signature_Field extends Forminator_Field {
 
 		$html = '<div class="forminator-field forminator-field-signature">';
 
-			$required_icon = $required ? ' ' . forminator_get_required_icon() : '';
-
-			$html .= sprintf(
-				'<label class="forminator-label">%s%s</label>',
-				esc_html( $label ),
-				$required_icon
-			);
+		$html .= self::get_field_label( $label, 'forminator-field-' . $id, $required );
 
 			$html .= '<div class="forminator-signature" data-elementheight="' . $height . '" aria-describedby="' . esc_attr( 'forminator-field-' . $id . '-description' ) . '">';
 
@@ -562,7 +556,7 @@ class Forminator_Signature_Field extends Forminator_Field {
 			if ( $create_jpg ) {
 				$result = imagejpeg( $transparent_image, $file_path, 100 );
 			} else {
-				$result = imagepng( $transparent_image, $file_path, 0, null );
+				$result = imagepng( $transparent_image, $file_path, 0 );
 			}
 
 			ImageDestroy( $im );

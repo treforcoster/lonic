@@ -1,9 +1,9 @@
 === Filter Everything&nbsp;— Product Filter & WordPress Filter ===
 Contributors: stepasyuk
 Tags: woocommerce product filter, woocommerce filter, product filter, post filter, ajax filter, product filter woocommerce, filter, taxonomy filter, post type filter, woocommerce products filter, category filter, price filter
-Stable tag: 1.7.15
+Stable tag: 1.8.2
 Requires at least: 4.6
-Tested up to: 6.3
+Tested up to: 6.4.2
 Requires PHP: 5.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -70,6 +70,7 @@ No need to list all possible filters you can create &mdash; they can be any, but
 - [Product Visibility](https://demo.filtereverything.pro/example/by-rating/)
 - [Featured image](https://demo.filtereverything.pro/posts/) exists/not exists
 - [Views count](https://demo.filtereverything.pro/posts/)
+- [Post or Product date](https://demo.filtereverything.pro/posts/?date_from=2016-12-20t15.29.13&date_to=2018-01-18t07.04.11)
 - Cooking time
 - Calories
 - [Author](https://demo.filtereverything.pro/posts/)
@@ -165,6 +166,21 @@ Uploading via FTP
 6. URL prefixes settings
 
 == Changelog ==
+
+= 1.8.2 =
+*Release Date - 10 January 2024*
+* Dev   - Added new filter type by Post Date
+* Tweak - Made Numeric Range filters collapsible
+* Fix   - Fixed warning message on the login screen
+* Fix   - Fixed issue with resetting filters cache
+* Fix   - Renamed 'wpc_clean' function to 'flrt_clean' to avoid conflicts
+
+= 1.7.16 =
+*Release Date - 14 December 2023*
+* Tweak - Added global variable $flrt_plugin to access the class
+* Fix   - Fixed the issue with double SEO titles and SEO Rules entities on block themes
+* Fix   - Fixed issue with term_taxonomy_id and taxonomy filter counters
+* Fix   - Fixed Select2 CSS conflict in Woocommerce admin forms
 
 = 1.7.15 =
 *Release Date - 01 August 2023*
@@ -264,20 +280,14 @@ Uploading via FTP
 * Fix   - Fixed compatibility issue with the Brizy page builder
 * Tweak - Changed the Reset button color to inactive
 
-= 1.6.7 =
-*Release Date - 07 August 2022*
-* Fix   - Fixed problem with Select2 script in dashboard
-
 [See changelog for all versions](https://demo.filtereverything.pro/changelog.txt).
 
 == Upgrade Notice ==
 
-= 1.7.15 =
-*Release Date - 01 August 2023*
-* Dev   - Added Spanish translation.
-* Dev   - Tested compatibility with WordPress 6.3
-* Fix   - Added 301 redirect to canonical URL with (or without) correct user trailing slash on filtering pages
-* Fix   - Added hook 'wpc_do_filter_request' to the collectFilteredPostsIds(); method to fix term counter
-* Fix   - Fixed hover "checked" effect for Color swatches on mobile devices
-* Tweak - Added hook 'wpc_set_min_max' to modify the $min_and_max array
-* Tweak - Sorted Filter and SEO Rule terms alphabetically for greater convenience
+= 1.8.2 =
+*Release Date - 10 January 2024*
+* Dev   - Added new filter type by Post Date
+* Tweak - Made Numeric Range filters collapsible
+* Fix   - Fixed warning message on the login screen
+* Fix   - Fixed issue with resetting filters cache
+* Fix   - Renamed 'wpc_clean' function to 'flrt_clean' to avoid conflicts

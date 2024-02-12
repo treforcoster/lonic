@@ -29,6 +29,8 @@ class Filter
                     'label'      => '',
                     'slug'       => '',
                     'view'       => '',
+                    'date_type'  => '',
+                    'date_format'  => '',
                     'show_term_names' => '',
                     'logic'      => '',
                     'orderby'    => '',
@@ -53,17 +55,17 @@ class Filter
 
     public function getEntityKey( $entity, $e_name = '' )
     {
-        // Meta field or Tax numeric
-        if( $e_name ){
-//            if ( mb_strpos( $e_name, 'taxonomy_' ) !== false  ) {
-//                $e_name = mb_strcut( $e_name, strlen( 'taxonomy_' ) );
-//            }
+        if ( $entity === 'post_date' ) {
+            return $entity . $this->sep . $entity;
+        }
 
+        // Meta field or Tax numeric
+        if ( $e_name ) {
             return $entity . $this->sep . $e_name;
         }
 
-        // Replace first "_" with $this->sep
-        if( mb_strpos( $entity, '_' ) !== false ){
+        // Replace first "_" with $this->sep in taxonomy entity
+        if ( mb_strpos( $entity, '_' ) !== false ) {
             $_position = strpos( $entity, '_' );
             return substr_replace( $entity, $this->sep, $_position, 1 );
         }
@@ -73,7 +75,7 @@ class Filter
 
     public function getEntityCanonicalName( $entity )
     {
-        if( mb_strpos( $entity, 'post_meta' ) !== false || mb_strpos( $entity, 'tax_numeric' ) !== false ){
+        if( mb_strpos( $entity, 'post_meta' ) !== false || mb_strpos( $entity, 'tax_numeric' ) !== false || mb_strpos( $entity, 'post_date' ) !== false ){
             $canonical = explode( $this->sep, $entity, 2 );
             return $canonical[0];
         } else {
@@ -100,13 +102,22 @@ class Filter
         return $entityFullName;
     }
 
+    /**
+     * Determines whether to modify or not e_name for a filter
+     * @param $filter array with filter properties
+     * @return bool
+     */
     public function needEntityToModifyEname( $filter )
     {
+        // taxonomy_pa_size
+        // taxonomy_pa_color
+        // author_author || author
+        // tax_numeric
         if( mb_strpos( $filter['entity'], 'taxonomy' ) === false
             &&
             mb_strpos( $filter['entity'], 'author' ) === false
             &&
-            mb_strpos( $filter['entity'], 'tax_numeric' ) === false ){
+            ! in_array( $filter['entity'], [ 'tax_numeric' , 'post_date' ] ) ){
             return false;
         }
         return true;
@@ -127,6 +138,12 @@ class Filter
         if ( mb_strpos( $filter['entity'], 'author' ) !== false ) {
             $filter['e_name'] = 'author';
             $filter['entity'] = 'author';
+            return $filter;
+        }
+
+        if ( mb_strpos( $filter['entity'], 'post_date' ) !== false ) {
+            $filter['e_name'] = 'post_date';
+            $filter['entity'] = 'post_date';
             return $filter;
         }
 
@@ -151,6 +168,12 @@ class Filter
             $filter['e_name'] = '';
             return $filter;
         }
+
+//        if ( mb_strpos( $filter['entity'], 'post_date' ) !== false ) {
+//            $filter['entity'] = 'post_date';
+//            $filter['e_name'] = '';
+//            return $filter;
+//        }
 
         return $filter;
     }
@@ -183,19 +206,6 @@ class Filter
         return false;
     }
 
-    public function addTermValue( $filter, $term ){
-        if( isset( $filter['values'] ) ){
-            if( ! in_array( $term, $filter['values'] ) ) {
-                $filter['values'][] = $term;
-                sort($filter['values'] );
-            }
-        } else {
-            $filter['values'] = $term;
-        }
-
-        return $filter;
-    }
-
     public function getFiltersOrder()
     {
         $permalinksTab = new PermalinksTab();
@@ -211,7 +221,7 @@ class Filter
         return $this->logicSeparators[ $filter['logic'] ];
     }
 
-    public function getAllFilters(){
-        return $this->filters;
-    }
+//    public function getAllFilters(){
+//        return $this->filters;
+//    }
 }

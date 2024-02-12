@@ -92,7 +92,7 @@ class Chips
 
                     foreach ($filter['values'] as $key => $termSlug) {
 
-                        if (in_array($filter['entity'], ['post_meta_num', 'tax_numeric'])) {
+                        if ( in_array($filter['entity'], ['post_meta_num', 'tax_numeric', 'post_date'] ) ) {
                             $termSlug = $key;
                         }
 

@@ -27,11 +27,22 @@
                 </div>
               <?php endforeach; ?>
             </div>
+            <div class="carousel-footer padding-top-intro  padding-bottom-intro">
+              <div class="pagination"></div>
+              <div class='navigation'>
+                @include('components.components.component-carousel-navigation')
+              </div>
+            </div>
 
-            {{-- @include('components.components.component-carousel-navigation-gallery') --}}
+            
+
+            {{-- <div class='navigation'>
+              @include('components.components.component-carousel-navigation')
+            </div> --}}
 
            
           </div>
+         
         </div>
       <?php } else { ?>
         <div class="gallery-single-image">

@@ -40,7 +40,7 @@ class Nf_Lockout extends Event {
 		$this->service = wd_di()->get( \WP_Defender\Component\Notfound_Lockout::class );
 		$service = wd_di()->get( Blacklist_Lockout::class );
 		$ip = $this->get_user_ip();
-		if ( $this->model->enabled && ! $service->is_ip_whitelisted( $ip ) ) {
+		if ( $this->model->enabled && ! $service->are_ips_whitelisted( $ip ) ) {
 			$this->service->add_hooks();
 		}
 	}
@@ -48,7 +48,7 @@ class Nf_Lockout extends Event {
 	/**
 	 * Queue assets and require data.
 	 *
-	 * @return null|void
+	 * @return void
 	 */
 	public function enqueue_assets() {
 		if ( ! $this->is_page_active() ) {

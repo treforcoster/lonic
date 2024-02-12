@@ -38,13 +38,10 @@ class PermalinksTab extends BaseSettings
 
     public function initSettings()
     {
-        $key_entities = [];
-
         $saved_options = get_option( $this->optionName );
-
         $flat_entities = $this->em->getFlatEntities();
 
-        register_setting($this->group, $this->optionName);
+        register_setting( $this->group, $this->optionName );
 
         $settings = array(
             'wpc_slugs'      => array(
@@ -52,7 +49,7 @@ class PermalinksTab extends BaseSettings
             )
         );
 
-        if(defined('FLRT_FILTERS_PRO')){
+        if ( defined('FLRT_FILTERS_PRO') ) {
             $settings = array(
                 'wpc_slugs'      => array(
                     'label'  => esc_html__( 'Global filter prefixes and order', 'filter-everything' ),
@@ -60,11 +57,11 @@ class PermalinksTab extends BaseSettings
             );
         }
 
-        if( ! $saved_options ){
+        if ( ! $saved_options ) {
 
             add_action('wpc_after_sections_settings_fields', array( $this, 'noFiltersMessage' ) );
 
-        }else{
+        } else {
             /**
              * @bug When you draggin field its size is changing.
              */
@@ -84,7 +81,7 @@ class PermalinksTab extends BaseSettings
                     $classes[] = 'free-version';
                 }
 
-                if ( ! in_array( $entity_name, [ 'post_meta_num', 'tax_numeric' ] ) ) {
+                if ( ! in_array( $entity_name, [ 'post_meta_num', 'tax_numeric', 'post_date' ] ) ) {
                     $classes[] = 'wpc-sortable-row';
                 }
 
@@ -113,7 +110,7 @@ class PermalinksTab extends BaseSettings
         $other_saved_options = [];
 
         foreach( $saved_options as $entity => $slug ) {
-            if ( ( mb_strpos( $entity, 'post_meta_num' ) !== false ) || ( mb_strpos( $entity, 'tax_numeric' ) !== false ) ) {
+            if ( ( mb_strpos( $entity, 'post_meta_num' ) !== false ) || ( mb_strpos( $entity, 'tax_numeric' ) !== false ) || ( mb_strpos( $entity, 'post_date' ) !== false ) ) {
                 $num_saved_options[ $entity ]   = $slug;
             } else {
                 $other_saved_options[ $entity ] = $slug;

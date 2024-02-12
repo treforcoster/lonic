@@ -545,7 +545,7 @@ msgid "Dropdown"
 msgstr ""
 
 #: src/Admin/FilterFields.php:248
-msgid "Range"
+msgid "Numeric range"
 msgstr ""
 
 #: src/Admin/FilterFields.php:258
@@ -2201,4 +2201,131 @@ msgid "«Auto-submission» and «Apply button» modes"
 msgstr ""
 
 msgid "Step-by-Step filtering"
+msgstr ""
+
+msgid "Dokan vendors"
+msgstr ""
+
+msgid "— There is no any vendors yet —"
+msgstr ""
+
+msgid "Out of stock visibility"
+msgstr ""
+
+msgid "Hide out of stock items from filtering results"
+msgstr ""
+
+msgid "Also hides variable products, if their variations are out of stock. Please do not use at the same time with the filter by Stock status."
+msgstr ""
+
+msgid "Date range"
+msgstr ""
+
+msgid "Date Type"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Date Time"
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Error: invalid Date Type parameter."
+msgstr ""
+
+msgid "Date Format"
+msgstr ""
+
+msgid "Custom:"
+msgstr ""
+
+msgctxt "Date Picker closeText"
+msgid "Filter"
+msgstr ""
+
+msgctxt "Date Picker currentText"
+msgid "Today"
+msgstr ""
+
+msgctxt "Date Picker nextText"
+msgid "Next"
+msgstr ""
+
+msgctxt "Date Picker prevText"
+msgid "Prev"
+msgstr ""
+
+msgctxt "Date Picker weekHeader"
+msgid "Wk"
+msgstr ""
+
+msgctxt "Date Time Picker timeOnlyTitle"
+msgid "Choose Time"
+msgstr ""
+
+msgctxt "Date Time Picker timeText"
+msgid "Time"
+msgstr ""
+
+msgctxt "Date Time Picker hourText"
+msgid "Hour"
+msgstr ""
+
+msgctxt "Date Time Picker minuteText"
+msgid "Minute"
+msgstr ""
+
+msgctxt "Date Time Picker secondText"
+msgid "Second"
+msgstr ""
+
+msgctxt "Date Time Picker timezoneText"
+msgid "Time Zone"
+msgstr ""
+
+msgctxt "Date Time Picker selectText"
+msgid "Select"
+msgstr ""
+
+msgctxt "Date Time Picker amText"
+msgid "AM"
+msgstr ""
+
+msgctxt "Date Time Picker amTextShort"
+msgid "A"
+msgstr ""
+
+msgctxt "Date Time Picker pmText"
+msgid "PM"
+msgstr ""
+
+msgctxt "Date Time Picker pmTextShort"
+msgid "P"
+msgstr ""
+
+msgid "After"
+msgstr ""
+
+msgid "Before"
+msgstr ""
+
+msgid "Post Date"
+msgstr ""
+
+msgid "Error: Invalid date format."
+msgstr ""
+
+msgid "Error: Invalid time format."
+msgstr ""
+
+msgid "Error: Invalid date or time format."
+msgstr ""
+
+msgid "How the date will be displayed in the Filters widget"
+msgstr ""
+
+msgid "More PHP date formats can be found on <a href=\"%1$s\" target=\"_blank\">this page</a>."
 msgstr ""

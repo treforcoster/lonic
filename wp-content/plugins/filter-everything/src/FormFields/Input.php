@@ -143,22 +143,6 @@ class Password extends Input {
     }
 }
 
-class Radio extends Input {
-    public function render(){
-        $class = 'class';
-        if(!$this -> $class){
-            $class = ' class="radio"';
-        }
-
-        $html = '<input '.$class.' type="radio"';
-        $html .= $this -> renderAttributes();
-        $html .= ' value="'.$this -> value.'"';
-        $html .= ' />';
-
-        return apply_filters( 'wpc_input_type_radio', $html, $this->getAttributes() );
-    }
-}
-
 class Submit extends Input {
     public function __construct($options, $validation = []){
         if(!is_array($options)){
@@ -197,7 +181,46 @@ class Text extends Input {
     }
 }
 
+class Radio extends Input {
+    public function render(){
+
+        $html = '<ul class="wpc-radio-list" id="'.$this->getAttribute('id' ).'">';
+        $current_value = $this->getAttribute('value');
+
+        foreach ( $this->getAttribute('options' ) as $value => $label ) {
+            $html .= '<li>';
+                $html .= '<label>';
+                    $html .= '<input type="radio"';
+                        $html .= $this->renderAttributes( $skip = array( 'options', 'value', 'id' ) );
+                        $html .= ' value="' . $value . '"';
+                        if ( $value === $current_value ) {
+                            $html .= ' checked="checked"';
+                        }
+                    $html .= ' />';
+                    $html .= $label;
+                $html .= '</label>';
+            $html .= '</li>';
+        }
+
+        $html .= '</ul>';
+
+        return apply_filters( 'wpc_input_type_radio', $html, $this->getAttributes() );
+    }
+}
+
 class Select extends Input {
+
+    public function render(){
+        $html = '<select';
+        $html .= $this->renderAttributes( array( 'value', 'options', 'disabled' ) );
+        $html .= '>';
+
+        $html .= $this->renderDropdown( $this->getAttribute('options' ) , $this->getAttribute('value' ), $this->getAttribute('disabled' ) );
+
+        $html .= '</select>'."\r\n";
+
+        return apply_filters( 'wpc_input_type_select', $html, $this->getAttributes() );
+    }
 
     private function renderDropdown( $options, $selected, $disabled = [] )
     {
@@ -268,18 +291,6 @@ class Select extends Input {
         $html .= '>' . $label . '</option>'."\r\n";
 
         return $html;
-    }
-
-    public function render(){
-        $html = '<select';
-        $html .= $this->renderAttributes( array( 'value', 'options', 'disabled' ) );
-        $html .= '>';
-
-        $html .= $this->renderDropdown( $this->getAttribute('options' ) , $this->getAttribute('value' ), $this->getAttribute('disabled' ) );
-
-        $html .= '</select>'."\r\n";
-
-        return apply_filters( 'wpc_input_type_select', $html, $this->getAttributes() );
     }
 }
 

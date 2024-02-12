@@ -3,7 +3,7 @@
 Plugin Name: Filter Everything&nbsp;— WooCoomerce Product & WordPress Filter
 Plugin URI: https://filtereverything.pro
 Description: Filters everything in WordPress & WooCommerce: Products, any Post types, by Any Criteria. Compatible with WPML, ACF and others popular. Supports AJAX.
-Version: 1.7.15
+Version: 1.8.2
 Author: Andrii Stepasiuk
 Author URI: https://filtereverything.pro/about/
 Text Domain: filter-everything
@@ -31,9 +31,9 @@ if( ! class_exists( 'FlrtFilter' ) ):
             $this->define( 'FLRT_PLUGIN_DIR_URL', plugin_dir_url( __FILE__ ) );
             $this->define( 'FLRT_PLUGIN_BASENAME', plugin_basename(__FILE__) );
             $this->define( 'FLRT_PLUGIN_SLUG', 'filter-everything-pro' );
-            $this->define( 'FLRT_PLUGIN_VER', '1.7.15' );
+            $this->define( 'FLRT_PLUGIN_VER', '1.8.2' );
             $this->define( 'FLRT_PLUGIN_URL', 'https://filtereverything.pro' );
-            $this->define( 'FLRT_PLUGIN_TESTED_TO', '6.3' );
+            $this->define( 'FLRT_PLUGIN_TESTED_TO', '6.4.2' );
             $this->define( 'FLRT_PLUGIN_DEBUG', false );
             $this->define( 'FLRT_TEMPLATES_DIR_NAME', 'filters' );
 
@@ -41,6 +41,7 @@ if( ! class_exists( 'FlrtFilter' ) ):
             $this->define( 'FLRT_FILTERS_POST_TYPE', 'filter-field' );
             $this->define( 'FLRT_PREFIX_SEPARATOR', '-' );
             $this->define( 'FLRT_QUERY_TERMS_SEPARATOR', ';' );
+            $this->define( 'FLRT_DATE_TIME_SEPARATOR', 't' );
             $this->define( 'FLRT_FOLDING_COOKIE_NAME', 'wpcContainersStatus' );
             $this->define( 'FLRT_MORELESS_COOKIE_NAME', 'wpcMoreLessStatus' );
             $this->define( 'FLRT_HIERARCHY_LIST_COOKIE_NAME', 'wpcHierarchyListStatus' );
@@ -70,6 +71,7 @@ if( ! class_exists( 'FlrtFilter' ) ):
             flrt_include('src/Entities/PostMetaEntity.php');
             flrt_include('src/Entities/PostMetaNumEntity.php');
             flrt_include('src/Entities/AuthorEntity.php');
+            flrt_include('src/Entities/PostDateEntity.php');
 
             // Include PRO
 //            flrt_include('pro/filters-pro.php');
@@ -113,6 +115,8 @@ if( ! class_exists( 'FlrtFilter' ) ):
 
             $this->registerHooks();
 
+            $this->initSettings();
+
             if( flrt_get_experimental_option( 'disable_woo_orderby' ) === 'on' ) {
                 if( ! function_exists('woocommerce_catalog_ordering') ){
                     function woocommerce_catalog_ordering()
@@ -125,9 +129,6 @@ if( ! class_exists( 'FlrtFilter' ) ):
 
         public function registerHooks()
         {
-            // Convert old post_name format to new. Since v1.1.24
-            add_action( 'init', [ $this, 'convertSetLocations' ], -1 );
-
             // Backward compatibility. From v1.3.2
             add_action( 'init', [ $this, 'convertShowChipsInContent' ], -1 );
 
@@ -169,56 +170,6 @@ if( ! class_exists( 'FlrtFilter' ) ):
             }
         }
 
-        public function convertSetLocations()
-        {
-            if( is_admin() ) {
-
-                global $wpdb;
-
-                // Convert separator from ":" to "___" and from -1 to 1
-                $sql   = [];
-                $sql[] = "SELECT {$wpdb->posts}.ID, {$wpdb->posts}.post_name";
-                $sql[] = "FROM {$wpdb->posts}";
-                $sql[] = "WHERE {$wpdb->posts}.post_type = '%s'";
-                $sql[] = "AND {$wpdb->posts}.post_name REGEXP '[\:]+'";
-                $sql[] = "OR {$wpdb->posts}.post_name = '-1'";
-
-                $sql = implode(" ", $sql);
-                $sql = $wpdb->prepare($sql, FLRT_FILTERS_SET_POST_TYPE);
-
-                $results = $wpdb->get_results($sql, ARRAY_A);
-
-                if (! empty( $results ) ) {
-
-                    foreach ($results as $row) {
-                        $update = [];
-
-                        if (!isset($row['post_name']) || !isset($row['ID'])) {
-                            continue;
-                        }
-
-                        if( $row['post_name'] == '-1' ){
-                            $new_post_name = '1';
-                        }else{
-                            $new_post_name = str_replace(":", "___", $row['post_name']);
-                        }
-
-                        $update[] = "UPDATE {$wpdb->posts}";
-                        $update[] = "SET {$wpdb->posts}.post_name = '%s'";
-                        $update[] = "WHERE {$wpdb->posts}.ID = %s";
-
-                        $updateSql = implode(" ", $update);
-
-                        $updateSql = $wpdb->prepare($updateSql, $new_post_name, $row['ID']);
-
-                        $wpdb->query($updateSql);
-                    }
-                }
-
-            }
-
-        }
-
         public function loadTextdomain()
         {
             load_plugin_textdomain( 'filter-everything', false, dirname(FLRT_PLUGIN_BASENAME) . '/lang' );
@@ -226,7 +177,8 @@ if( ! class_exists( 'FlrtFilter' ) ):
 
         public function oneTwoThreeGo()
         {
-            new \FilterEverything\Filter\Plugin();
+            global $flrt_plugin;
+            $flrt_plugin = new \FilterEverything\Filter\Plugin();
         }
 
         /**
@@ -235,6 +187,39 @@ if( ! class_exists( 'FlrtFilter' ) ):
         public function afterSetupTheme()
         {
             $this->define( 'FLRT_ALLOW_PLL_TRANSLATIONS', true );
+        }
+
+        private function initSettings(){
+            $container = \FilterEverything\Filter\Container::instance();
+
+            $settings['php_to_js_date_formats'] = array(
+                'Y' => 'yy',
+                'y' => 'y',
+                'm' => 'mm',
+                'n' => 'm',
+                'F' => 'MM',
+                'M' => 'M',
+                'l' => 'DD',
+                'D' => 'D',
+                'd' => 'dd',
+                'j' => 'd',
+                'S' => '',
+            );
+
+            $settings['php_to_js_time_formats'] = array(
+                'a' => 'tt',
+                'A' => 'TT',
+                'h' => 'hh',
+                'g' => 'h',
+                'H' => 'HH',
+                'G' => 'H',
+                'i' => 'mm',
+                's' => 'ss',
+            );
+
+            foreach ( $settings as $key => $value ) {
+                $container->storeParam( $key, $value );
+            }
         }
 
         public function define( $name, $value = true )

@@ -22,43 +22,39 @@ class Two_Fa extends Component {
 	/**
 	 * The user meta key for the default provider.
 	 *
-	 * @type string
+	 * @var string
 	 */
 	public const DEFAULT_PROVIDER_USER_KEY = 'wd_2fa_default_provider';
 
 	/**
 	 * The user meta key for enabled providers.
 	 *
-	 * @type string
+	 * @var string
 	 */
 	public const ENABLED_PROVIDERS_USER_KEY = 'wd_2fa_enabled_providers';
 
 	/**
-	 * @type int
+	 * @var int
 	 */
 	public const ATTEMPT_LIMIT = 5;
 
 	/**
-	 * @type int
+	 * @var int
 	 */
 	public const TIME_LIMIT = 30 * MINUTE_IN_SECONDS;
 
 	/**
-	 * @type string
+	 * @var string
 	 */
 	public const TOKEN_USER_KEY = 'defender_two_fa_token';
 
 	/**
 	 * Get the limit of failed attempts.
 	 *
+	 * @since 3.3.0
 	 * @return int
 	 */
-	public function get_attempt_limit() {
-		/**
-		 * @since 3.3.0
-		 *
-		 * @param int $limit
-		 */
+	public function get_attempt_limit(): int {
 		return (int) apply_filters( 'wd_2fa_attempt_limit', self::ATTEMPT_LIMIT );
 	}
 
@@ -462,6 +458,11 @@ class Two_Fa extends Component {
 		$headers = [ 'Content-Type: text/html; charset=UTF-8' ];
 		$from_email = get_bloginfo( 'admin_email' );
 		$headers[] = sprintf( 'From: %s <%s>', $settings->email_sender, $from_email );
+		/**Todo: check
+		$headers[] = wd_di()->get( \WP_Defender\Component\Mail::class )->get_headers(
+			defender_noreply_email( 'wd_two_fa_totp_noreply_email' ),
+			'totp'
+		);*/
 
 		return wp_mail( Fallback_Email::get_backup_email( $user->ID ), $settings->email_subject, $body, $headers );
 	}
@@ -526,6 +527,14 @@ class Two_Fa extends Component {
 		 */
 		$firewall_component = wd_di()->get( \WP_Defender\Component\Firewall::class );
 
+		$skip_priority_lockout_checks = true;
+		foreach ( $this->get_user_ip() as $ip ) {
+			if ( ! $firewall_component->skip_priority_lockout_checks( $ip ) ) {
+				$skip_priority_lockout_checks = false;
+				break;
+			}
+		}
+
 		/**
 		 * Required rules:
 		 * hook returns true (since v3.3.0),
@@ -535,7 +544,7 @@ class Two_Fa extends Component {
 		if (
 			apply_filters( 'wd_2fa_enable_attempts', true )
 			&& $login_settings->enabled
-			&& ! $firewall_component->skip_priority_lockout_checks( $this->get_user_ip() )
+			&& ! $$skip_priority_lockout_checks
 		) {
 			$line = get_user_meta( $user_id, 'wd_2fa_attempt_' . $slug, true );
 			// Fresh start or there's a record.
@@ -710,7 +719,7 @@ class Two_Fa extends Component {
 	/**
 	 * Reset 2FA methods for specific user and display notice.
 	 *
-	 * @return null|void
+	 * @return void
 	 */
 	public function admin_notices() {
 		$screen = get_current_screen();

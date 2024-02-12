@@ -57,6 +57,6 @@ class Bootstrap {
 			],
 		];
 		/** @noinspection PhpIncludeInspection */
-		include_once( defender_path( 'extra/dash-notice/wpmudev-dash-notification.php' ) );
+		include_once defender_path( 'extra/dash-notice/wpmudev-dash-notification.php' );
 	}
 }

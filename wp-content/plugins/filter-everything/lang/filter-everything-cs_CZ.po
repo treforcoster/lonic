@@ -1779,7 +1779,7 @@ msgid "Random"
 msgstr "Náhodný"
 
 #: src/Admin/FilterFields.php:248
-msgid "Range"
+msgid "Numeric Range"
 msgstr "Rozsah"
 
 msgid "Read more"

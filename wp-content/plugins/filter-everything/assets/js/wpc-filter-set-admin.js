@@ -1,5 +1,5 @@
 /*!
- * Filter Everything set admin 1.7.15
+ * Filter Everything set admin 1.8.2
  */
 (function($) {
     "use strict";
@@ -334,6 +334,7 @@
             $el.find('[id*="' + search + '"]').attr('id', replaceAttr);
             $el.find('[for*="' + search + '"]').attr('for', replaceAttr);
             $el.find('[name*="' + search + '"]').attr('name', replaceAttr);
+            $el.find('[class*="' + search + '"]').attr('class', replaceAttr);
             $el.data('fid', replace);
             $el.attr('id', 'wpc-filter-id-'+replace);
 
@@ -509,7 +510,8 @@
                 $('#wpc_filter_fields-'+fid+'-e_name').trigger('change');
             }
 
-            if( entity === 'tax_numeric' || entity === 'post_meta' || entity === 'post_meta_num' || entity === 'post_meta_exists' ){
+            // replace with includes
+            if ( [ 'tax_numeric', 'post_meta', 'post_meta_num', 'post_meta_exists', 'post_date' ].includes(entity) ) {
                 let target = $('#wpc_filter_fields-'+fid+'-exclude');
                 target.select2({
                     disabled: true,
@@ -520,7 +522,7 @@
             }
 
             let entityLabel = $(this).find('option:selected').text();
-            let target = $(this).parents('.wpc-filter-item').find('.wpc-filter-head li.wpc-filter-entity');
+            let target      = $(this).parents('.wpc-filter-item').find('.wpc-filter-head li.wpc-filter-entity');
             target.text(entityLabel);
 
             theTitle = $("#wpc_filter_fields-"+fid+"-label").val();
@@ -781,6 +783,60 @@
             if( typeof filterPagelink !== 'undefined'){
                 wpcGetWpQueries( filterPagelink );
             }
+        });
+
+        $('body').on( 'change', '.wpc-date-format', function (e){
+            let otherFieldName = $(this).attr('name');
+            let $customField = $( '.wpc-date-custom-format[name="'+otherFieldName+'"]' );
+            if ( $(this).attr('value') === 'other' ) {
+                $customField.removeAttr('disabled');
+            } else {
+                $customField.val( $(this).val() );
+                $customField.attr('disabled', 'disabled');
+            }
+        });
+
+        $('body').on('change', '.wpc-date-type', function (e){
+
+            let dataFid = $(this).parents('.wpc-filter-item').data('fid');
+
+            let $spinner = $( '.wpc_filter_fields-'+dataFid+'-date_format-wrap' ).children( '.spinner' );
+            $spinner.addClass( 'is-active' );
+
+            // Set up AJAX request
+            let requestParams           = {};
+            //requestParams._wpnonce  = $("#wpc_set_nonce").val();
+            requestParams.setId         = $("#post_ID").val();
+            requestParams.dateType      = $("#wpc_filter_fields-"+dataFid+"-date_type").val();
+            requestParams.fid           = dataFid;
+
+            wp.ajax.post( 'wpc_get_date_formats', requestParams )
+                .always( function() {
+                    $spinner.removeClass( 'is-active' );
+                })
+                .done( function( response ) {
+                    if ( typeof response.html !== 'undefined' ) {
+                        let setDefault  = true;
+                        let radioList   = $(response.html).find('ul');
+
+                        $.each( radioList.find('input.wpc-date-format'), function( key, value ){
+                            let theOption = $(this);
+                            if( theOption.is(':checked') ){
+                                setDefault = false;
+                                return;
+                            }
+                        });
+
+                        if( setDefault === true ) {
+                            radioList.find('input.wpc-date-format:first').attr('checked', 'checked');
+                        }
+
+                        $( '.wpc_filter_fields-'+dataFid+'-date_format-wrap ul' ).replaceWith(radioList);
+                    }
+                })
+                .fail( function(response) {
+                    // {"success":false}
+                });
         });
 
         $('body').on('change', '.wpc-field-parent-filter', function (){
@@ -1173,11 +1229,15 @@
         let fid = entitySelect.parents('.wpc-filter-item').data('fid');
 
         if( val === 'post_meta_num' || val === 'tax_numeric' ) {
-            $('#wpc_filter_fields-'+fid+'-view option:not([value="range"])').attr('disabled', 'disabled');
-            $('#wpc_filter_fields-'+fid+'-view option[value="range"]').removeAttr('disabled')
+            $('#wpc_filter_fields-' + fid + '-view option:not([value="range"])').attr('disabled', 'disabled');
+            $('#wpc_filter_fields-' + fid + '-view option[value="range"]').removeAttr('disabled')
                 .prop('selected', true);
-            $('#wpc_filter_fields-'+fid+'-view').trigger('change');
-
+            $('#wpc_filter_fields-' + fid + '-view').trigger('change');
+        } else if ( val === 'post_date' ) {
+            $('#wpc_filter_fields-' + fid + '-view option:not([value="date"])').attr('disabled', 'disabled');
+            $('#wpc_filter_fields-' + fid + '-view option[value="date"]').removeAttr('disabled')
+                .prop('selected', true);
+            $('#wpc_filter_fields-' + fid + '-view').trigger('change');
         }else{
             $('#wpc_filter_fields-'+fid+'-view option').removeAttr('disabled')
             $('#wpc_filter_fields-'+fid+'-view option:not([disabled]):first').prop('selected', true);
@@ -1195,7 +1255,7 @@
         if ( val === 'author_author' || val === 'post_meta_exists' ) {
             $( '#wpc_filter_fields-' + fid + '-logic option[value="and"]' ).attr( 'disabled', 'disabled' );
             $( '#wpc_filter_fields-' + fid + '-logic option[value="or"]' ).prop( 'selected', true );
-        } else if ( val === 'post_meta_num' || val === 'tax_numeric' ) {
+        } else if ( val === 'post_meta_num' || val === 'tax_numeric' || val === 'post_date' ) {
             // If filter is numeric logic can be AND only
             $( '#wpc_filter_fields-' + fid + '-logic option[value="or"]' ).attr( 'disabled', 'disabled' );
             $( '#wpc_filter_fields-' + fid + '-logic option[value="and"]' ).prop( 'selected', true );
@@ -1291,7 +1351,7 @@
         }
 
         // Numeric values can not be in URL path
-        if( val === 'post_meta_num' || val === 'tax_numeric' ){
+        if( val === 'post_meta_num' || val === 'tax_numeric' || val === 'post_date' ){
             $('#wpc_filter_fields-'+fid+'-in_path').prop( "checked", false );
             // $('#wpc_filter_fields-'+fid+'-show_chips').prop( "checked", false );
         }else{

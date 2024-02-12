@@ -149,10 +149,22 @@ class Container
         return $this->getService('swatches' );
     }
 
+    /**
+     * Sanitizes $_GET variables and stores them in the Container
+     * @return false|mixed
+     */
     public function getTheGet()
     {
-        if( ! $this->getParam('get') ){
-            $this->storeParam( 'get', $_GET );
+        if ( ! $this->getParam('get') ) {
+            $clean_get = [];
+
+            if ( is_array( $_GET ) ) {
+                foreach ( $_GET as $param => $value ) {
+                    $clean_get[ $param ] = filter_input( INPUT_GET, $param, FILTER_SANITIZE_STRING );
+                }
+            }
+
+            $this->storeParam( 'get', $clean_get );
         }
 
         return $this->getParam('get');

@@ -4,7 +4,7 @@
  *
  * @var array                           $allowed_users   Allowed users list.
  * @var array                           $available_users Available admin users.
- * @var WPMUDEV_Dashboard_Sui_Page_Urls $urls            URLs class;	 		  		  				 		   
+ * @var WPMUDEV_Dashboard_Sui_Page_Urls $urls            URLs class;
  *
  * @package WPMUDEV_Dashboard
  * @since   4.11.2

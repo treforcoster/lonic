@@ -32,7 +32,10 @@ class Plugin
     }
 
     public function register_hooks(){
-        $postData = Container::instance()->getThePost();
+        //$postData = Container::instance()->getThePost();
+        /**
+         * string
+         */
         $getData  = Container::instance()->getTheGet();
 
         if( ! is_admin() ){
@@ -57,10 +60,11 @@ class Plugin
             add_action( 'wpc_filtered_query_end', [ $this, 'addSearchArgsToWpQuery' ] );
             add_action( 'wpc_all_set_wp_queried_posts', [ $this, 'addSearchArgsToWpQuery' ] );
 
+            add_filter( 'posts_where', [ $this, 'postDateWhere' ], 10000, 2 );
+
             if ( flrt_is_woocommerce() ){
                 add_action( 'woocommerce_product_query', 'flrt_remove_product_query_post_clauses', 10, 2 );
                 add_filter( 'posts_search', [$this, 'addSkuSearchSql'], 10000, 2 );
-                add_filter( 'posts_join', [$this, 'addSkuSearchJoinSql'], 10000, 2 );
             }
 
             $sorting = new Sorting();
@@ -73,7 +77,7 @@ class Plugin
         add_action( 'admin_print_scripts', array( $this, 'includeAdminJs' ) );
 
         // Do not include JS, if this page is admin or can't contain filters
-        if( ! is_admin() ){
+        if( ! is_admin() && ! is_login() ){
             add_action( 'wp_head', [ $this, 'inlineFrontCss' ] );
             add_action( 'wp_print_styles', array( $this, 'includeFrontCss' ) );
             add_action( 'wp_print_scripts', array( $this, 'includeFrontJs' ) );
@@ -152,6 +156,15 @@ class Plugin
 
                     $result = $wpdb->get_results( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '%{$key}%'", ARRAY_A );
 
+                    if ( isset( $result[0]['option_name'] ) ) {
+                        $terms_transient_key = str_replace( '_transient_', '', str_replace( '_transient_timeout_', '', $result[0]['option_name'] ) );
+                    }
+                }
+
+                if ( in_array( $type, [ 'post_date', 'post_meta_date' ] ) ) {
+                    global $wpdb;
+                    $key = 'wpc_terms_post_date_';
+                    $result = $wpdb->get_results( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '%{$key}%'", ARRAY_A );
                     if ( isset( $result[0]['option_name'] ) ) {
                         $terms_transient_key = str_replace( '_transient_', '', str_replace( '_transient_timeout_', '', $result[0]['option_name'] ) );
                     }
@@ -533,6 +546,31 @@ class Plugin
                         border-color: '.$color.';
                     }'."\r\n";
 
+            $css .= '#ui-datepicker-div.wpc-filter-datepicker .ui-state-active, 
+            #ui-datepicker-div.ui-widget-content.wpc-filter-datepicker .ui-state-active, 
+            #ui-datepicker-div.wpc-filter-datepicker .ui-widget-header .ui-state-active{
+                    border-color: '.$color.';
+                    background: '.$color.';
+                    opacity: 0.95;
+            }'."\r\n";
+
+            $css .= '#ui-datepicker-div.wpc-filter-datepicker .ui-state-hover, 
+            #ui-datepicker-div.ui-widget-content.wpc-filter-datepicker .ui-state-hover, 
+            #ui-datepicker-div.wpc-filter-datepicker .ui-widget-header .ui-state-hover, 
+            #ui-datepicker-div.wpc-filter-datepicker .ui-state-focus, 
+            #ui-datepicker-div.ui-widget-content.wpc-filter-datepicker .ui-state-focus, 
+            #ui-datepicker-div.wpc-filter-datepicker .ui-widget-header .ui-state-focus{
+                border-color: '.$color.';
+                background: '.$color.';
+                opacity: 0.6;
+            }';
+
+            $css .= '#ui-datepicker-div.wpc-filter-datepicker .ui-datepicker-close.ui-state-default{
+                background: '.$color.';
+                color: '.$contrastColor.';
+            }'."\r\n";
+
+
             $css .= '}'."\r\n";
         }
         if( $styled_inputs ){
@@ -708,6 +746,13 @@ class Plugin
                         body .btSidebar,
                         body .theme-generatepress.woocommerce #left-sidebar {
                             display: table-header-group;
+                        }'."\r\n";
+                        $css .= '#ui-datepicker-div.wpc-filter-datepicker .ui-datepicker-close.ui-state-default{
+                            background: '.$color.';
+                            color: '.$contrastColor.';
+                        }'."\r\n";
+                        $css .= '.wpc-filters-date-range-column{
+                            justify-content: left;
                         }'."\r\n";
             $css .= '}'."\r\n";
         }
@@ -973,7 +1018,9 @@ class Plugin
     {
         $suffix = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '.min';
         $ver = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? rand(0, 1000) : FLRT_PLUGIN_VER;
-
+        /**
+         * string
+         */
         $getData  = Container::instance()->getTheGet();
         if( isset( $getData[FLRT_BEAVER_BUILDER_VAR] ) ){
             wp_enqueue_style('wpc-widgets', FLRT_PLUGIN_DIR_URL . 'assets/css/wpc-widgets' . $suffix . '.css', [], $ver );
@@ -999,21 +1046,57 @@ class Plugin
     {
         $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
         $ver    = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? rand(0, 1000) : FLRT_PLUGIN_VER;
-
+        /**
+         * string
+         */
         $getData  = Container::instance()->getTheGet();
+        $em       = Container::instance()->getEntityManager();
+
+        $wpcFrontJsVariables = [];
+
         if( isset( $getData[FLRT_BEAVER_BUILDER_VAR] ) ){
             wp_enqueue_script('wpc-widgets', FLRT_PLUGIN_DIR_URL . 'assets/js/wpc-widgets' . $suffix . '.js', array('jquery'), $ver );
             $l10n = array(
-                'wpcItemNum'  => esc_html__( 'Item #', 'filter-everything')
+                'wpcItemNum'  => esc_html__( 'Item #', 'filter-everything' )
             );
             wp_localize_script( 'wpc-widgets', 'wpcWidgets', $l10n );
         }
 
         // Do not include plugin JS if there are no Filter Sets on the page
-        $sets               = $this->wpManager->getQueryVar('wpc_page_related_set_ids', []);
-        if( empty( $sets ) ) {
+        $sets               = $this->wpManager->getQueryVar( 'wpc_page_related_set_ids', [] );
+        $related_filters = $em->getSetsRelatedFilters( $sets );
+        $date_filters       = [];
+        $include_timepicker = false;
+
+        if ( ! empty( $related_filters ) ) {
+            foreach ( $related_filters as $filter ) {
+                if ( in_array( $filter['entity'], [ 'post_date', 'post_meta_date' ] ) ) {
+
+                    $date_time = flrt_split_date_time( $filter['date_format'] );
+
+                    global $wp_locale;
+                    $date_filters[ $filter['ID'] ] = [
+                        'date_type'     => $filter['date_type'],
+                        'date_format'   => flrt_convert_date_to_js( $date_time['date'] ),
+                        'time_format'   => flrt_convert_time_to_js( $date_time['time'] ),
+                    ];
+
+                    if ( in_array( $filter['date_type'], [ 'time', 'datetime' ] ) ) {
+                        $include_timepicker = true;
+                    }
+
+                }
+            }
+        }
+
+        /**
+         * Do not continue and do not include any assets
+         * if this page does not contain Filter Sets
+         */
+        if ( empty( $sets ) ) {
             return false;
         }
+
         $showBottomWidget   = 'no';
         $ajaxEnabled        = false;
         $autoScroll         = false;
@@ -1027,23 +1110,23 @@ class Plugin
         $queryOnThePageSets = [];
         $filterSetService   = Container::instance()->getFilterSetService();
 
-        if( flrt_get_option('show_bottom_widget') === 'on' ) {
+        if ( flrt_get_option('show_bottom_widget') === 'on' ) {
             $showBottomWidget = 'yes';
         }
 
-        if( flrt_get_option('enable_ajax') === 'on' ){
+        if ( flrt_get_option('enable_ajax') === 'on' ) {
             $ajaxEnabled = true;
         }
 
-        if( flrt_get_experimental_option('auto_scroll') === 'on' ){
+        if ( flrt_get_experimental_option('auto_scroll') === 'on' ) {
             $autoScroll = true;
         }
 
-        if( flrt_get_experimental_option( 'use_wait_cursor' ) === 'on' ){
+        if ( flrt_get_experimental_option( 'use_wait_cursor' ) === 'on' ) {
             $waitCursor = true;
         }
 
-        if( flrt_get_option('bottom_widget_compatibility') ){
+        if ( flrt_get_option('bottom_widget_compatibility') ) {
             $wpcPopupCompatMode = true;
         }
 
@@ -1056,7 +1139,7 @@ class Plugin
             }
 
             $per_page[ $set['ID'] ] = intval($numberposts);
-            $theSet = $filterSetService->getSet($set['ID']);
+            $theSet = $filterSetService->getSet( $set['ID'] );
 
             if( isset( $set['query_on_the_page'] ) && $set['query_on_the_page'] ){
                 if( (int) $set['ID'] > 0 ) {
@@ -1076,6 +1159,81 @@ class Plugin
         $wpcPostContainers = apply_filters( 'wpc_posts_containers', flrt_get_option( 'posts_container', flrt_default_posts_container() ) );
 
         wp_register_script( 'wc-jquery-ui-touchpunch', FLRT_PLUGIN_DIR_URL . 'assets/js/jquery-ui-touch-punch/jquery-ui-touch-punch'.$suffix.'.js', [], $ver, true );
+
+        $wpcFrontJsVariables = array(
+            'ajaxUrl'                    => admin_url('admin-ajax.php'),
+            'wpcAjaxEnabled'             => $ajaxEnabled,
+            'wpcStatusCookieName'        => FLRT_FOLDING_COOKIE_NAME,
+            'wpcMoreLessCookieName'      => FLRT_MORELESS_COOKIE_NAME,
+            'wpcHierarchyListCookieName' => FLRT_HIERARCHY_LIST_COOKIE_NAME,
+            'wpcWidgetStatusCookieName'  => FLRT_OPEN_CLOSE_BUTTON_COOKIE_NAME,
+            'wpcMobileWidth'             => $wpc_mobile_width,
+            'showBottomWidget'           => $showBottomWidget,
+            '_nonce'                     => wp_create_nonce('wpcNonceFront'),
+            'wpcPostContainers'          => $wpcPostContainers,
+            'wpcAutoScroll'              => $autoScroll,
+            'wpcAutoScrollOffset'        => $autoScrollOffset,
+            'wpcWaitCursor'              => $waitCursor,
+            'wpcPostsPerPage'            => $per_page,
+            'wpcUseSelect2'              => $wpcUseSelect2,
+            'wpcDateFilters'          => false,
+            'wpcPopupCompatMode'         => $wpcPopupCompatMode,
+            'wpcApplyButtonSets'         => $applyButtonSets,
+            'wpcQueryOnThePageSets'      => $queryOnThePageSets,
+            'wpcNoPostsContainerMsg'     => esc_html__('It appears that this page does not contain a container with the specified «HTML id or class of the Posts Container». Try to specify the correct one in the Filter Set settings or the common plugin Settings.', 'filter-everything'),
+        );
+
+        /**
+         * We includes Flatpickr.js only on pages, where date filter is used.
+         */
+        if ( ! empty( $date_filters ) ) {
+//            wp_enqueue_script( 'flatpickr', FLRT_PLUGIN_DIR_URL . "assets/js/flatpickr/flatpickr.min.js", '', '4.6.13' );
+//            wp_enqueue_style('flatpickr', FLRT_PLUGIN_DIR_URL . "assets/css/flatpickr/flatpickr.min.css", '', '4.6.13' );
+
+            wp_enqueue_script( 'jquery-ui-datepicker' );
+            wp_enqueue_style( 'wpc-datepicker', FLRT_PLUGIN_DIR_URL . 'assets/css/datepicker/jquery-ui'.$suffix.'.css', array(), '1.11.4' );
+
+            if ( $include_timepicker ) {
+                wp_enqueue_script( 'wpc-timepicker', FLRT_PLUGIN_DIR_URL . "assets/js/timepicker/jquery-ui-timepicker-addon".$suffix.".js", array( 'jquery-ui-datepicker' ), '1.6.3' );
+                wp_enqueue_style( 'wpc-timepicker', FLRT_PLUGIN_DIR_URL . "assets/css/timepicker/jquery-ui-timepicker-addon".$suffix.".css", array(), '1.6.3' );
+            }
+
+            $wpcFrontJsVariables['wpcDateFilters'] = $date_filters;
+            $wpcFrontJsVariables['wpcDateFiltersLocale'] = determine_locale();
+            $wpcFrontJsVariables['wpcDateFiltersL10n'] = array(
+                'closeText'       => _x( 'Filter', 'Date Picker closeText', 'filter-everything' ),
+                'currentText'     => _x( 'Today', 'Date Picker currentText', 'filter-everything' ),
+                'nextText'        => _x( 'Next', 'Date Picker nextText', 'filter-everything' ),
+                'prevText'        => _x( 'Prev', 'Date Picker prevText', 'filter-everything' ),
+                'weekHeader'      => _x( 'Wk', 'Date Picker weekHeader', 'filter-everything' ),
+                'timeOnlyTitle'   => _x( 'Choose Time', 'Date Time Picker timeOnlyTitle', 'filter-everything' ),
+                'timeText'        => _x( 'Time', 'Date Time Picker timeText', 'filter-everything' ),
+                'hourText'        => _x( 'Hour', 'Date Time Picker hourText', 'filter-everything' ),
+                'minuteText'      => _x( 'Minute', 'Date Time Picker minuteText', 'filter-everything' ),
+                'secondText'      => _x( 'Second', 'Date Time Picker secondText', 'filter-everything' ),
+                'timezoneText'    => _x( 'Time Zone', 'Date Time Picker timezoneText', 'filter-everything' ),
+                'selectText'      => _x( 'Select', 'Date Time Picker selectText', 'filter-everything' ),
+                'amNames'         => array(
+                    _x( 'AM', 'Date Time Picker amText', 'filter-everything' ),
+                    _x( 'A', 'Date Time Picker amTextShort', 'filter-everything' ),
+                ),
+                'pmNames'       => array(
+                    _x( 'PM', 'Date Time Picker pmText', 'filter-everything' ),
+                    _x( 'P', 'Date Time Picker pmTextShort', 'filter-everything' ),
+                ),
+
+                'monthNames'      => array_values( $wp_locale->month ),
+                'monthNamesShort' => array_values( $wp_locale->month_abbrev ),
+                'dayNames'        => array_values( $wp_locale->weekday ),
+                'dayNamesMin'     => array_values( $wp_locale->weekday_initial ),
+                'dayNamesShort'   => array_values( $wp_locale->weekday_abbrev ),
+                'firstDay'        => get_option( 'start_of_week' ),
+            );
+        }
+
+        /**
+         * Include Main Front filters javascript
+         */
         wp_enqueue_script('wpc-filter-everything', FLRT_PLUGIN_DIR_URL . 'assets/js/filter-everything'.$suffix.'.js', array('jquery', 'jquery-ui-slider', 'wc-jquery-ui-touchpunch'), $ver, true );
 
         if( flrt_get_experimental_option('select2_dropdowns') === 'on' ){
@@ -1085,29 +1243,11 @@ class Plugin
             wp_enqueue_style('select2', FLRT_PLUGIN_DIR_URL . "assets/css/select2/select2".$suffix.".css", '', $select2ver );
         }
 
-        wp_localize_script( 'wpc-filter-everything', 'wpcFilterFront',
-            array(
-                'ajaxUrl'                    => admin_url('admin-ajax.php'),
-                'wpcAjaxEnabled'             => $ajaxEnabled,
-                'wpcStatusCookieName'        => FLRT_FOLDING_COOKIE_NAME,
-                'wpcMoreLessCookieName'      => FLRT_MORELESS_COOKIE_NAME,
-                'wpcHierarchyListCookieName' => FLRT_HIERARCHY_LIST_COOKIE_NAME,
-                'wpcWidgetStatusCookieName'  => FLRT_OPEN_CLOSE_BUTTON_COOKIE_NAME,
-                'wpcMobileWidth'             => $wpc_mobile_width,
-                'showBottomWidget'           => $showBottomWidget,
-                '_nonce'                     => wp_create_nonce('wpcNonceFront'),
-                'wpcPostContainers'          => $wpcPostContainers,
-                'wpcAutoScroll'              => $autoScroll,
-                'wpcAutoScrollOffset'        => $autoScrollOffset,
-                'wpcWaitCursor'              => $waitCursor,
-                'wpcPostsPerPage'            => $per_page,
-                'wpcUseSelect2'              => $wpcUseSelect2,
-                'wpcPopupCompatMode'         => $wpcPopupCompatMode,
-                'wpcApplyButtonSets'         => $applyButtonSets,
-                'wpcQueryOnThePageSets'      => $queryOnThePageSets,
-                'wpcNoPostsContainerMsg'     => esc_html__('It appears that this page does not contain a container with the specified «HTML id or class of the Posts Container». Try to specify the correct one in the Filter Set settings or the common plugin Settings.', 'filter-everything'),
-            )
-        );
+        $wpcFrontJsVariables['wpcUseSelect2'] = $wpcUseSelect2;
+
+        wp_localize_script( 'wpc-filter-everything', 'wpcFilterFront', $wpcFrontJsVariables );
+
+        unset( $filterSetService, $wpcFrontJsVariables );
     }
 
     public function removeApplyButtonOrderField( &$set_settings_fields )
@@ -1185,30 +1325,52 @@ class Plugin
         return $wp_query;
     }
 
-    public function addSkuSearchJoinSql( $join, $wp_query )
-    {
-        if( ( $wp_query->get('flrt_query_hash') || $wp_query->get('flrt_query_clone') ) && $wp_query->get('s') !== ''  ){
-
-            if ( $wp_query->get('wc_query') === 'product_query' || $wp_query->get('post_type') === 'product' ) {
-                global $wpdb;
-                $join .= " LEFT JOIN {$wpdb->wc_product_meta_lookup} wc_product_meta_lookup ON ($wpdb->posts.ID = wc_product_meta_lookup.product_id) ";
-            }
-        }
-
-        return $join;
-    }
-
     public function addSkuSearchSql( $search, $wp_query )
     {
         if( $wp_query->get('flrt_query_hash') || $wp_query->get('flrt_query_clone') ){
 
-            if ( $wp_query->get('wc_query') === 'product_query' || $wp_query->get('post_type') === 'product' ) {
+            if ( $wp_query->get('wc_query') === 'product_query' || $wp_query->get('post_type') === 'product' /* || $wp_query->get('post_type') === 'product_variation' */ ) {
                 global $wpdb;
-                $sku_sql = $wpdb->prepare( "wc_product_meta_lookup.sku LIKE %s", '%' . $wpdb->esc_like( $wp_query->get('s') ) . '%' );
-                $search  = str_replace( 'AND (((', "AND ((( $sku_sql ) OR (", $search);
+
+                $product_id = wc_get_product_id_by_sku( $wp_query->get('s') );
+                if ( ! $product_id ) {
+                    return $search;
+                }
+
+                $product = wc_get_product( $product_id );
+                if ( $product->is_type( 'variation' ) ) {
+                    $product_id = $product->get_parent_id();
+                }
+
+                $search = str_replace( 'AND (((', "AND (({$wpdb->posts}.ID IN (" . $product_id . ")) OR ((", $search );
+                return $search;
             }
 
         }
         return $search;
+    }
+
+    public function postDateWhere( $where, $wp_query )
+    {   global $wpdb;
+        $sql = [];
+        $operator = '';
+        $wpc_date_query = $wp_query->get( 'wpc_date_query' );
+
+        if( ! empty( $wpc_date_query ) && is_array( $wpc_date_query ) ) {
+                foreach ( $wpc_date_query as $edge => $value ) {
+                    if( $edge === 'from' ) {
+                        $operator = '>=';
+                    } elseif ( $edge === 'to' ) {
+                        $operator = '<=';
+                    }
+
+                    $sql[] = $wpdb->prepare( "AND {$wpdb->posts}.post_date {$operator} %s ", $value );
+
+                }
+
+                $where = implode( ' ', $sql ) . $where;
+        }
+
+        return $where;
     }
 }

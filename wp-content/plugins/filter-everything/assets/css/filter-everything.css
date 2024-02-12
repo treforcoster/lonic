@@ -1,5 +1,5 @@
 /*!
- * Filter Everything admin 1.7.15
+ * Filter Everything admin 1.8.2
  */
 .rtl .wpc-filter-layout-dropdown .select2-container--default .select2-selection--single .select2-selection__arrow b,
 .rtl .wpc-filter-search-wrapper button.wpc-search-clear,
@@ -411,7 +411,7 @@ li.wpc-filter-chip {
 .wpc-filter-chip-name {
     margin-right: 0.5em;
     white-space: nowrap;
-    max-width: 152px;
+    max-width: 207px;
     overflow: hidden;
 }
 .rtl .wpc-filter-chip-name {
@@ -1379,6 +1379,11 @@ span.wpc-dropdown-default{
     width: 100%;
     margin: 0;
 }
+.wpc-filters-date-range-wrapper input[type="text"]{
+    max-width: 80%;
+    box-sizing: border-box;
+    width: 80%;
+}
 .wpc-filters-main-wrap input.wpc-filter-search-field {
     padding-right: 30px;
     width: 100%;
@@ -1591,6 +1596,84 @@ li.select2-results__option img.wpc-term-image {
 }
 .wpc-horizontal-layout .wpc-filter-layout-submit-button {
     justify-content: flex-end;
+}
+#ui-datepicker-div{
+    z-index: 100 !important;
+}
+.wpc-filter-datepicker {
+    font-size: 15px;
+}
+.wpc-filter-datepicker .ui-datepicker-current{
+    display: none;
+}
+#ui-datepicker-div.wpc-filter-datepicker .ui-timepicker-select{
+    -webkit-appearance: none;
+    line-height: 2;
+    color: #2c3338;
+    border-color: #8c8f94;
+    box-shadow: none;
+    border-radius: 3px;
+    padding: 0 24px 0 8px;
+    min-height: 30px;
+    max-width: 25rem;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+#ui-datepicker-div.wpc-filter-datepicker .ui_tpicker_second .ui-timepicker-select{
+    margin-right: 0;
+}
+.ui-datepicker.wpc-filter-datepicker .ui-widget-content button,
+.ui-datepicker.wpc-filter-datepicker .ui_tpicker_time_label{
+    font-size: 14px;
+    font-weight: 400;
+}
+.ui-datepicker.wpc-filter-datepicker .ui-widget-content button{
+    padding:.4em 1.6em .4em 1.6em;
+}
+.ui-datepicker.wpc-filter-datepicker .ui-timepicker-div dl{
+    margin: 7px 0;
+}
+.ui-datepicker.wpc-filter-datepicker select,
+.ui-datepicker.wpc-filter-datepicker .ui-datepicker-title select{
+    font-size: 14px;
+    line-height: 2;
+    color: #2c3338;
+    border-color: #8c8f94;
+    box-shadow: none;
+    border-radius: 3px;
+    padding: 0 16px 0 8px;
+    min-height: 30px;
+    max-width: 25rem;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.ui-datepicker.wpc-filter-datepicker.ui-widget-content {
+    border: 1px solid #E1E1E1;
+    background: #fff;
+    color: #444;
+    border-radius: 3px;
+}
+#ui-datepicker-div.wpc-filter-datepicker button.ui-priority-primary{
+    font-weight: 400;
+}
+#ui-datepicker-div.wpc-filter-datepicker{
+    z-index: 9999999 !important;
+}
+.wpc-filters-date-range-from-column{
+    margin-bottom: 10px;
+}
+.wpc-filters-date-range-column{
+    display: flex;
+    justify-content: space-between;
+}
+.wpc-filters-date-range-column label{
+    display: inline-flex;
+    align-items: center;
+    min-width: 50px;
+    width: 20%;
+}
+.wpc-filters-date-range-column label:hover{
+    cursor: pointer;
 }
 @media screen and (max-width: 1050px) {
     .wpc-horizontal-layout a.wpc-filters-reset-button,

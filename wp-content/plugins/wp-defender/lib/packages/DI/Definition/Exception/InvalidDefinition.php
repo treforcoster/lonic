@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace WPMU_DEV\Defender\Vendor\DI\Definition\Exception;
 
 use WPMU_DEV\Defender\Vendor\DI\Definition\Definition;
-use WPMU_DEV\Defender\Vendor\Psr\Container\ContainerExceptionInterface;
+use WPMU_DEV\Defender\Vendor\Psr\Container\ContainerExceptionInterface;		 			 		 	  		 			  
 
 /**
  * Invalid WPMU_DEV\Defender\Vendor\DI definitions.

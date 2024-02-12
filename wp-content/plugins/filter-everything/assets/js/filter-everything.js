@@ -1,5 +1,5 @@
 /*!
- * Filter Everything 1.7.15
+ * Filter Everything 1.8.2
  */
 (function ($) {
     "use strict";
@@ -15,6 +15,9 @@
     let wpcWaitCursor               = wpcFilterFront.wpcWaitCursor;
     let wpcPostsPerPage             = wpcFilterFront.wpcPostsPerPage;
     let wpcUseSelect2               = wpcFilterFront.wpcUseSelect2;
+    let wpcDateFilters              = wpcFilterFront.wpcDateFilters;
+    let wpcDateFiltersLocale        = wpcFilterFront.wpcDateFiltersLocale;
+    let wpcDateFiltersL10n          = wpcFilterFront.wpcDateFiltersL10n;
     let wpcPopupCompatMode          = wpcFilterFront.wpcPopupCompatMode;
     let wpcApplyButtonSets          = wpcFilterFront.wpcApplyButtonSets;
     let wpcQueryOnThePageSets       = wpcFilterFront.wpcQueryOnThePageSets;
@@ -141,13 +144,7 @@
         let $el     = $('.wpc-filter-set-'+setId);
         let applyButtonMode = false;
 
-        // if( setId > 0 && wpcApplyButtonSets.length > 0 && wpcApplyButtonSets.includes(setId) ){
-        //     if( $(this).parents('.wpc-filter-set-'+setId).length > 0 ){
-        //         applyButtonMode = true;
-        //     }
-        // }
-
-        if( wpcAjax /* || applyButtonMode */ ) {
+        if( wpcAjax ) {
             e.preventDefault();
             wpcSendFilterRequest( wpcLink, $el, applyButtonMode );
             return false;
@@ -254,51 +251,9 @@
         wpcCloseFiltersContainer(setId);
     })
 
-    $(document).on('change', '.wpc-filter-range-form input[type="number"]', function (e) {
+    $(document).on('change', '.wpc-filter-range-form input[type="number"]', function (event) {
         let form = $(this).parents('.wpc-filter-range-form');
-
-        let $min    = form.find('.wpc-filters-range-min');
-        let $max    = form.find('.wpc-filters-range-max');
-
-        var curMinVal = parseFloat($min.val());
-        var curMaxVal = parseFloat($max.val());
-
-        var initialMin = $min.data('min');
-        var initialMax = $max.data('max');
-
-        if( form.hasClass('wpc-form-has-slider') ){
-            let $slider = form.find('.wpc-filters-range-slider-control');
-            $slider.slider("option", "values", [curMinVal, curMaxVal]);
-        }
-
-        if (curMinVal === initialMin) {
-            $min.attr('disabled', true);
-        }
-
-        if (curMaxVal === initialMax) {
-            $max.attr('disabled', true);
-        }
-
-        let $el = form.parents(wpcWidgetContainer);
-        let setId = $el.data('set');
-        let applyButtonMode = false;
-
-        if( setId > 0 && wpcApplyButtonSets.length > 0 && wpcApplyButtonSets.includes(setId) ){
-            applyButtonMode = true;
-        }
-
-        if( wpcAjax || applyButtonMode ){
-            let search  = form.serialize();
-            let wpcLink = form.attr('action') + '?' + search;
-
-            wpcSendFilterRequest( wpcLink, $el, applyButtonMode );
-
-            $min.attr('disabled', false);
-            $max.attr('disabled', false);
-        } else {
-            form.submit();
-        }
-
+        processRangeForm( event, form );
     });
 
     $(document).on( 'click','.wpc-open-close-filters-button', function (e){
@@ -383,6 +338,13 @@
 
     $(document).on('submit', '.wpc-filter-range-form', function (e) {
         submitSliderForm(e, $(this));
+    });
+
+    $(document).on('keydown', '.wpc-filters-range-from,.wpc-filters-range-to', function (event){
+        if ( event.which == 13 ) {
+            let fid = $(this).data('fid');
+            processRangeForm( event, $("#wpc-filter-date-range-form-"+ fid ) );
+        }
     });
 
     $(document).on('click', '.wpc-filter-content a', function (e) {
@@ -544,6 +506,15 @@
         // $(this).hide();
     })
 
+    // $.datepicker._hideDatepicker = function( eee ) {
+    //     console.log( eee );
+    // };
+
+    function isDonePressed( inst ) {
+        return ( ( $('#ui-datepicker-div .ui-datepicker-close.ui-state-hover').length > 0 ) && !inst._keyEvent );
+    }
+
+
     function wpcInitiateAll(){
         $('.wpc-filter-range-form').each( function ( index, form ){
             $.fn.wpcInitSlider( $(form) );
@@ -561,6 +532,142 @@
                 let widgetSet = $(widget).data('set');
                 let widgetClass = 'wpc-filter-set-'+widgetSet;
                 wpcInitSelect2(widgetClass);
+            });
+        }
+
+        if ( wpcDateFilters !== '' ) {
+
+            $.datepicker.regional[wpcDateFiltersLocale] = wpcDateFiltersL10n;
+            $.datepicker.setDefaults(wpcDateFiltersL10n);
+
+            const updatedProperties = {
+                _selectDate : function( id, dateStr ) {
+                    var onSelect,
+                        target = $( id ),
+                        inst = this._getInst( target[ 0 ] );
+
+                    dateStr = ( dateStr != null ? dateStr : this._formatDate( inst ) );
+                    if ( inst.input ) {
+                        inst.input.val( dateStr );
+                    }
+                    this._updateAlternate( inst );
+
+                    onSelect = this._get( inst, "onSelect" );
+                    if ( onSelect ) {
+                        onSelect.apply( ( inst.input ? inst.input[ 0 ] : null ), [ dateStr, inst ] );  // trigger custom callback
+                    } else if ( inst.input ) {
+                        inst.input.trigger( "change" ); // fire the change event
+                    }
+
+                    if ( inst.inline || this._curInst.id.includes( 'wpc-filters-alt-date' ) ) {
+                        this._updateDatepicker( inst );
+                    } else {
+                        this._hideDatepicker();
+                        this._lastInput = inst.input[ 0 ];
+                        if ( typeof( inst.input[ 0 ] ) !== "object" ) {
+                            inst.input.trigger( "focus" ); // restore focus
+                        }
+                        this._lastInput = null;
+                    }
+                }
+            };
+
+            Object.assign( $.datepicker, updatedProperties );
+
+            $.each( wpcDateFilters, function ( fid, dateFilter ) {
+
+                if ( $("#wpc-filters-date-from-"+ fid).length < 1 ) {
+                    return false;
+                }
+                let pickerOptions = {};
+                let timeFormat = dateFilter['time_format'].includes('s') ? 'HH.mm.ss' : 'HH.mm.00';
+                if ( dateFilter['date_type'] === 'date' ) {
+                    let yearMin = $("#wpc-filters-date-from-"+ fid).data('from').slice(0,4);
+                    let yearMax = $("#wpc-filters-date-to-"+ fid).data('to').slice(0,4);
+
+                    pickerOptions = {
+                        dateFormat: dateFilter['date_format'], // will be shown in visible field
+                        altFieldTimeOnly: false,
+                        altField: '#wpc-filters-date-from-' + fid,
+                        altFormat: 'yy-mm-dd',
+                        changeYear: true,
+                        yearRange: yearMin+':'+yearMax,
+                        changeMonth: true,
+                        showButtonPanel: true,
+                        onClose: function( dateText, inst ){
+                            if( isDonePressed( inst ) ) {
+                                processRangeForm( event, $("#wpc-filter-date-range-form-"+ fid ) );
+                            }
+                        },
+                        beforeShow: function(input, inst) {
+                            $('#ui-datepicker-div').addClass('wpc-filter-datepicker');
+                        }
+                    };
+
+                    $( "#wpc-filters-alt-date-from-" + fid  ).datepicker( pickerOptions );
+                    pickerOptions.altField = '#wpc-filters-date-to-' + fid;
+                    $( "#wpc-filters-alt-date-to-" + fid ).datepicker( pickerOptions );
+
+                } else if ( dateFilter['date_type'] === 'datetime' ) {
+                    $.timepicker.regional[wpcDateFiltersLocale] = wpcDateFiltersL10n;
+                    $.timepicker.setDefaults(wpcDateFiltersL10n);
+                    let yearMin = $("#wpc-filters-date-from-"+ fid).data('from').slice(0,4);
+                    let yearMax = $("#wpc-filters-date-to-"+ fid).data('to').slice(0,4);
+
+                    pickerOptions = {
+                        dateFormat: dateFilter['date_format'],
+                        timeFormat: dateFilter['time_format'], // Depends from localization
+                        altFieldTimeOnly: false,
+                        altField: '#wpc-filters-date-from-' + fid,
+                        altFormat: 'yy-mm-dd',
+                        altTimeFormat: timeFormat, // Depends from format HH.mm.ss or HH.mm.00
+                        altSeparator: 't',
+                        changeYear: true,
+                        yearRange: yearMin+':'+yearMax,
+                        changeMonth: true,
+                        showButtonPanel: true,
+                        controlType: 'select',
+                        oneLine: true,
+                        onClose: function( dateText, inst ){
+                            if( isDonePressed( inst ) ) {
+                                processRangeForm( event, $("#wpc-filter-date-range-form-"+ fid ) );
+                            }
+                        },
+                        beforeShow: function(input, inst) {
+                            $('#ui-datepicker-div').addClass('wpc-filter-datepicker');
+                        }
+                    };
+
+                    $( "#wpc-filters-alt-date-from-" + fid ).datetimepicker( pickerOptions );
+                    pickerOptions.altField = '#wpc-filters-date-to-' + fid;
+                    $( "#wpc-filters-alt-date-to-" + fid ).datetimepicker( pickerOptions );
+
+                } else if ( dateFilter['date_type'] === 'time' ) {
+                    $.timepicker.regional[wpcDateFiltersLocale] = wpcDateFiltersL10n;
+                    $.timepicker.setDefaults(wpcDateFiltersL10n);
+
+                    pickerOptions = {
+                        timeFormat: dateFilter['time_format'],
+                        altField: '#wpc-filters-date-from-' + fid,
+                        altFieldTimeOnly: false,
+                        altTimeFormat: timeFormat,
+                        controlType: 'select',
+                        oneLine: true,
+                        onClose: function( dateText, inst ){
+                            if( isDonePressed( inst ) ) {
+                                processRangeForm( event, $("#wpc-filter-date-range-form-"+ fid ) );
+                            }
+                        },
+                        beforeShow: function(input, inst) {
+                            $('#ui-datepicker-div').addClass('wpc-filter-datepicker');
+                        }
+                    };
+
+                    $( "#wpc-filters-alt-date-from-" + fid  ).timepicker( pickerOptions );
+                    pickerOptions.altField = '#wpc-filters-date-to-' + fid;
+                    $( "#wpc-filters-alt-date-to-" + fid ).timepicker( pickerOptions );
+
+                }
             });
         }
 
@@ -921,49 +1028,71 @@
     }
 
     function submitSliderForm(event, form) {
-
         if (event.originalEvent) {
+            processRangeForm( event, form );
+        }
+    }
 
-            let $min    = form.find('.wpc-filters-range-min');
-            let $max    = form.find('.wpc-filters-range-max');
+    function processRangeForm( event, form ){
+        let low_suffix  = 'min';
+        let high_suffix = 'max';
+
+        if ( form.hasClass('wpc-filter-date-range-form') ) {
+            low_suffix  = 'from';
+            high_suffix = 'to';
+        }
+
+        let $min = form.find( '.wpc-filters-range-' + low_suffix );
+        let $max = form.find( '.wpc-filters-range-' + high_suffix );
+
+        if ( low_suffix === 'min' && high_suffix ===  'max' ) {
+            var curMinVal = parseFloat( $min.val() );
+            var curMaxVal = parseFloat( $max.val() );
+        } else {
+            var curMinVal = $min.val().toString();
+            var curMaxVal = $max.val().toString();
+        }
+
+        var initialMin = $min.data( low_suffix );
+        var initialMax = $max.data( high_suffix );
+
+        // The form has slider
+        if( form.hasClass('wpc-form-has-slider') ){
             let $slider = form.find('.wpc-filters-range-slider-control');
-
-            var minVal = parseFloat($min.val());
-            var maxVal = parseFloat($max.val());
-
-            var initialMin = $slider.slider('option', 'min');
-            var initialMax = $slider.slider('option', 'max');
-
-            if (minVal === initialMin) {
-                $min.attr('disabled', true);
+            // in Case of e.type === 'change' we have to set slider values
+            if ( event.type === 'change' ){
+                $slider.slider("option", "values", [curMinVal, curMaxVal]);
             }
+        }
 
-            if (maxVal === initialMax) {
-                $max.attr('disabled', true);
-            }
+        if (curMinVal === initialMin) {
+            $min.attr('disabled', true);
+        }
 
-            let $el = form.parents(wpcWidgetContainer);
-            let setId = $el.data('set');
-            let applyButtonMode = false;
+        if (curMaxVal === initialMax) {
+            $max.attr('disabled', true);
+        }
 
-            if( setId > 0 && wpcApplyButtonSets.length > 0 && wpcApplyButtonSets.includes( setId ) ){
-                applyButtonMode = true;
-            }
+        let $el = form.parents(wpcWidgetContainer);
+        let setId = $el.data('set');
+        let applyButtonMode = false;
 
-            if ( wpcAjax || applyButtonMode ) {
-                event.preventDefault();
-                let search  = form.serialize();
-                let wpcLink = form.attr('action') + '?' + search;
+        if( setId > 0 && wpcApplyButtonSets.length > 0 && wpcApplyButtonSets.includes( setId ) ){
+            applyButtonMode = true;
+        }
 
-                wpcSendFilterRequest(wpcLink, $el, applyButtonMode);
+        if ( wpcAjax || applyButtonMode ) {
+            event.preventDefault();
+            let search  = form.serialize();
+            let wpcLink = form.attr('action') + '?' + search;
 
-                $min.attr('disabled', true);
-                $max.attr('disabled', true);
+            wpcSendFilterRequest(wpcLink, $el, applyButtonMode);
 
-            } else if( event.originalEvent ) {
-                form.trigger('submit');
-            }
+            $min.attr('disabled', true);
+            $max.attr('disabled', true);
 
+        } else {
+            form.trigger('submit');
         }
     }
 

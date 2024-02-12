@@ -154,7 +154,7 @@
                     "name": "image",
                     "aria-label": "",
                     "type": "image",
-                    "instructions": "",
+                    "instructions": "Upload image 1770 x 800",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -172,7 +172,7 @@
                     "max_height": "",
                     "max_size": "",
                     "mime_types": "",
-                    "preview_size": "medium",
+                    "preview_size": "image-carousel",
                     "library": "all",
                     "parent_repeater": "field_654f6da9c60d9"
                 }
@@ -204,5 +204,5 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1705734269
+    "modified": 1707734577
 }

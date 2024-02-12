@@ -32,16 +32,16 @@ class WpManager
 
     public function parseRequest($WP)
     {
-        if ($this->requestParser->detectFilterRequest()) {
-            foreach ($this->requestParser->getQueryVars() as $key => $queryVar) {
-                $this->setQueryVar($key, $queryVar);
+        if ( $this->requestParser->detectFilterRequest() ) {
+            foreach ( $this->requestParser->getQueryVars() as $key => $queryVar ) {
+                $this->setQueryVar( $key, $queryVar );
             }
 
             $this->isFilterRequest = true;
-            $this->setQueryVar('wpc_is_filter_request', true);
+            $this->setQueryVar('wpc_is_filter_request', true );
 
-            if ($this->getQueryVar('error') === '404') {
-                $WP->set_query_var('error', '404');
+            if ( $this->getQueryVar('error') === '404' ) {
+                $WP->set_query_var( 'error', '404' );
                 return false;
             }
 
@@ -66,8 +66,63 @@ class WpManager
         }
     }
 
+    /**
+     * Checks if requested date/time matches to the registered filters date/time format
+     * @return bool false if the format is invalid
+     */
+    public function isValidRequestedDateFormat()
+    {   // Main goal is to detect if queried date format does not match to the existing date filters format
+        // How to check it?
+        // Get queried date formats and compare it with related filters format
+        $valid                   = true;
+        $date_types              = [];
+        $stored_date_types       = [];
+        $queried_filters         = $this->getQueryVar( 'queried_values', [] );
+
+        if ( ! empty( $queried_filters ) ) {
+
+            foreach ( $queried_filters as $slug => $filter ) {
+               if ( $filter['entity'] === 'post_date' ) {
+                   $date_filters[$slug] = $filter;
+                   if ( isset( $filter['values']['from'] ) && $filter['values']['from'] ) {
+                       $date_types[] = flrt_detect_date_type( $filter['values']['from'] );
+                   }
+                   if ( isset( $filter['values']['to'] ) && $filter['values']['to'] ) {
+                       $date_types[] = flrt_detect_date_type( $filter['values']['to'] );
+                   }
+               }
+            }
+
+            $date_types = array_unique( $date_types );
+        }
+
+        $related_filters = $this->em->getSetsRelatedFilters( $sets = [] );
+
+        if ( ! empty( $related_filters ) ) {
+            $stored_date_types = [];
+            foreach ( $related_filters as $filter ) {
+                if ( $filter['entity'] === 'post_date' ) {
+                    $stored_date_types[] = $filter['date_type'];
+                }
+            }
+            $stored_date_types = array_flip( $stored_date_types );
+        }
+
+        if ( ! empty( $date_types ) && ! empty( $stored_date_types ) ) {
+            foreach ( $date_types as $date_type ) {
+                if ( ! isset( $stored_date_types[$date_type] ) ) {
+                    $valid = false;
+                    break; // this means that requested URL is not valid
+                }
+            }
+        }
+
+        return $valid;
+    }
+
     public static function redirectCanonical()
-    {   // We do not need to check for is_admin() because this works only in frontend
+    {
+        // We do not need to check for is_admin() because this works only in frontend
         $permalinksOn = defined('FLRT_PERMALINKS_ENABLED') ? FLRT_PERMALINKS_ENABLED : false;
         if ( ! $permalinksOn ) {
             return true;
@@ -96,7 +151,7 @@ class WpManager
         $correct_path = user_trailingslashit( $original['path'] );
 
         // 301 redirect if the path is wrong
-        if ( $correct_path !== $original['path'] ) {
+        if ( $correct_path !== $original['path'] && $original['path'] !== '/' ) {
             $redirect_url = $original['scheme'] . '://' . $original['host'] . $correct_path;
             if ( $original['query'] !== '' ) {
                 $redirect_url .= '?' . $original['query'];
@@ -177,6 +232,11 @@ class WpManager
                     self::make_404($wp_query, 'Forbidden filter requested');
                     return true;
                 }
+
+                if ( ! $this->isValidRequestedDateFormat() ) {
+                    self::make_404( $wp_query, 'Invalid date/time format requested');
+                    return true;
+                }
             }
             // To will never fire this section of code again
             $wpc_not_fired = false;
@@ -232,7 +292,6 @@ class WpManager
                     }
                 }
             }
-
         }
 
         // Filter $wp_query after adding filtering terms
@@ -298,7 +357,7 @@ class WpManager
         foreach ($relatedFilters as $filter) {
             $slug = $filter['slug'];
 
-            if (isset($queriedValues[$slug])) {
+            if ( isset( $queriedValues[$slug] ) ) {
                 $queriedValuesWithLogic[$slug]                  = $queriedValues[$slug];
                 $queriedValuesWithLogic[$slug]['logic']         = $filter['logic'];
                 $queriedValuesWithLogic[$slug]['show_chips']    = $filter['show_chips'];
@@ -309,6 +368,11 @@ class WpManager
                 if ( in_array( $filter['entity'], [ 'post_meta_num', 'tax_numeric' ] ) ) {
                     $queriedValuesWithLogic[$slug]['step']      = $filter['step'];
                 }
+
+                if ( in_array( $filter['entity'], [ 'post_date' ] ) ) {
+                    $queriedValuesWithLogic[$slug]['date_format'] = $filter['date_format'];
+                }
+
             }
 
         }
@@ -477,7 +541,7 @@ class WpManager
             $wp_queried_object['post_types'][] = ($wp_query->get('post_type')) ? $wp_query->get('post_type') : 'post';
         }
 
-        return $wp_queried_object;
+        return apply_filters( 'wpc_wp_queried_object', $wp_queried_object, $wp_query );
     }
 
     private function fillQueriedTermObject($wp_query)

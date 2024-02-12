@@ -1819,7 +1819,7 @@ msgid "Random"
 msgstr "Zufall"
 
 #: src/Admin/FilterFields.php:248
-msgid "Range"
+msgid "Numeric Range"
 msgstr "Bereich"
 
 msgid "Read more"

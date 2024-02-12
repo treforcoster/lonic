@@ -4,16 +4,18 @@ Donate link: https://paypal.me/SS88/
 Tags: file size, media library, image size, library size
 Requires at least: 4.1
 Tested up to: 6.4
-Stable tag: 1.5.1
+Stable tag: 1.6.1
 Requires PHP: 5.6
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Enhance your Media Library experience with a new column that displays the sizes of files, including collective images, allowing you to conveniently sort them based on file size. Click the 'Index Media' button after installation.
+Enhance your Media Library experience with a new column that displays the sizes of files, including collective variants, allowing you to conveniently sort them based on file size. Click the 'Index Media' button after installation.
 
 == Description ==
 
-Improve your Media Library functionality by introducing a new column that showcases the sizes of files, including collective images efficiently. This lightweight plugin empowers you to effortlessly sort files based on their respective file sizes. Click the 'Index Media' button after installation.
+Update in 2024: We're thrilled to announce the latest upgrade to our acclaimed Media Library File Size plugin for WordPress – Version 1.6! 🎉 This powerful update takes your media management to new heights, offering an unparalleled level of detail and control over your image variants. Now you can simply click the button 'View Variants' to show a modal with all the listed variants of an image. Details include, full URL, file name, and file size.
+
+Improve your Media Library functionality by introducing a new column that showcases the sizes of files, including collective variants efficiently. This lightweight plugin empowers you to effortlessly sort files based on their respective file sizes. Click the 'Index Media' button after installation.
 
 https://youtu.be/Tt5kdo8NH70
 
@@ -54,6 +56,13 @@ Make sure you are looking at your Media Library, and you are in List view. Grid 
 This is a collective size of your thumbnails (and other sized images).
 
 == Changelog ==
+
+= 1.6.1 =
+* File size fix in modal
+
+= 1.6 =
+* Many thanks for 2,000 active installations!
+* This new version includes a 'View Variants' button, which opens a minimalist modal to show you all the different variants WordPress has for the selected image. This information includes filename, file size, width, height, and the wordpress size name use. You can also click the box to load that individual variant in a new tab!
 
 = 1.5.1 =
 * Potential memory issue fix for large libraries

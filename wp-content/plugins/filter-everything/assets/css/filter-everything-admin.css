@@ -1,5 +1,5 @@
 /*!
- * Filter Everything admin 1.7.15
+ * Filter Everything admin 1.8.2
  */
 #filters-seo-rules .inside,
 #filters-set-items .inside{
@@ -220,6 +220,8 @@ li.wpc-filter-slug{
     border: 1px solid #e3e3e3;
     box-shadow: 0 1px 1px rgba(0,0,0,.04);
 }
+.wpc-date-type-tr,
+.wpc-date-format-tr,
 .wpc-field-show-term-names-tr,
 .wpc-field-apply-button-text-tr,
 .wpc-field-apply-button-page-type-tr,
@@ -231,6 +233,8 @@ li.wpc-filter-slug{
 #wpc-filter-id-search-field{
     display: none;
 }
+.wpc-filter-post_date .wpc-date-format-tr,
+.wpc-filter-post_date .wpc-date-type-tr,
 .taxonomy-has-swatches .wpc-field-show-term-names-tr,
 .wpc-filter-has-brands .wpc-field-show-term-names-tr,
 .wpc-field-apply-button-text-tr.wpc-opened,
@@ -385,6 +389,13 @@ label.wpc-filter-label {
     font-size: 14px;
     line-height: 1.4;
 }
+.wpc-filter-field-td .wpc-type-date input.wpc-date-custom-format,
+.wpc-filter-field-td .wpc-type-time input.wpc-date-custom-format{
+    width: 100px;
+}
+.wpc-filter-field-td .wpc-type-datetime input.wpc-date-custom-format{
+    width: 200px;
+}
 .wpc-wp-entity-label-wrapper{
     padding-left: 12px;
     padding-right: 12px;
@@ -414,6 +425,7 @@ label[for="wpc_seo_rules-wp_entity"],
 .wpc-view-range .wpc-field-search-tr,
 .wpc-view-dropdown .wpc-field-search-tr,
 .wpc-view-range .wpc-field-more-less-tr,
+.wpc-filter-post_date .wpc-field-more-less-tr,
 .wpc-view-dropdown .wpc-field-more-less-tr,
 .wpc-field-for-variations-tr,
 .wpc-field-hierarchy-tr,
@@ -517,12 +529,14 @@ label[for="wpc_seo_rules-wp_entity"],
 .wpc-field-rule-meta-desc{
     min-height: 65px;
 }
+.wpc-date-format-tr .wpc-field-wrap,
 .wpc_set_fields-post_name-wrap,
 .wpc-intersection-fields-wrapper,
 .wpc_set_fields-wp_filter_query-wrap,
 .wpc_set_fields-apply_button_post_name-wrap{
     position: relative;
 }
+.wpc-date-format-tr .wpc-field-wrap .spinner,
 .wpc-field-exclude-tr .wpc-field-wrap .spinner,
 .wpc_set_fields-wp_filter_query-wrap .spinner,
 .wpc_set_fields-post_name-wrap .spinner,
@@ -538,12 +552,25 @@ label[for="wpc_seo_rules-wp_entity"],
 .wpc_set_fields-apply_button_post_name-wrap .spinner{
     bottom: calc(50% - 19px);
 }
+.wpc-date-format-tr .wpc-field-wrap .spinner.is-active+.wpc-after-spinner-container,
 .wpc_set_fields-wp_filter_query-wrap .spinner.is-active+#wpc-field-wp-query-container,
 .wpc-field-exclude-tr .wpc-field-wrap .spinner.is-active+.wpc-after-spinner-container,
 .wpc_set_fields-post_name-wrap .spinner.is-active+#wpc-field-location-container,
 .wpc_set_fields-apply_button_post_name-wrap .spinner.is-active+#wpc-field-apply-button-location-container,
 .wpc-intersection-fields-wrapper .spinner.is-active+.wpc-form-fields-table{
     opacity: 0.3;
+}
+.wpc-filter-post_date .wpc-type-datetime li label span{
+    display: inline-block;
+    min-width: 195px;
+}
+.wpc-filter-post_date .wpc-type-date li label span{
+    display: inline-block;
+    min-width: 140px;
+}
+.wpc-filter-post_date .wpc-type-time li label span{
+    display: inline-block;
+    min-width: 140px;
 }
 .wpc-no-seo-filters-message{
     display: block;
@@ -685,19 +712,21 @@ tr.wpc-sortable-row.ui-sortable-helper{
 }
 .wpc-field-range-slider-tr,
 .wpc-field-value-step-tr,
+.wpc-filter-post_date .wpc-field-logic-tr,
+.wpc-filter-post_date .wpc-field-orderby-tr,
+.wpc-filter-post_date .wpc-field-path-tr,
+.wpc-filter-post_date .wpc-field-exclude-tr,
+.wpc-filter-post_date .wpc-field-search-tr,
 .wpc-filter-tax_numeric .wpc-field-logic-tr,
 .wpc-filter-tax_numeric .wpc-field-orderby-tr,
 .wpc-filter-tax_numeric .wpc-field-path-tr,
 .wpc-filter-tax_numeric .wpc-field-exclude-tr,
-.wpc-filter-tax_numeric .wpc-field-collapse-tr,
 .wpc-filter-tax_numeric .wpc-field-search-tr,
 .wpc-filter-post_meta_num .wpc-field-logic-tr,
 .wpc-filter-post_meta_num .wpc-field-orderby-tr,
 .wpc-filter-post_meta_num .wpc-field-path-tr,
 .wpc-filter-post_meta_num .wpc-field-exclude-tr,
-.wpc-filter-post_meta_num .wpc-field-collapse-tr,
-.wpc-filter-post_meta_num .wpc-field-search-tr,
-.wpc-filter-post_meta_num .wpc-field-a-labels-tr{
+.wpc-filter-post_meta_num .wpc-field-search-tr{
     display: none;
 }
 .wpc-filter-tax_numeric .wpc-field-range-slider-tr,
@@ -800,6 +829,12 @@ input[disabled="disabled"]+.wpc-checkbox-placeholder{
 #tiptip_content code, .chart-tooltip code, .wc_error_tip code {
     padding: 1px;
     background: #888
+}
+#tiptip_content a{
+    color: #ffffff;
+}
+body #tiptip_content a:hover{
+    color: inherit;
 }
 #tiptip_arrow, #tiptip_arrow_inner {
     position: absolute;

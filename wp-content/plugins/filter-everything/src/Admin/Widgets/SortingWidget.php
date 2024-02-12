@@ -61,7 +61,7 @@ class SortingWidget extends \WP_Widget
         $url_manager     = new UrlManager();
         $sorting         = new Sorting();
         // @todo values (keys) shouldn't be meta, meta_num or can?
-        $orderby = isset( $_GET['ordr'] ) ? wpc_clean( wp_unslash( $_GET['ordr'] ) ) : 'default';
+        $orderby = isset( $_GET['ordr'] ) ? flrt_clean( wp_unslash( $_GET['ordr'] ) ) : 'default';
 
         echo $args['before_widget'];
         if ( ! empty( $title ) ) {

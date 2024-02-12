@@ -13,13 +13,13 @@
         .prev-3,
         .prev-5,
         .arrow {
-          stroke: #ca385b;
+          stroke: #FF664D;
           stroke-width: 1.5px;
           fill: none;
         }
 
         .circle {
-          stroke: #CDD4D5;
+          stroke: #FF664D;
           stroke-width: 1.5px;
           fill: none;
         }
@@ -77,13 +77,13 @@
         .next-1,
         .next-3,
         .arrow {
-          stroke: #ca385b;
+          stroke: #FF664D;
           stroke-width: 1.5px;
           fill: none;
         }
 
         .circle {
-          stroke: #CDD4D5;
+          stroke: #FF664D;
           stroke-width: 1.5px;
           fill: none;
           opacity: 0.7;

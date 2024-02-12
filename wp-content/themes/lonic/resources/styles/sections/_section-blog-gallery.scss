@@ -22,23 +22,30 @@
     height: auto;
   }
 
+  .carousel-footer {
+    position: relative;
+
+    .pagination {
+      display: flex;
+      height: 14px;
+      // height: var(--carousel-pagintation-size);
+      justify-content: center;
+      top: auto !important;
+    }
+
+    .navigation {
+      position: absolute;
+      top: 50%;
+      right: 0;
+    }
+  }
+
   .button-prev {
     display: inline-block;
-    width: 40px;
-    height: 40px;
-    position: absolute;
-    top: 50%;
-    left: 20px;
-    margin-top: -20px;
     z-index: 5000;
 
-    @include media-breakpoint-up(lg) {
-      width: 3.958vw;
-      height: 3.958vw;
-      top: 50%;
-      left: 3.958vw;
-      margin-top: -1.979vw;
-    }
+    width: clamp(2.625rem, 2.188vw, 10rem);
+    height: clamp(2.625rem, 2.188v, 10rem);
 
     svg {
       width: 100%;
@@ -47,21 +54,10 @@
   }
   .button-next {
     display: inline-block;
-    width: 40px;
-    height: 40px;
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    margin-top: -20px;
     z-index: 5000;
 
-    @include media-breakpoint-up(lg) {
-      width: 3.958vw;
-      height: 3.958vw;
-      top: 50%;
-      right: 3.958vw;
-      margin-top: -1.979vw;
-    }
+    width: clamp(2.625rem, 2.188vw, 10rem);
+    height: clamp(2.625rem, 2.188v, 10rem);
 
     svg {
       width: 100%;

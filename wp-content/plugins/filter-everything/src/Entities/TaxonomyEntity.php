@@ -72,7 +72,7 @@ class TaxonomyEntity implements Entity
         return $terms;
     }
 
-    public function getTermTaxonomyPostsIds( $termTaxonomyIds, $filter )
+    public function getTermTaxonomyPostsIds( $termTaxonomyIds, $termIds, $filter )
     {
         global $wpdb;
         $include_variation_atts = false;
@@ -94,17 +94,19 @@ class TaxonomyEntity implements Entity
                 }
             }
 
-            $query[] = "SELECT DISTINCT {$wpdb->term_relationships}.term_taxonomy_id,{$wpdb->term_relationships}.object_id";
+            $query[] = "SELECT DISTINCT {$wpdb->term_relationships}.term_taxonomy_id";
+            $query[] = ", {$wpdb->term_relationships}.object_id";
+            $query[] = ", tt.term_id";
 
             if( $include_variation_atts ){
                 $query[] = ", tm.slug";
             }
 
             $query[] = "FROM {$wpdb->term_relationships}";
+            $query[] = "LEFT JOIN {$wpdb->term_taxonomy} AS tt";
+            $query[] = "ON ( {$wpdb->term_relationships}.term_taxonomy_id = tt.term_taxonomy_id )";
 
             if( $include_variation_atts ){
-                $query[] = "LEFT JOIN {$wpdb->term_taxonomy} AS tt";
-                $query[] = "ON ( {$wpdb->term_relationships}.term_taxonomy_id = tt.term_taxonomy_id )";
                 $query[] = "LEFT JOIN {$wpdb->terms} AS tm";
                 $query[] = "ON ( tt.term_id = tm.term_id )";
             }
@@ -121,11 +123,11 @@ class TaxonomyEntity implements Entity
         $taxonomy_terms = apply_filters( 'wpc_term_taxonomy_terms', $results, $this );
 
         foreach ($taxonomy_terms as $key => $result) {
-            $ids[$result['term_taxonomy_id']][] = (int) $result['object_id'];
+            $ids[$result['term_id']][] = (int) $result['object_id'];
         }
 
         // Add possible empty terms without posts
-        foreach( $termTaxonomyIds as $term_id ){
+        foreach( $termIds as $term_id ){
             if( ! isset( $ids[$term_id] ) ){
                 $ids[$term_id] = [];
             }
@@ -153,6 +155,7 @@ class TaxonomyEntity implements Entity
     public function populateTermsWithPostIds( $setId, $post_type )
     {
         $termTaxonomyIds     = [];
+        $termIds             = [];
         $termPosts           = [];
         $the_filter          = [];
         $allWpQueriedPostIds = [];
@@ -170,11 +173,12 @@ class TaxonomyEntity implements Entity
 
         foreach ( $this->getAllExistingTerms() as $term ){
             $termTaxonomyIds[] = $term->term_taxonomy_id;
+            $termIds[]         = $term->term_id;
         }
 
 
         if( ! empty( $the_filter ) ){
-            $termPosts = $this->getTermTaxonomyPostsIds( $termTaxonomyIds, $the_filter );
+            $termPosts = $this->getTermTaxonomyPostsIds( $termTaxonomyIds, $termIds, $the_filter );
         }
 
         if( $this->getName() === 'product_shipping_class' ){
@@ -190,15 +194,16 @@ class TaxonomyEntity implements Entity
         $allWpQueriedPostIds = array_flip( $allWpQueriedPostIds );
 
         foreach( $this->items as $index => $term ){
-            if( isset( $termPosts[$term->term_taxonomy_id] ) ){
+            if( isset( $termPosts[$term->term_id] ) ){
                 $intersected_posts = [];
-                foreach ( $termPosts[$term->term_taxonomy_id] as $post_id ){
+                foreach ( $termPosts[$term->term_id] as $post_id ){
                     if(isset( $allWpQueriedPostIds[$post_id] )){
                         $intersected_posts[] = $post_id;
                     }
                 }
                 $this->items[$index]->posts = $intersected_posts;
             }else{
+                // Here could be items that have no posts, but their descendants have
                 $this->items[$index]->posts = [];
             }
 
@@ -315,7 +320,6 @@ class TaxonomyEntity implements Entity
                 }
                 // Solution for 'include_children=true' problem and parent counts
                 $this->descendants = flrt_find_all_descendants( $children_terms );
-
                 $this->items = $termsUpdated;
             }
 
