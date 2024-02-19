@@ -7,11 +7,11 @@
   if ($position == "right") {
 
     $order = ' ';
-    $justify = " ";
+  
   } else {
 
     $order = 'reverse';
-    $justify = "justify-content-end";
+  
   }
 ?>
 
@@ -21,8 +21,8 @@
 
 ">
   <div class="container-fluid">
-    <div class="row <?php echo $justify; ?> <?php echo $order; ?>">
-      <div class="col-lg-5 medium text-dark ">
+    <div class="row g-8 justify-content-between <?php echo $order; ?>">
+      <div class="col-lg-5 medium text-dark g-10">
         <div class="text-border padding-element">
 
           <?php the_sub_field('text') ?>
@@ -31,9 +31,9 @@
         </div>
       </div>
       <div class="col-lg-7">
-
-       Video
-
+        <div class="video-embed">
+          <?php the_sub_field('video');?>
+        </div>
       </div>
     </div>
   </div>
