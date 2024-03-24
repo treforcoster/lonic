@@ -2,10 +2,12 @@
     <div class="inner">
         <div class="container-fluid">
             <div class="row">
-                <?php $width = get_sub_field('text_width'); ?>
+                <?php $width = get_field('blog_text_width', 'options'); ?>
+
                 <?php $widthClass = "col-lg-8"; ?>
+
                 <?php if ($width === "short") {
-                  $widthClass = "col-lg-6";
+                  $widthClass = "col-lg-5";
                 } else {
                   $widthClass = "col-lg-8";
                 }?>

@@ -5,7 +5,7 @@
         {
             "key": "field_660071099982d",
             "label": "Text Width",
-            "name": "text_width",
+            "name": "blog_text_width",
             "aria-label": "",
             "type": "radio",
             "instructions": "",
@@ -73,5 +73,5 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1711305078
+    "modified": 1711311820
 }
