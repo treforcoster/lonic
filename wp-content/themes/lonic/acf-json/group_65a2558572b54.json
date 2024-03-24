@@ -3,6 +3,31 @@
     "title": "8.01 Blog Index Settings",
     "fields": [
         {
+            "key": "field_660071099982d",
+            "label": "Text Width",
+            "name": "text_width",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "short": "short",
+                "long": "long"
+            },
+            "default_value": "",
+            "return_format": "value",
+            "allow_null": 0,
+            "other_choice": 0,
+            "layout": "horizontal",
+            "save_other_choice": 0
+        },
+        {
             "key": "field_65a25585ac702",
             "label": "Text",
             "name": "index_text",
@@ -16,7 +41,7 @@
                 "class": "",
                 "id": ""
             },
-            "default_value": "",
+            "default_value": "short",
             "tabs": "all",
             "toolbar": "full",
             "media_upload": 1,
@@ -48,5 +73,5 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1705137564
+    "modified": 1711305078
 }
