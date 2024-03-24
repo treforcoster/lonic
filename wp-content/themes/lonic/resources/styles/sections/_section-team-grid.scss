@@ -1,5 +1,9 @@
 .section-team-grid {
   h2 {
     text-align: center;
+
+    &:after {
+      display: none;
+    }
   }
 }
