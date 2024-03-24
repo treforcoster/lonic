@@ -19,7 +19,11 @@
 
                     <?php $links = get_sub_field('links'); ?>
 
-                    <?php if ($links) { ?>
+                    
+
+                </div>
+                <div class="col-lg-12 large ">
+                <?php if ($links) { ?>
                     <div class="padding-top-element links">
 
                         @include('components.helpers.links')
@@ -27,7 +31,6 @@
                     </div>
 
                     <?php } ?>
-
                 </div>
             </div>
         </div>
