@@ -5,7 +5,7 @@
     <div class="container-fluid">
       <div class="row">
       <?php $width = get_sub_field('text_width'); ?>
-      <?php $widthClass= ""; ?>
+      <?php $widthClass= "col-lg-8"; ?>
       <?php if ($width === "short"){
         $widthClass = "col-lg-6";
       } else {
