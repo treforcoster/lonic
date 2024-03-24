@@ -2,7 +2,7 @@
     "key": "post_type_647fa9c225141",
     "title": "Testimonials",
     "menu_order": 0,
-    "active": true,
+    "active": false,
     "post_type": "testimonial",
     "advanced_configuration": true,
     "import_source": "",
@@ -79,5 +79,6 @@
     "can_export": true,
     "delete_with_user": false,
     "register_meta_box_cb": "",
-    "modified": 1686175394
+    "enter_title_here": "",
+    "modified": 1711296682
 }

@@ -1,6 +1,6 @@
 <?php
 
-add_action('init', 'register_testimonials_post_type');
+//add_action('init', 'register_testimonials_post_type');
 
 function register_testimonials_post_type()
 {
