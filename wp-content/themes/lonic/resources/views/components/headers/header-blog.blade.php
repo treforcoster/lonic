@@ -7,7 +7,7 @@
                 <?php $width = get_sub_field('text_width');?>
                 <?php $widthClass= "col-lg-8"; ?>
                 <?php if ($width === "short"){
-                  $widthClass = "col-lg-6";
+                  $widthClass = "col-lg-5";
                 } else {
                   $widthClass = "col-lg-8";
                 }?>
