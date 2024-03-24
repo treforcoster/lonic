@@ -4,7 +4,14 @@
   <div class="inner">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-lg-8 large ">
+      <?php $width = get_sub_field('text_width'); ?>
+      <?php $widthClass= ""; ?>
+      <?php if ($width === "short"){
+        $widthClass = "col-lg-6";
+      } else {
+        $widthClass = "col-lg-8";
+      }?>
+        <div class="<?php echo $widthClass;?> large ">
 
         <h1><?php the_sub_field('title'); ?></h1>
 
