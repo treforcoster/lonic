@@ -8,7 +8,7 @@
 
 namespace Smush\Core\Integrations;
 
-use Smush\Core\Modules\CDN;
+use Smush\Core\CDN\CDN_Helper;
 use Smush\Core\Modules\Helpers\Parser;
 use Smush\Core\Settings;
 
@@ -20,34 +20,24 @@ if ( ! defined( 'WPINC' ) ) {
  * Class Envira
  */
 class Envira {
-
-	/**
-	 * CDN module instance.
-	 *
-	 * @var CDN $cdn
-	 */
-	private $cdn;
-
 	/**
 	 * Envira constructor.
 	 *
 	 * @since 3.3.0
-	 *
-	 * @param CDN $cdn  CDN module.
 	 */
-	public function __construct( CDN $cdn ) {
+	public function __construct() {
 		if ( is_admin() ) {
 			return;
 		}
 
-		if ( Settings::get_instance()->get( 'lazy_load' ) ) {
+		$settings = Settings::get_instance();
+		if ( $settings->get( 'lazy_load' ) ) {
 			add_filter( 'smush_skip_image_from_lazy_load', array( $this, 'skip_lazy_load' ), 10, 3 );
 			add_filter( 'envira_gallery_indexable_images', array( $this, 'add_no_lazyload_class' ) );
 		}
 
-		if ( $cdn->is_active() ) {
-			$this->cdn = $cdn;
-			add_filter( 'smush_cdn_image_tag', array( $this, 'replace_cdn_links' ) );
+		if ( $settings->is_cdn_active() ) {
+			add_filter( 'wp_smush_updated_element_markup', array( $this, 'replace_cdn_links' ) );
 		}
 	}
 
@@ -160,11 +150,12 @@ class Envira {
 	 * @return bool|string
 	 */
 	private function convert_url_to_cdn( $url ) {
-		if ( ! $this->cdn->is_supported_path( $url ) ) {
+		$cdn_helper = CDN_Helper::get_instance();
+		if ( ! $cdn_helper->is_supported_url( $url ) ) {
 			return false;
 		}
 
-		return $this->cdn->generate_cdn_url( $url );
+		return $cdn_helper->generate_cdn_url( $url );
 	}
 
 }

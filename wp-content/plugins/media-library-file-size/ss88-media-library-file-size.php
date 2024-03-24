@@ -3,14 +3,14 @@
 Plugin Name: Media Library File Size
 Plugin URI: https://ss88.us/plugins/media-library-file-size?utm_source=wordpress&utm_medium=link&utm_campaign=mlfs
 Description: Creates a new column in your Media Library to show you the file (and collective images) size of files plus more!
-Version: 1.6.1
+Version: 1.6.2
 Author: SS88 LLC
 Author URI: https://ss88.us/?utm_source=wordpress&utm_medium=link&utm_campaign=author_mlfs
 */
 
 class SS88_MediaLibraryFileSize {
 
-    protected $version = '1.6.1';
+    protected $version = '1.6.2';
 	protected $variantJSON = [];
 
     public static function init() {

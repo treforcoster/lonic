@@ -3,8 +3,8 @@ Contributors: SS88_UK
 Donate link: https://paypal.me/SS88/
 Tags: file size, media library, image size, library size
 Requires at least: 4.1
-Tested up to: 6.4
-Stable tag: 1.6.1
+Tested up to: 6.5
+Stable tag: 1.6.2
 Requires PHP: 5.6
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -56,6 +56,9 @@ Make sure you are looking at your Media Library, and you are in List view. Grid 
 This is a collective size of your thumbnails (and other sized images).
 
 == Changelog ==
+
+= 1.6.2 =
+* Fix visibility of button on Activation of plugin
 
 = 1.6.1 =
 * File size fix in modal

@@ -1,8 +1,20 @@
 Plugin Name: WP Defender
 Author: WPMU DEV
-Tested up to: 6.4.2
+Tested up to: 6.5
 
 Change Log:
+
+= 4.6.0 ( 2024-03-18 ) =
+
+- New: Introducing the "Unlock Me" feature to unblock admin on lockout
+- Fix: False positive with BuddyBoss plugin on Malware scan
+- Fix: Undefined variable in two-fa.php
+
+= 4.5.1 ( 2024-02-26 ) =
+
+- Enhance: Improve IP detection with auto-detection for Cloudflare and notices for proxy configurations
+- Enhance: Compatibility with WordPress 6.5
+- Enhance: Replace the old Twitter logo with the new logo in emails
 
 = 4.5.0 ( 2024-01-24 ) =
 
@@ -49,10 +61,5 @@ Change Log:
 - Fix: PHP v8.1 warning for setcookie()
 - Fix: Issue when applying custom config
 
-= 4.2.1 ( 2023-10-19 ) =
 
-- Fix: Deprecation error in the log
-- Fix: Data opt-in modal visibility conditions
-
-
-734049-1707734400-au
+734049-1711283446-au

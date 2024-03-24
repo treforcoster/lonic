@@ -22,6 +22,7 @@ function defender_drop_custom_tables() {
 	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}defender_lockout_log" );
 	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}defender_lockout" );
 	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}defender_audit_log" );
+	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}defender_unlockout" );
 }
 
 /**
@@ -118,6 +119,7 @@ if ( $uninstall_settings && $uninstall_data ) {
 	\WP_Defender\Controller\Data_Tracking::delete_modal_key();
 	\WP_Defender\Component\Rate::clean_up();
 	\WP_Defender\Controller\General_Notice::delete_slugs();
+	\WP_Defender\Component\Firewall::delete_slugs();
 }
 // Remains from old versions.
 delete_site_option( 'wd_audit_cached' );

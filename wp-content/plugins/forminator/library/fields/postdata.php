@@ -210,7 +210,7 @@ class Forminator_Postdata extends Forminator_Field {
 	 * @return string
 	 */
 	public function get_post_content( $id, $name, $field, $required, $ajax ) {
-		return apply_filters( 'forminator_field_postdata_post_content', $this->_get_post_field( $id, $name, $field, $required, 'post_content', 'wp_editor', 'forminator-textarea', 'post-content', array( 'ajax' => $ajax ) ) );
+		return apply_filters( 'forminator_field_postdata_post_content', $this->_get_post_field( $id, $name, $field, $required, 'post_content', 'wp_editor', 'forminator-textarea', 'post-content', array( 'ajax' => $ajax ) ) );	 	 		  		  						   	
 	}
 
 	/**

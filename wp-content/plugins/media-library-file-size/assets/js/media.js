@@ -19,11 +19,7 @@ function SS88_MediaLibraryFileSize_init_MediaLibrary() {
 
 			}).then(function(response) {
 
-				if(response.success) {
-
-					SB.addButton()
-
-				}
+				SB.addButton()
 
 				if(response.data.TotalMLSize) SB.addSize(response.data.TotalMLSize, response.data.TotalMLSize_Title)
 

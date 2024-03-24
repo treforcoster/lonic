@@ -8,6 +8,7 @@
 
 namespace Smush\Core;
 
+use Smush\Core\CDN\CDN_Helper;
 use Smush\Core\Stats\Global_Stats;
 use WP_Smush;
 
@@ -56,31 +57,33 @@ class Settings {
 	 * @var array
 	 */
 	private $defaults = array(
-		'auto'              => true,    // works with CDN.
-		'lossy'             => 0,   // works with CDN.
-		'strip_exif'        => true,    // works with CDN.
-		'resize'            => false,
-		'detection'         => false,
-		'original'          => false,
-		'backup'            => false,
-		'no_scale'          => false,
-		'png_to_jpg'        => false,   // works with CDN.
-		'nextgen'           => false,
-		's3'                => false,
-		'gutenberg'         => false,
-		'js_builder'        => false,
-		'gform'             => false,
-		'cdn'               => false,
-		'auto_resize'       => false,
-		'webp'              => true,
-		'usage'             => false,
-		'accessible_colors' => false,
-		'keep_data'         => true,
-		'lazy_load'         => false,
-		'background_images' => true,
-		'rest_api_support'  => false,   // CDN option.
-		'webp_mod'          => false,   // WebP module.
-		'background_email'  => false,
+		'auto'                   => true,    // works with CDN.
+		'lossy'                  => 0,   // works with CDN.
+		'strip_exif'             => true,    // works with CDN.
+		'resize'                 => false,
+		'detection'              => false,
+		'original'               => false,
+		'backup'                 => false,
+		'no_scale'               => false,
+		'png_to_jpg'             => false,   // works with CDN.
+		'nextgen'                => false,
+		's3'                     => false,
+		'gutenberg'              => false,
+		'js_builder'             => false,
+		'gform'                  => false,
+		'cdn'                    => false,
+		'auto_resize'            => false,
+		'webp'                   => true,
+		'usage'                  => false,
+		'accessible_colors'      => false,
+		'keep_data'              => true,
+		'lazy_load'              => false,
+		'background_images'      => true,
+		'rest_api_support'       => false,   // CDN option.
+		'webp_mod'               => false,   // WebP module.
+		'background_email'       => false,
+		'webp_direct_conversion' => false,
+		'webp_fallback'          => false,
 	);
 
 	/**
@@ -142,7 +145,7 @@ class Settings {
 	 *
 	 * @var array
 	 */
-	private $webp_fields = array( 'webp_mod' );
+	private $webp_fields = array( 'webp_mod', 'webp_direct_conversion', 'webp_fallback' );
 
 	/**
 	 * List of fields in Settings form.
@@ -199,7 +202,24 @@ class Settings {
 
 		add_filter( 'wp_smush_settings', array( $this, 'remove_unavailable' ) );
 
+		// TODO: Fix network settings issue and remove temporary fix.
+		add_filter( 'option_wp-smush-settings', array( $this, 'maybe_filter_subsite_settings_for_mu_sites' ) );
+
 		$this->init();
+	}
+
+	public function maybe_filter_subsite_settings_for_mu_sites( $subsite_settings ) {
+		if ( ! is_multisite() || empty( $this->get_subsite_page_modules() ) ) {
+			return $subsite_settings;
+		}
+
+		$network_settings = get_site_option( 'wp-smush-settings' );
+		$network_fields   = array_merge( $this->get_settings_fields(), $this->get_webp_fields() );
+		foreach ( $network_fields as $setting_field ) {
+			$subsite_settings[ $setting_field ] = ! empty( $network_settings[ $setting_field ] );
+		}
+
+		return $subsite_settings;
 	}
 
 	/**
@@ -294,7 +314,7 @@ class Settings {
 				'desc'        => esc_html__( 'This will add functionality to your website that highlights images that are either too large or too small for their containers.', 'wp-smushit' ),
 			),
 			'original'          => array(
-				'label'       => esc_html__( 'Compress original images', 'wp-smushit' ),
+				'label'       => esc_html__( 'Optimize original images', 'wp-smushit' ),
 				'short_label' => esc_html__( 'Original Images', 'wp-smushit' ),
 				'desc'        => esc_html__( 'Choose how you want Smush to handle the original image file when you run a bulk smush.', 'wp-smushit' ),
 			),
@@ -413,6 +433,10 @@ class Settings {
 		return $this->lazy_load_fields;
 	}
 
+	public function get_webp_fields() {
+		return $this->webp_fields;
+	}
+
 	/**
 	 * Init settings.
 	 *
@@ -481,7 +505,7 @@ class Settings {
 			return false;
 		}
 
-		if ( self::is_ajax_network_admin() ) {
+		if ( self::is_ajax_network_admin() || is_network_admin() ) {
 			return true;
 		}
 
@@ -743,6 +767,10 @@ class Settings {
 			$this->parse_cdn_settings();
 		}
 
+		if ( 'webp' === $page ) {
+			$this->parse_webp_settings();
+		}
+
 		if ( 'integrations' === $page ) {
 			foreach ( $this->get_integrations_fields() as $field ) {
 				$new_settings[ $field ] = filter_input( INPUT_POST, $field, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
@@ -822,7 +850,7 @@ class Settings {
 	 */
 	private function parse_cdn_settings() {
 		// $status = connect to CDN.
-		if ( ! WP_Smush::get_instance()->core()->mod->cdn->get_status() ) {
+		if ( ! CDN_Helper::get_instance()->is_cdn_active() ) {
 			$response = WP_Smush::get_instance()->api()->enable();
 
 			// Probably an exponential back-off.
@@ -945,6 +973,11 @@ class Settings {
 		$this->set_setting( 'wp-smush-lazy_load', $settings );
 	}
 
+	private function parse_webp_settings() {
+		$webp_fallback_active = filter_input( INPUT_POST, 'webp-fallback', FILTER_VALIDATE_BOOLEAN );
+		$this->set( 'webp_fallback', ! empty( $webp_fallback_active ) );
+	}
+
 	/**
 	 * Parse access control settings on multisite.
 	 *
@@ -1038,6 +1071,10 @@ class Settings {
 		return defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_SERVER['HTTP_REFERER'] ) && preg_match( '#^' . network_admin_url() . '#i', wp_unslash( $_SERVER['HTTP_REFERER'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
+	public function is_optimize_original_images_active() {
+		return ! empty( self::get_instance()->get( 'original' ) );
+	}
+
 	public function is_png2jpg_module_active() {
 		return $this->is_module_active( 'png_to_jpg' );
 	}
@@ -1058,6 +1095,33 @@ class Settings {
 		return $this->is_module_active( 's3' );
 	}
 
+	public function is_cdn_webp_conversion_active() {
+		return $this->is_cdn_active()
+		       && ! empty( self::get_instance()->get( 'webp' ) );
+	}
+
+	public function is_webp_direct_conversion_active() {
+		return $this->is_webp_module_active()
+		       && ! empty( self::get_instance()->get( 'webp_direct_conversion' ) );
+	}
+
+	public function is_automatic_compression_active() {
+		return self::get_instance()->get( 'auto' );
+	}
+
+	public function is_cdn_active() {
+		return $this->is_module_active( 'cdn' );
+	}
+
+	public function is_webp_fallback_active() {
+		return $this->is_webp_module_active()
+		       && ! empty( self::get_instance()->get( 'webp_fallback' ) );
+	}
+
+	public function is_lazyload_active() {
+		return self::get_instance()->get( 'lazy_load' );
+	}
+
 	public function is_module_active( $module ) {
 		$pro_modules = array(
 			'cdn',
@@ -1076,7 +1140,7 @@ class Settings {
 	}
 
 	public function get_lossy_level_setting() {
-		$current_level = $this->get( 'lossy' );
+		$current_level = self::get_instance()->get( 'lossy' );
 		return $this->sanitize_lossy_level( $current_level );
 	}
 
@@ -1125,6 +1189,14 @@ class Settings {
 
 	public function has_bulk_smush_page() {
 		return $this->is_page_active( 'bulk' );
+	}
+
+	public function has_cdn_page() {
+		return $this->is_page_active( 'cdn' );
+	}
+
+	public function has_webp_page() {
+		return $this->is_page_active( 'webp' );
 	}
 
 	private function is_page_active( $page_slug ) {

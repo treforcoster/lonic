@@ -12,6 +12,7 @@
 
 namespace Smush\Core\Integrations;
 
+use Smush\Core\CDN\CDN_Helper;
 use Smush\Core\Helper;
 use Smush\Core\Modules\Helpers\Parser;
 use Smush\Core\Modules\Smush;
@@ -27,6 +28,7 @@ if ( ! defined( 'WPINC' ) ) {
  * @since 2.8.0
  */
 class Common {
+	private $cdn_helper;
 
 	/**
 	 * Common constructor.
@@ -77,6 +79,9 @@ class Common {
 
 		// Thumbnail regeneration handler.
 		add_filter( 'wp_generate_attachment_metadata', array( $this, 'maybe_handle_thumbnail_generation' ) );
+		$this->cdn_helper = CDN_Helper::get_instance();
+
+		add_action( 'wp_smush_should_transform', array( $this, 'should_transform' ) );
 	}
 
 	/**
@@ -327,14 +332,12 @@ class Common {
 	 * @return string
 	 */
 	public function soliloquy_image_src( $src ) {
-		$cdn = WP_Smush::get_instance()->core()->mod->cdn;
-
-		if ( ! $cdn->get_status() || empty( $src ) ) {
+		if ( ! $this->cdn_helper->is_cdn_active() || empty( $src ) ) {
 			return $src;
 		}
 
-		if ( $cdn->is_supported_path( $src ) ) {
-			return $cdn->generate_cdn_url( $src );
+		if ( $this->cdn_helper->is_supported_url( $src ) ) {
+			return $this->cdn_helper->generate_cdn_url( $src );
 		}
 
 		return $src;
@@ -444,10 +447,8 @@ class Common {
 	 * @return string
 	 */
 	public function woocommerce_cdn_gallery_thumbnails( $html ) {
-		$cdn = WP_Smush::get_instance()->core()->mod->cdn;
-
 		// Replace only when the CDN is active.
-		if ( ! $cdn->get_status() ) {
+		if ( ! $this->cdn_helper->is_cdn_active() ) {
 			return $html;
 		}
 
@@ -459,12 +460,12 @@ class Common {
 
 		foreach ( $matches as $key => $url ) {
 			// Only use the match for the thumbnail URL if it's supported.
-			if ( 'thumb' !== $key || empty( $url[0] ) || ! $cdn->is_supported_path( $url[0] ) ) {
+			if ( 'thumb' !== $key || empty( $url[0] ) || ! $this->cdn_helper->is_supported_url( $url[0] ) ) {
 				continue;
 			}
 
 			// Replace the data-thumb attribute of the div with the CDN link.
-			$cdn_url = $cdn->generate_cdn_url( $url[0] );
+			$cdn_url = $this->cdn_helper->generate_cdn_url( $url[0] );
 			if ( $cdn_url ) {
 				$html = str_replace( $url[0], $cdn_url, $html );
 			}
@@ -672,5 +673,73 @@ class Common {
 		}
 
 		return $new_meta;
+	}
+
+	public function should_transform( $should_transform ) {
+		return $should_transform
+		       && ! $this->is_smartcrawl_analysis_request()
+		       && ! $this->is_page_builder_request();
+	}
+
+	/**
+	 * Compatibility with SmartCrawl readability analysis.
+	 * Do not process page on analysis.
+	 *
+	 * @since 3.3.0
+	 */
+	private function is_smartcrawl_analysis_request() {
+		$wds_analysis = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_SPECIAL_CHARS );
+		if ( ! is_null( $wds_analysis ) && 'wds-analysis-recheck' === $wds_analysis ) {
+			return true;
+		}
+
+		if ( null !== filter_input( INPUT_GET, 'wds-frontend-check', FILTER_SANITIZE_SPECIAL_CHARS ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check if this is one of the known page builders.
+	 *
+	 * @return bool
+	 * @since 3.5.1
+	 *
+	 */
+	private function is_page_builder_request() {
+		// Oxygen builder.
+		if ( defined( 'SHOW_CT_BUILDER' ) && SHOW_CT_BUILDER ) {
+			return true;
+		}
+
+		// Oxygen builder as well.
+		if ( null !== filter_input( INPUT_GET, 'ct_builder' ) ) {
+			return true;
+		}
+
+		// Beaver builder.
+		if ( null !== filter_input( INPUT_GET, 'fl_builder' ) ) {
+			return true;
+		}
+
+		// Thrive Architect Builder.
+		if ( null !== filter_input( INPUT_GET, 'tve' ) && null !== filter_input( INPUT_GET, 'tcbf' ) ) {
+			return true;
+		}
+
+		// Tatsu page builder.
+		if ( null !== filter_input( INPUT_GET, 'tatsu' ) ) {
+			return true;
+		}
+
+		// BuddyBoss' AJAX requests. They do something strange and end up defining
+		// DOING_AJAX on template_redirect after self::parse_page() runs. That makes
+		// our lazy load page parsing break some of their AJAX requests.
+		if ( function_exists( 'bbp_is_ajax' ) && bbp_is_ajax() ) {
+			return true;
+		}
+
+		return false;
 	}
 }

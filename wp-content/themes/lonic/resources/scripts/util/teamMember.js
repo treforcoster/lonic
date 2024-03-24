@@ -9,16 +9,20 @@ class TeamMember {
 
       $more.click(function () {
         gsap.to($more, { opacity: 0, onComplete: setMoreHidden });
-        gsap.to($bio, { opacity: 1 });
+        //gsap.to($bio, { opacity: 1 });
+        gsap.to($bio, {
+          duration: 0.4,
+          height: "auto",
+        })
         gsap.set($close, { visibility: 'visible' });
-        gsap.to($close, { opacity: 1 });
+        gsap.set($close, { opacity: 1 });
       });
 
       $close.click(function () {
         gsap.set($more, { visibility: 'visible' });
-        gsap.to($more, { opacity: 1 });
-        gsap.to($bio, { opacity: 0 });
-        gsap.to($close, { opacity: 0, onComplete: setCloseHidden });
+        gsap.set($more, { opacity: 1 });
+        gsap.to($bio, { height: 0 });
+        gsap.set($close, { opacity: 0, onComplete: setCloseHidden });
       });
 
       function setMoreHidden() {

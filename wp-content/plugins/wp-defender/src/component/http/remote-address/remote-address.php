@@ -2,6 +2,9 @@
 
 namespace WP_Defender\Component\Http\Remote_Address;
 
+use WP_Defender\Component\Trusted_Proxy_Preset\Trusted_Proxy_Preset;
+use WP_Defender\Traits\IP;
+
 /**
  * Class Remote_Addr.
  *
@@ -12,6 +15,8 @@ namespace WP_Defender\Component\Http\Remote_Address;
  * @package WP_Defender\Component\Http\Remote_Address
  */
 class Remote_Address {
+	use IP;
+
 	/**
 	 * Whether to use proxy addresses or not.
 	 *
@@ -39,6 +44,13 @@ class Remote_Address {
 	protected $proxy_header = 'HTTP_X_FORWARDED_FOR';
 
 	/**
+	 * The trusted proxy preset.
+	 *
+	 * @var string
+	 */
+	protected $trusted_proxy_preset = '';
+
+	/**
 	 * Changes proxy handling setting.
 	 *
 	 * This must be static method, since validators are recovered automatically
@@ -60,6 +72,22 @@ class Remote_Address {
 	 */
 	public function get_use_proxy(): bool {
 		return $this->use_proxy;
+	}
+
+	/**
+	 * Get the list of trusted proxy addresses.
+	 *
+	 * @since 4.6.0
+	 * @return array
+	 */
+	public function get_trusted_proxies(): array {
+		/**
+		 * Filter the list of trusted proxies.
+		 *
+		 * @param array $trusted_proxies List of trusted proxy IP addresses or CIDR ranges.
+		 * @since 4.6.0
+		 */
+		return (array) apply_filters( 'wpdef_firewall_trusted_proxies', $this->trusted_proxies );
 	}
 
 	/**
@@ -87,6 +115,18 @@ class Remote_Address {
 	}
 
 	/**
+	 * Set the trusted proxy preset.
+	 *
+	 * @param  string $trusted_proxy_preset
+	 * @return $this
+	 */
+	public function set_trusted_proxy_preset( string $trusted_proxy_preset ): self {
+		$this->trusted_proxy_preset = $trusted_proxy_preset;
+
+		return $this;
+	}
+
+	/**
 	 * Returns client IP address.
 	 *
 	 * @return string IP address.
@@ -98,7 +138,7 @@ class Remote_Address {
 			return $ip;
 		}
 
-		// direct IP address
+		// Direct IP address.
 		if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
 			return $_SERVER['REMOTE_ADDR'];
 		}
@@ -114,13 +154,7 @@ class Remote_Address {
 	 * @return false|string
 	 */
 	protected function get_ip_address_from_proxy() {
-		if (
-			! $this->use_proxy ||
-			(
-				isset( $_SERVER['REMOTE_ADDR'] ) &&
-				! in_array( $_SERVER['REMOTE_ADDR'], $this->trusted_proxies, true )
-			)
-		) {
+		if ( ! $this->use_proxy ) {
 			return false;
 		}
 
@@ -130,24 +164,37 @@ class Remote_Address {
 			return false;
 		}
 
-		// Extract IPs
-		$ips = explode( ',', $_SERVER[ $header ] );
-		// trim, so we can compare against trusted proxies properly
-		$ips = array_map( 'trim', $ips );
-		// remove trusted proxy IPs
-		$ips = array_diff( $ips, $this->trusted_proxies );
+		$trusted_proxies = $this->get_trusted_proxies();
 
-		// Any left?
-		if ( empty( $ips ) ) {
-			return false;
+		// Extract IPs
+		$ips = array_reverse( explode( ',', $_SERVER[ $header ] ) );
+		foreach( $ips as $ip ) {
+			// trim, so we can compare against trusted proxies properly
+			$ip = trim( $ip );
+
+			// Since we've removed any known, trusted proxy servers, the right-most
+			// address represents the first IP we do not know about -- i.e., we do
+			// not know if it is a proxy server, or a client. As such, we treat it
+			// as the originating IP.
+			// @see http://en.wikipedia.org/wiki/X-Forwarded-For
+			foreach( $trusted_proxies as $trusted_proxy ) {
+				if (
+					( false !== strpos( $trusted_proxy, '/' ) && $this->compare_cidr( $ip, $trusted_proxy ) ) ||
+					$trusted_proxy === $ip
+				) {
+					continue 2;
+				}
+			}
+
+			if ( $this->is_ip_in_trusted_proxy_preset( $ip ) ) {
+				continue;
+			}
+
+
+			return $ip;
 		}
 
-		// Since we've removed any known, trusted proxy servers, the right-most
-		// address represents the first IP we do not know about -- i.e., we do
-		// not know if it is a proxy server, or a client. As such, we treat it
-		// as the originating IP.
-		// @see http://en.wikipedia.org/wiki/X-Forwarded-For
-		return array_pop( $ips );
+		return false;
 	}
 
 	/**
@@ -168,5 +215,39 @@ class Remote_Address {
 		}
 
 		return $header;
+	}
+
+	/**
+	 * Check if IP is in trusted proxy preset.
+	 *
+	 * @param string $ip
+	 *
+	 * @return bool
+	 */
+	public function is_ip_in_trusted_proxy_preset( string $ip ): bool {
+		$trusted_ips = [];
+		if ( ! empty( $this->trusted_proxy_preset ) ) {
+			/**
+			 * @var Trusted_Proxy_Preset $trusted_proxy_preset ;
+			 */
+			$trusted_proxy_preset = wd_di()->get( Trusted_Proxy_Preset::class );
+			$trusted_proxy_preset->set_proxy_preset( $this->trusted_proxy_preset );
+			$trusted_ips = $trusted_proxy_preset->get_ips();
+		}
+
+		if ( empty( $trusted_ips ) ) {
+			return false;
+		}
+
+		foreach ( $trusted_ips as $trusted_ip ) {
+			if (
+				( false !== strpos( $trusted_ip, '/' ) && $this->compare_cidr( $ip, $trusted_ip ) ) ||
+				$trusted_ip === $ip
+			) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

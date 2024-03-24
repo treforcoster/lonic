@@ -721,7 +721,7 @@ class Security_Tweaks extends Event {
 	/**
 	 * @param $slug
 	 *
-	 * @return mixed|null
+	 * @return mixed
 	 */
 	private function get_tweak( $slug ) {
 		$tweaks = Array_Cache::get( 'tweaks', 'tweaks' );
@@ -768,7 +768,10 @@ class Security_Tweaks extends Event {
 		wp_clear_scheduled_hook( 'wpdef_sec_key_gen' );
 	}
 
-	public function remove_data() {}
+	public function remove_data() {
+		// Remove cached data.
+		Array_Cache::remove( 'tweaks', 'tweaks' );
+	}
 
 	/**
 	 * @param array  $data

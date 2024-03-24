@@ -2,6 +2,7 @@
 
 namespace Smush\Core\Media_Library;
 
+use Smush\Core\CDN\CDN_Helper;
 use Smush\Core\Helper;
 use Smush\Core\Media\Media_Item;
 use Smush\Core\Media\Media_Item_Cache;
@@ -128,8 +129,7 @@ class Media_Library_Row {
 	}
 
 	private function get_animated_cdn_notice_with_config_link() {
-		$cdn = WP_Smush::get_instance()->core()->mod->cdn;
-		if ( $cdn->get_status() ) {
+		if ( CDN_Helper::get_instance()->is_cdn_active() ) {
 			return '<span class="smush-cdn-notice">' . esc_html__( 'GIFs are serving from global CDN', 'wp-smushit' ) . '</span>';
 		}
 		$cdn_link = Helper::get_page_url( 'smush-cdn' );

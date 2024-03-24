@@ -209,8 +209,16 @@ class Core extends Stats {
 		new Integrations\Gutenberg();
 		new Integrations\Composer();
 		new Integrations\Gravity_Forms();
-		new Integrations\Envira( $this->mod->cdn );
-		new Integrations\Avada( $this->mod->cdn );
+		new Integrations\Envira();
+		new Integrations\Avada();
+		$hummingbird = new Integrations\Hummingbird_Integration();
+		$hummingbird->init();
+
+		$woo = new Integrations\WooCommerce();
+		$woo->init();
+
+		$amp = new Integrations\AMP_Integration();
+		$amp->init();
 
 		// Register logger to schedule cronjob.
 		Helper::logger();
@@ -328,7 +336,7 @@ class Core extends Stats {
 				'<a href=' . esc_url( menu_page_url( 'smush-tutorials', false ) ) . '>',
 				'</a>'
 			),
-			'smush_cdn_activation_notice'  => WP_Smush::is_pro() && ! $this->mod->cdn->is_active() ?
+			'smush_cdn_activation_notice'  => WP_Smush::is_pro() && ! Settings::get_instance()->is_cdn_active() ?
 				sprintf(
 					/* translators: 1 - Number of CDN PoP locations, 2 - opening a tag, 3 - closing a tag */
 					esc_html__( 'Activate Smush CDN to bulk smush and serve animated GIF’s via %1$d worldwide locations. %2$sActivate CDN%3$s', 'wp-smushit' ),

@@ -3,6 +3,7 @@
 namespace WP_Defender\Component;
 
 use WP_Defender\Component;
+use WP_Defender\Model\Setting\Mask_Login as Model_Mask_Login;
 
 /**
  * Doing the logic for mask login module.
@@ -124,7 +125,7 @@ class Mask_Login extends Component {
 	 * @return bool
 	 */
 	public function redeem_ticket( $ticket ): bool {
-		$settings = new \WP_Defender\Model\Setting\Mask_Login();
+		$settings = wd_di()->get( Model_Mask_Login::class );
 		$detail = $settings->express_tickets[ $ticket ] ?? false;
 		if ( false === $detail ) {
 			return false;
@@ -143,47 +144,6 @@ class Mask_Login extends Component {
 		$settings->save();
 
 		return true;
-	}
-
-	/**
-	 * Check if the HTTP_USER_AGENT is a bot.
-	 *
-	 * @deprecated 4.2.0
-	 *
-	 * @return bool
-	 */
-	public function is_bot_request(): bool {
-
-		$is_bot_req = false;
-		/**
-		 * Filters the bot list for Mask Login.
-		 *
-		 * @since 3.12.0
-		 * @deprecated 4.2.0
-		 *
-		 * @param array $bot_list A list of bots.
-		 */
-		$bot_list = apply_filters_deprecated( 'wd_mask_login_bot_list', [[]], '4.2.0' );
-		if ( ! empty( $bot_list ) && is_array( $bot_list ) ) {
-			$pattern = '/' . implode( '|', $bot_list ) . '/i';
-
-			if (
-				! empty( $_SERVER['HTTP_USER_AGENT'] ) &&
-				preg_match( $pattern, $_SERVER['HTTP_USER_AGENT'] )
-			) {
-				$is_bot_req = true;
-			}
-		}
-
-		/**
-		 * Filters the result of bot request check.
-		 *
-		 * @since 3.12.0
-		 * @deprecated 4.2.0
-		 *
-		 * @param bool $is_bot_req Is it a bot request or not?
-		 */
-		return (bool) apply_filters_deprecated( 'wd_mask_login_is_bot_request', [$is_bot_req], '4.2.0' );
 	}
 
 	/**
@@ -223,5 +183,18 @@ class Mask_Login extends Component {
 		$requested_path = $this->get_request_path();
 
 		return trim( $requested_path, '/' ) === trim( $is_login_path, '/' );
+	}
+
+	/**
+	 * @since 4.6.0
+	 * @return string
+	 */
+	public static function maybe_masked_login_url(): string {
+		$settings = wd_di()->get( Model_Mask_Login::class );
+		if ( $settings->is_active() ) {
+			return $settings->get_new_login_url();
+		} else {
+			return wp_login_url();
+		}
 	}
 }

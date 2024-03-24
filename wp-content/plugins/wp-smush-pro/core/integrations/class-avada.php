@@ -8,8 +8,9 @@
 
 namespace Smush\Core\Integrations;
 
-use Smush\Core\Modules\CDN;
+use Smush\Core\CDN\CDN_Helper;
 use Smush\Core\Modules\Helpers\Parser;
+use Smush\Core\Settings;
 
 if ( ! defined( 'WPINC' ) ) {
 	die;
@@ -19,30 +20,24 @@ if ( ! defined( 'WPINC' ) ) {
  * Class Avada
  */
 class Avada {
-
-	/**
-	 * CDN module instance.
-	 *
-	 * @var CDN $cdn
-	 */
-	private $cdn;
+	private $cdn_helper;
 
 	/**
 	 * Avada constructor.
 	 *
 	 * @since 3.3.0
-	 *
-	 * @param CDN $cdn  CDN module.
 	 */
-	public function __construct( CDN $cdn ) {
-		if ( $cdn->is_active() ) {
-			$this->cdn = $cdn;
-			add_filter( 'smush_cdn_bg_image_tag', array( $this, 'replace_cdn_links' ) );
+	public function __construct() {
+		$settings = Settings::get_instance();
+		if ( $settings->is_cdn_active() ) {
+			add_filter( 'wp_smush_updated_element_markup', array( $this, 'replace_cdn_links' ) );
 
 			if ( defined( 'FUSION_BUILDER_PLUGIN_DIR' ) ) {
+				// TODO: the filter smush_after_process_background_images is deprecated now, this might not be needed with the new framework
 				add_filter( 'smush_after_process_background_images', array( $this, 'smush_cdn_image_replaced' ), 10, 3 );
 			}
 		}
+		$this->cdn_helper = CDN_Helper::get_instance();
 	}
 
 	/**
@@ -54,8 +49,8 @@ class Avada {
 	 * @return string
 	 */
 	public function smush_cdn_image_replaced( $content, $image, $img_src ) {
-		if ( $this->cdn->is_supported_path( $img_src ) ) {
-			$new_src = $this->cdn->generate_cdn_url( $img_src );
+		if ( $this->cdn_helper->is_supported_url( $img_src ) ) {
+			$new_src = $this->cdn_helper->generate_cdn_url( $img_src );
 
 			if ( $new_src ) {
 				$content = str_replace( $img_src, $new_src, $content );
@@ -81,8 +76,8 @@ class Avada {
 			$original_src = $image_src;
 
 			// Replace the data-bg-url of the image with CDN link.
-			if ( $this->cdn->is_supported_path( $image_src ) ) {
-				$image_src = $this->cdn->generate_cdn_url( $image_src );
+			if ( $this->cdn_helper->is_supported_url( $image_src ) ) {
+				$image_src = $this->cdn_helper->generate_cdn_url( $image_src );
 
 				if ( $image_src ) {
 					$img = preg_replace( '#(data-bg-url=["|\'])' . $original_src . '(["|\'])#i', '\1' . $image_src . '\2', $img, 1 );

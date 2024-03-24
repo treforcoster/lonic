@@ -60,7 +60,7 @@ class WhiteLabel {
 			return false;
 		}
 		$whitelabel_settings = WPMUDEV_Dashboard::$whitelabel->get_settings();
-		return ! empty( $whitelabel_settings['labels_enabled'] ) && ! empty( $whitelabel_settings['labels_config'][ $plugin_id ] );		  	   				 	    	 	
+		return ! empty( $whitelabel_settings['labels_enabled'] ) && ! empty( $whitelabel_settings['labels_config'][ $plugin_id ] );
 	}
 
 	/**

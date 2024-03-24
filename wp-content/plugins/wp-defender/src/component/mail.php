@@ -58,6 +58,8 @@ class Mail extends Component {
 				return __( 'Unsubscription', 'wpdef' );
 			case 'totp':
 				return __( 'Two-Factor Authentication', 'wpdef' );
+			case \WP_Defender\Component\Unlock_Me::SLUG_UNLOCK:
+				return \WP_Defender\Component\Unlock_Me::get_feature_title();
 			default:
 				return '';
 		}
