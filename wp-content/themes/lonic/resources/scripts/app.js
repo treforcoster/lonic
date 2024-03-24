@@ -20,6 +20,7 @@ import DownArrow from './util/downArrow.js';
 // import PropertyAreaMap from './util/propertyAreaMap.js';
 import ExpandingCarousel from './util/expandingCarousel.js';
 import ClientsCarousel from './util/clientsCarousel.js';
+import SectionCarousel from './util/sectionCarousel.js';
 
 /**
  * Application entrypoint
@@ -47,9 +48,9 @@ domReady(async () => {
   const accordion = new Accordion();
   const downArrow = new DownArrow();
 
-  const expandingCarousel = new ExpandingCarousel();
+  //const expandingCarousel = new ExpandingCarousel();
   const clientsCarousel = new ClientsCarousel();
-
+  const sectionCarousel = new SectionCarousel();
   //const classFile = new ClassFile();
   // }
   //myFunction();

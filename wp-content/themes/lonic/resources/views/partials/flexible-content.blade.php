@@ -35,7 +35,7 @@
 @endif
 
 @if(get_row_layout() == 'carousel')
-@include('components.sections.section-expanding-carousel')
+@include('components.sections.section-carousel')
 @endif
 
 @if(get_row_layout() == 'clients')     
