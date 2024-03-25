@@ -6,7 +6,7 @@
       <div class="col-6">
         <div class="featured-image ">
           <?php $img_id = get_post_thumbnail_id(get_the_ID());
-          $image = wp_get_attachment_image_src($img_id, "featured-image");
+          $image = wp_get_attachment_image_src($img_id, "image-landscape");
           $alt_text = get_post_meta($img_id, '_wp_attachment_image_alt', true); ?>
     
           <img class="rounded-image" src="<?php echo $image[0]; ?>" alt="<?php echo $alt_text; ?>">
