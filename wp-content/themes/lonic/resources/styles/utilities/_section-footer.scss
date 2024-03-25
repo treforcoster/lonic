@@ -1,7 +1,22 @@
 .section-footer {
+  overflow: hidden;
   .logo-footer {
     height: 30px;
     width: auto;
+  }
+
+  .divider {
+    position: relative;
+    &:after {
+      content: "";
+      background: #66ffd0;
+      width: 1px;
+      height: 200%;
+      top: -50%;
+      right: 4vw;
+      position: absolute;
+
+    }
   }
 
   h1,
@@ -32,7 +47,7 @@
     color: var(--text-color-white-copy) !important;
 
     &:hover {
-      color: var(--text-color-white-links-hover);
+      color: var(--text-color-white-links-hover) !important;
     }
   }
 

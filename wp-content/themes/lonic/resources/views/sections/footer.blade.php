@@ -11,19 +11,19 @@
             </div>
             <div class="col-lg-8">
                 <div class="row">
-                    <div class="col-6 col-lg-3  medium p-b-mobile-element divider">
+                    <div class="col-6 col-lg-3  medium p-b-mobile-element ">
                         @php dynamic_sidebar('footer-2') @endphp
                     </div>
         
-                    <div class="col-6 col-lg-3  medium p-b-mobile-section divider">
+                    <div class="col-6 col-lg-3  medium p-b-mobile-section ">
                         @php dynamic_sidebar('footer-3') @endphp
                     </div>
         
-                    <div class="col-6 col-lg-3  medium p-b-mobile-section divider">
+                    <div class="col-6 col-lg-3  medium p-b-mobile-section ">
                         @php dynamic_sidebar('footer-4') @endphp
                     </div>
         
-                    <div class="col-6 col-lg-3  medium p-b-mobile-section divider">
+                    <div class="col-6 col-lg-3  medium p-b-mobile-section ">
                         @php dynamic_sidebar('footer-5') @endphp
                     </div>
                 </div>
