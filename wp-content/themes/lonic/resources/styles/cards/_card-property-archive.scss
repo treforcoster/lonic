@@ -7,9 +7,13 @@
     .featured-image {
       position: relative;
       overflow: hidden;
+      padding-bottom: 70%;
+
       img {
+        position: absolute;
         width: 100%;
-        height: auto;
+        height:100%;
+        object-fit: cover;
       }
 
       .sold {
