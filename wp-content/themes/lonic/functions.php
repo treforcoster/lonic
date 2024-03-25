@@ -11,7 +11,7 @@
 |
 */
 
-if (!file_exists($composer = __DIR__ . '/vendor/autoload.php')) {
+if (!file_exists($composer = __DIR__.'/vendor/autoload.php')) {
     wp_die(__('Error locating autoloader. Please run <code>composer install</code>.', 'sage'));
 }
 
@@ -73,112 +73,106 @@ collect([
         }
     });
 
-
 function my_password_form()
 {
     global $post;
-    $label = 'pwbox-' . (empty($post->ID) ? rand() : $post->ID);
-    $o = '<section class="section-password-block p-t-mobile-section p-b-mobile-section p-t-desktop-section p-b-desktop-section medium text-dark"><div class="container-fluid"><div class="row p-b-mobile-section p-b-desktop-section"><div class="col-lg-6"><form action="' . esc_url(site_url('wp-login.php?action=postpass', 'login_post')) . '" method="post">
-    ' . __("<h1><span class='lead-in-heading'>GALLERY</span>Please enter the password below to see photos from The Summer Lunch</h1>") . '
-    <label for="' . $label . '">' . __("Password:") . ' </label><input name="post_password" id="' . $label . '" type="password" size="20" maxlength="20" /><input type="submit" name="Submit" value="' . esc_attr__("Submit") . '" />
+    $label = 'pwbox-'.(empty($post->ID) ? rand() : $post->ID);
+    $o = '<section class="section-password-block p-t-mobile-section p-b-mobile-section p-t-desktop-section p-b-desktop-section medium text-dark"><div class="container-fluid"><div class="row p-b-mobile-section p-b-desktop-section"><div class="col-lg-6"><form action="'.esc_url(site_url('wp-login.php?action=postpass', 'login_post')).'" method="post">
+    '.__("<h1><span class='lead-in-heading'>GALLERY</span>Please enter the password below to see photos from The Summer Lunch</h1>").'
+    <label for="'.$label.'">'.__('Password:').' </label><input name="post_password" id="'.$label.'" type="password" size="20" maxlength="20" /><input type="submit" name="Submit" value="'.esc_attr__('Submit').'" />
     </form></div></div></div></section>
     ';
+
     return $o;
 }
 add_filter('the_password_form', 'my_password_form');
 
 add_filter('wp_lazy_loading_enabled', '__return_true', 99);
-add_action('wp_ajax_myfilter', 'misha_filter_function'); // wp_ajax_{ACTION HERE} 
+add_action('wp_ajax_myfilter', 'misha_filter_function'); // wp_ajax_{ACTION HERE}
 add_action('wp_ajax_nopriv_myfilter', 'misha_filter_function');
 
 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 function misha_filter_function()
 {
+    // var_dump($_POST);
 
-    //var_dump($_POST);
-
-
-
-    $args = array(
+    $args = [
         'orderby' => 'date', // we will sort posts by date
-        'order'    => $_POST['date'],
-        'post_type'        => 'property',
+        'order' => $_POST['date'],
+        'post_type' => 'property',
         'posts_per_page' => -1,
         'post_status' => 'publish',
-
-
-    );
+    ];
 
     // for taxonomies / categories
     if ($_POST['categoryfilter'] == '*' || $_POST['categoryfilter'] == '') {
     } else {
-        $args['tax_query'] = array(
-            array(
+        $args['tax_query'] = [
+            [
                 'taxonomy' => 'location',
                 'field' => 'id',
                 'terms' => $_POST['categoryfilter'],
-            )
-        );
+            ],
+        ];
     }
 
     if ($_POST['statusFilter'] == '*' || $_POST['statusFilter'] == '') {
     } else {
-        $args['meta_query'] = array(
-            array(
-                'key'        => 'status',
-                'value'    => $_POST['statusFilter'],
-            )
-        );
+        $args['meta_query'] = [
+            [
+                'key' => 'status',
+                'value' => $_POST['statusFilter'],
+            ],
+        ];
     }
 
-
     if ($_POST['price_min'] != '' && $_POST['price_max'] != '') {
-        $args['meta_query'][] = array(
+        $args['meta_query'][] = [
             'key' => 'price',
-            'value' => array((int)$_POST['price_min'], (int)$_POST['price_max']),
+            'value' => [(int) $_POST['price_min'], (int) $_POST['price_max']],
             'type' => 'numeric',
             'compare' => 'between',
-            'relation' => 'AND'
-        );
+            'relation' => 'AND',
+        ];
     } else {
-        //if only min price is set
+        // if only min price is set
         if ($_POST['price_min'] != '') {
-            $args['meta_query'][] = array(
+            $args['meta_query'][] = [
                 'key' => 'price',
-                'value' =>  (int)$_POST['price_min'],
+                'value' => (int) $_POST['price_min'],
                 'type' => 'numeric',
-                'compare' => '>='
-            );
+                'compare' => '>=',
+            ];
         }
 
         if ($_POST['price_max'] != '') {
-            $args['meta_query'][] = array(
+            $args['meta_query'][] = [
                 'key' => 'price',
-                'value' =>  (int)$_POST['price_max'],
+                'value' => (int) $_POST['price_max'],
                 'type' => 'numeric',
-                'compare' => '<='
-            );
+                'compare' => '<=',
+            ];
         }
     }
 
-
     $query = new WP_Query($args);
 
-    $rate =  get_field('currency_USDGBP', 'options');
-    $eur_rate =  get_field('currency_USDEUR', 'options');
+    $rate = get_field('currency_USDGBP', 'options');
+    $eur_rate = get_field('currency_USDEUR', 'options');
 
     $count = 0;
 
-    if ($query->have_posts()) :
-        while ($query->have_posts()) : $query->the_post(); ?>
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post(); ?>
 
             <?php if ($count > 2) {
-                $display = "hidden";
+                $display = 'hidden';
             } ?>
 
-            <?php $count++; ?>
+            <?php ++$count; ?>
 
-            <div id="c<?php echo $count; ?>" class="property-post col-md-4 p-b-mobile-element p-b-desktop-intro <?php //echo $display;
+            <div id="c<?php echo $count; ?>" class="property-post col-md-4 p-b-mobile-element p-b-desktop-intro <?php // echo $display;
                                                                                                                 ?>">
 
                 <a class="card-propery-archive" href="<?php the_permalink(); ?>">
@@ -187,12 +181,12 @@ function misha_filter_function()
 
 
                             <?php $img_id = get_post_thumbnail_id(get_the_ID());
-                            $image = wp_get_attachment_image_src($img_id, "featured-image", false, 'lazy');
-                            $alt_text = get_post_meta($img_id, '_wp_attachment_image_alt', true); ?>
+            $image = wp_get_attachment_image_src($img_id, 'featured-image', false, 'lazy');
+            $alt_text = get_post_meta($img_id, '_wp_attachment_image_alt', true); ?>
 
                             <img src="<?php echo $image[0]; ?>" alt="<?php echo $alt_text; ?>">
 
-                            <?php $image = get_field('image') ?>
+                            <?php $image = get_field('image'); ?>
                             <div class='hover-image'>
                                 <?php if (!empty($image)) {
                                     // vars
@@ -201,8 +195,7 @@ function misha_filter_function()
 
                                     $sizedImage = $image['sizes']['featured-image'];
 
-
-                                ?>
+                                    ?>
                                     <img src="<?php echo $sizedImage; ?>" alt="<?php echo $alt; ?>" class="lazyload">
 
                                 <?php } ?>
@@ -225,14 +218,14 @@ function misha_filter_function()
                                     <?php if ($price_data) { ?>
                                         <div class="card-price price-gbp alt">
 
-                                            <?php if ($price_label == "POA") { ?>
+                                            <?php if ($price_label == 'POA') { ?>
 
                                                 <?php echo 'POA'; ?>
 
                                             <?php } else { ?>
 
-                                                <?php $price = number_format((float)$price_data);
-                                                echo '£' . $price; ?>
+                                                <?php $price = number_format((float) $price_data);
+                                                echo '£'.$price; ?>
 
                                             <?php } ?>
 
@@ -240,14 +233,14 @@ function misha_filter_function()
 
                                         <div class="card-price price-usd alt">
 
-                                            <?php if ($price_label == "POA") { ?>
+                                            <?php if ($price_label == 'POA') { ?>
 
                                                 <?php echo 'POA'; ?>
 
                                             <?php } else { ?>
                                                 <?php $price = $price_data / $rate; ?>
-                                                <?php $price = number_format((float)$price);
-                                                echo '$' . $price; ?>
+                                                <?php $price = number_format((float) $price);
+                                                echo '$'.$price; ?>
 
                                             <?php } ?>
 
@@ -255,14 +248,14 @@ function misha_filter_function()
 
                                         <div class="card-price price-eur alt">
 
-                                            <?php if ($price_label == "POA") { ?>
+                                            <?php if ($price_label == 'POA') { ?>
 
                                                 <?php echo 'POA'; ?>
 
                                             <?php } else { ?>
                                                 <?php $price = $price_data / $rate * $eur_rate; ?>
-                                                <?php $price = number_format((float)$price);
-                                                echo '€' . $price; ?>
+                                                <?php $price = number_format((float) $price);
+                                                echo '€'.$price; ?>
 
                                             <?php } ?>
 
@@ -273,14 +266,14 @@ function misha_filter_function()
                                     <?php $status = get_field('status'); ?>
                                     <?php $new = get_field('new'); ?>
 
-                                    <?php $date1 = get_the_date("Y-m-d");
-                                    $date2 = date("Y-m-d");
-                                    $diff = abs(strtotime($date2) - strtotime($date1));
-                                    $years = floor($diff / (365 * 60 * 60 * 24));
-                                    $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
-                                    $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
-                                    $totalTime = ($years * 12) + $months;
-                                    ?>
+                                    <?php $date1 = get_the_date('Y-m-d');
+            $date2 = date('Y-m-d');
+            $diff = abs(strtotime($date2) - strtotime($date1));
+            $years = floor($diff / (365 * 60 * 60 * 24));
+            $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
+            $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
+            $totalTime = ($years * 12) + $months;
+            ?>
                                     <div class="tags end">
                                         <?php if ($new == 'yes' && $status == 'For Sale') { ?>
                                             <div class='tag red'>New</div>
@@ -303,20 +296,18 @@ function misha_filter_function()
 
 
 
-        <?php endwhile; ?>
+        <?php } ?>
 
 
 
 <?php
         wp_reset_postdata();
-    else :
+    } else {
         echo get_field('no_properties_text', 'options');
-    endif;
+    }
 
-    die();
+    exit;
 }
-
-
 
 setUpCurrency();
 
@@ -324,33 +315,34 @@ function setUpCurrency()
 {
     add_action('update_currency_rates', 'update_rates');
 
-    if (!wp_next_scheduled('update_currency_rates'))
+    if (!wp_next_scheduled('update_currency_rates')) {
         wp_schedule_event(time(), 'daily', 'update_currency_rates');
+    }
 
     // This is for dev only
-    //add_action('plugins_loaded',  'update_rates');
-    //echo 'setup 2';
-    //update_rates();
+    // add_action('plugins_loaded',  'update_rates');
+    // echo 'setup 2';
+    // update_rates();
 }
 
 function update_rates()
 {
     $curl = curl_init();
 
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://api.apilayer.com/currency_data/live?source=USD&currencies=GBP,EUR",
-        CURLOPT_HTTPHEADER => array(
-            "Content-Type: text/plain",
-            "apikey: cZMe1JfvxjV8FGFoRZugc9HBIatFqQWd"
-        ),
+    curl_setopt_array($curl, [
+        CURLOPT_URL => 'https://api.apilayer.com/currency_data/live?source=USD&currencies=GBP,EUR',
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: text/plain',
+            'apikey: cZMe1JfvxjV8FGFoRZugc9HBIatFqQWd',
+        ],
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
+        CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
         CURLOPT_TIMEOUT => 0,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "GET"
-    ));
+        CURLOPT_CUSTOMREQUEST => 'GET',
+    ]);
 
     $field_name = 'currency_USDGBP';
     $field_name_eur = 'currency_USDEUR';
@@ -359,13 +351,13 @@ function update_rates()
     $response = curl_exec($curl);
 
     curl_close($curl);
-    //echo $response;
+    // echo $response;
     $decoded = json_decode($response);
-    //update_option('currency_USDGBP', $decoded->quotes->USDGBP, false);
+    // update_option('currency_USDGBP', $decoded->quotes->USDGBP, false);
     update_field($field_name, $decoded->quotes->USDGBP, $field_location);
     update_field($field_name_eur, $decoded->quotes->USDEUR, $field_location);
     // 151
-    //0.78409
+    // 0.78409
 
     // echo 'update_rates';
     //     $field_name = 'currency_USDGBP';
@@ -374,15 +366,14 @@ function update_rates()
     //     $field_location = 'options';
     //     echo $field_location;
     //     update_field($field_name, 'value2', $field_location);
-
 }
 /**
- * Enable vCard Upload 
- *
+ * Enable vCard Upload.
  */
 function be_enable_vcard_upload($mime_types)
 {
     $mime_types['vcf'] = 'text/vcard';
+
     return $mime_types;
 }
 add_filter('upload_mimes', 'be_enable_vcard_upload');
@@ -397,4 +388,19 @@ function posts_link_attributes_1()
 function posts_link_attributes_2()
 {
     return 'class="prev-posts"';
+}
+
+add_filter('pre_get_posts', 'custom_change_property_posts_per_page');
+/**
+ * Change Posts Per Page for Portfolio Archive.
+ *
+ * @param object $query data
+ */
+function custom_change_property_posts_per_page($query)
+{
+    if ($query->is_post_type_archive('property') && !is_admin() && $query->is_main_query()) {
+        $query->set('posts_per_page', '-1');
+    }
+
+    return $query;
 }
