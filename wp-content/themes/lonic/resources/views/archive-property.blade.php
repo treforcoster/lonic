@@ -12,7 +12,7 @@
   @endif
 
   <div class="container-fluid  padding-top-intro padding-bottom-intro text-center bg-colour-light text-dark ">
-      <h3>Our current instructions</h3>
+       <?php the_field('properties_title', 'options'); ?>
   </div>
 
 
