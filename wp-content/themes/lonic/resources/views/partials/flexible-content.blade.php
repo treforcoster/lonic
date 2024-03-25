@@ -58,6 +58,10 @@
 @include('components.sections.section-logo-block')
 @endif
 
+@if(get_row_layout() == 'text')
+@include('components.sections.section-text')
+@endif
+
 @if(get_row_layout() == 'contact_form')
 @include('components.sections.section-contact-form')
 @endif

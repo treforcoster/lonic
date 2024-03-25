@@ -1,5 +1,5 @@
 <section id="<?php //echo $section['section_id'];
-              ?>" class="section section-line section-blog-text padding-top-section padding-bottom-section  bg-<?php the_sub_field('background_colour'); ?> text-<?php the_sub_field('text_colour'); ?>
+              ?>" class="section section-blog-text padding-top-section padding-bottom-section  bg-<?php the_sub_field('background_colour'); ?> text-<?php the_sub_field('text_colour'); ?>
 
 ">
   <div class="container-fluid">
