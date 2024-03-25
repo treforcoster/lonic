@@ -4,6 +4,9 @@
 
         <div class="row">
             <div class="col-lg-4 p-b-mobile-section divider no-bullets">
+                <div class="padding-bottom-element">
+                <img class="logo-footer" src="<?php the_field('logo_footer', 'options'); ?>">
+                </div>
                 @php dynamic_sidebar('footer-1') @endphp
             </div>
             <div class="col-lg-8">

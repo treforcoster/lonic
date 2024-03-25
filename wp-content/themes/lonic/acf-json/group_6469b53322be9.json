@@ -16,7 +16,6 @@
                 "class": "",
                 "id": ""
             },
-            "acfe_save_meta": 0,
             "uploader": "",
             "return_format": "url",
             "acfe_thumbnail": 0,
@@ -44,7 +43,33 @@
                 "class": "",
                 "id": ""
             },
-            "acfe_save_meta": 0,
+            "uploader": "",
+            "return_format": "url",
+            "acfe_thumbnail": 0,
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "preview_size": "medium",
+            "library": "all"
+        },
+        {
+            "key": "field_6601da1dd72f2",
+            "label": "Logo Footer",
+            "name": "logo_footer",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
             "uploader": "",
             "return_format": "url",
             "acfe_thumbnail": 0,
@@ -72,7 +97,6 @@
                 "class": "",
                 "id": ""
             },
-            "acfe_save_meta": 0,
             "uploader": "",
             "return_format": "url",
             "acfe_thumbnail": 0,
@@ -100,7 +124,6 @@
                 "class": "",
                 "id": ""
             },
-            "acfe_save_meta": 0,
             "default_value": "",
             "tabs": "all",
             "toolbar": "full",
@@ -121,7 +144,6 @@
                 "class": "",
                 "id": ""
             },
-            "acfe_save_meta": 0,
             "default_value": "",
             "tabs": "all",
             "toolbar": "full",
@@ -142,7 +164,6 @@
                 "class": "",
                 "id": ""
             },
-            "acfe_save_meta": 0,
             "uploader": "",
             "return_format": "url",
             "acfe_thumbnail": 0,
@@ -170,7 +191,6 @@
                 "class": "",
                 "id": ""
             },
-            "acfe_save_meta": 0,
             "default_value": "",
             "tabs": "all",
             "toolbar": "full",
@@ -191,82 +211,11 @@
                 "class": "",
                 "id": ""
             },
-            "acfe_save_meta": 0,
             "default_value": "",
             "tabs": "all",
             "toolbar": "full",
             "media_upload": 1,
             "delay": 0
-        },
-        {
-            "key": "field_646bd3b9f7777",
-            "label": "Map Header Background",
-            "name": "map_header_background",
-            "aria-label": "",
-            "type": "image",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "acfe_save_meta": 0,
-            "uploader": "",
-            "return_format": "url",
-            "acfe_thumbnail": 0,
-            "min_width": "",
-            "min_height": "",
-            "min_size": "",
-            "max_width": "",
-            "max_height": "",
-            "max_size": "",
-            "mime_types": "",
-            "preview_size": "medium",
-            "library": "all"
-        },
-        {
-            "key": "field_64cff349bf193",
-            "label": "currency_USDGBP",
-            "name": "currency_USDGBP",
-            "aria-label": "",
-            "type": "text",
-            "instructions": "Do not edit this field. \r\nAutomatically updated daily by currency plugin.",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "acfe_save_meta": 0,
-            "default_value": "",
-            "maxlength": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": ""
-        },
-        {
-            "key": "field_64f2f6930680c",
-            "label": "currency_USDEUR",
-            "name": "currency_USDEUR",
-            "aria-label": "",
-            "type": "text",
-            "instructions": "Do not edit this field. \r\nAutomatically updated daily by currency plugin.",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "acfe_save_meta": 0,
-            "default_value": "",
-            "maxlength": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": ""
         },
         {
             "key": "field_64e6d1f43f83b",
@@ -282,7 +231,6 @@
                 "class": "",
                 "id": ""
             },
-            "acfe_save_meta": 0,
             "default_value": "",
             "tabs": "all",
             "toolbar": "full",
@@ -303,7 +251,6 @@
                 "class": "",
                 "id": ""
             },
-            "acfe_save_meta": 0,
             "post_type": "",
             "post_status": "",
             "taxonomy": "",
@@ -337,5 +284,5 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1693644457
+    "modified": 1711397420
 }
