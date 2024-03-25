@@ -1,0 +1,117 @@
+.button-prev,
+.button-next {
+  .prev-1,
+  .prev-2,
+  .prev-5,
+  .prev-7 {
+    fill: none;
+  }
+
+  .prev-1,
+  .prev-3,
+  .prev-5,
+  .arrow {
+    stroke: #ff664d;
+    stroke-width: 1.5px;
+    fill: none;
+  }
+
+  .circle {
+    stroke: #ff664d;
+    stroke-width: 1.5px;
+    fill: none;
+  }
+
+  .prev-3 {
+    fill: #fff;
+  }
+
+  .prev-4 {
+    clip-path: url(#prev-path);
+  }
+
+  .prev-5 {
+    stroke-miterlimit: 10;
+  }
+
+  .prev-6 {
+    stroke: none;
+  }
+
+  .next-1,
+  .next-2,
+  .next-5,
+  .next-7 {
+    fill: none;
+  }
+
+  .next-1,
+  .next-3,
+  .arrow {
+    stroke: #032c33;
+    stroke-width: 1.5px;
+    fill: none;
+  }
+
+  .circle {
+    stroke: #032c33;
+    stroke-width: 1.5px;
+    fill: none;
+    opacity: 0.7;
+  }
+
+  .next-3 {
+    fill: #fff;
+  }
+
+  .next-4 {
+    clip-path: url(#clip-path);
+  }
+
+  .next-5 {
+    stroke-miterlimit: 10;
+  }
+
+  .next-6 {
+    stroke: none;
+  }
+
+  &:hover {
+    .prev-1,
+    .prev-3,
+    .prev-5,
+    .arrow {
+      stroke: #ff664d;
+      stroke-width: 1.5px;
+      fill: none;
+    }
+
+    .circle {
+      stroke: #ff664d;
+      stroke-width: 1.5px;
+      fill: none;
+    }
+
+    .next-1,
+    .next-2,
+    .next-5,
+    .next-7 {
+      fill: none;
+    }
+
+    .next-1,
+    .next-3,
+    .arrow {
+      stroke: #ff664d;
+      stroke-width: 1.5px;
+      fill: none;
+    }
+
+    .circle {
+      stroke: #ff664d;
+      stroke-width: 1.5px;
+      fill: none;
+      opacity: 0.7;
+    }
+  }
+}

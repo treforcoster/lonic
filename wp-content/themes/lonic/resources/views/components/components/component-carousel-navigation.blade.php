@@ -2,43 +2,7 @@
   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="76.916" height="76.915" viewBox="0 0 76.916 76.915">
     <defs>
       <style>
-        .prev-1,
-        .prev-2,
-        .prev-5,
-        .prev-7 {
-          fill: none;
-        }
-
-        .prev-1,
-        .prev-3,
-        .prev-5,
-        .arrow {
-          stroke: #FF664D;
-          stroke-width: 1.5px;
-          fill: none;
-        }
-
-        .circle {
-          stroke: #FF664D;
-          stroke-width: 1.5px;
-          fill: none;
-        }
-
-        .prev-3 {
-          fill: #fff;
-        }
-
-        .prev-4 {
-          clip-path: url(#prev-path);
-        }
-
-        .prev-5 {
-          stroke-miterlimit: 10;
-        }
-
-        .prev-6 {
-          stroke: none;
-        }
+       
       </style>
       <clipPath id="prev-path">
         <rect id="Rectangle_105" data-name="Rectangle 105" class="prev-1" width="40.806" height="21.097" />
@@ -67,43 +31,7 @@
   <svg id="Group_13469" data-name="Group 13469" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="76.916" height="76.915" viewBox="0 0 76.916 76.915">
     <defs>
       <style>
-        .next-1,
-        .next-2,
-        .next-5,
-        .next-7 {
-          fill: none;
-        }
-
-        .next-1,
-        .next-3,
-        .arrow {
-          stroke: #FF664D;
-          stroke-width: 1.5px;
-          fill: none;
-        }
-
-        .circle {
-          stroke: #FF664D;
-          stroke-width: 1.5px;
-          fill: none;
-          opacity: 0.7;
-        }
-
-        .next-3 {
-          fill: #fff;
-        }
-
-        .next-4 {
-          clip-path: url(#clip-path);
-        }
-
-        .next-5 {
-          stroke-miterlimit: 10;
-        }
-
-        .next-6 {
-          stroke: none;
-        }
+      
       </style>
       <clipPath id="clip-path">
         <rect id="Rectangle_105" data-name="Rectangle 105" class="next-1" width="40.806" height="21.097" />

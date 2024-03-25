@@ -99,6 +99,7 @@
 @import 'utilities/section-footer';
 
 @import 'utilities/header-burger-menu';
+@import 'utilities/carousel-navigation';
 
 @import 'utilities/socials';
 
@@ -116,9 +117,8 @@ html {
 
 body,
 html {
-  /*width: 100vw;
+  width: 100vw;
   overflow-x: hidden;
-  overscroll-behavior-y: none;*/
 }
 
 #main {

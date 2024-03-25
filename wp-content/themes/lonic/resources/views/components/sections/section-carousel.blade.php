@@ -44,6 +44,18 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+            <div class="col-lg-12 medium text-dark text-right">
+            <div class="navigation-wrapper padding-top-element">
+
+              <div class="pagination"></div>
+
+              <div class='navigation'>
+                @include('components.components.component-carousel-navigation')
+              </div>
+            </div>
+          </div>
+            </div>
         </div>
     </div>
 </section>
