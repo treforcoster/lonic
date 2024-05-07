@@ -24,4 +24,23 @@
       text-transform: uppercase;
     }
   }
+
+  &.office-1 {
+    .image-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+
+      img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .full-height {
+      min-height: 450px;
+    }
+  }
 }

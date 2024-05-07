@@ -33,11 +33,16 @@ $col = 'col-span-12';
         $contCol = 'col-lg-12';
         
       } else {
-        $col = 'col-lg-6';
+        $col = 'col-lg-12';
+        $imageCol = 'col-lg-9';
+        $flex = 'd-flex align-items-start flex-column full-height';
+        $textCol = 'col-lg-3';
+        $contCol = 'col-lg-12';
+        /*$col = 'col-lg-6';
         $imageCol = 'col-lg-12';
         $flex = 'row';
         $textCol = 'col-lg-12';
-        $contCol = 'col-lg-6';
+        $contCol = 'col-lg-6';*/
       }?>
       
       <div class="<?php echo $col;?>  margin-bottom-element">
@@ -45,17 +50,19 @@ $col = 'col-span-12';
         <div class="row g-0">
 
         <div class="<?php echo $imageCol;?>">
-          <?php $image = get_sub_field('image'); ?>
-          <?php if ($image) :
-          $url = $image['url'];
-          $title = $image['title'];
-          $alt = $image['alt'];
-          $caption = $image['caption'];
-          $size = 'image-landscape';
-          $thumb = $image['sizes'][$size]; ?>
-          <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr($alt); ?>" />
-      <?php endif; ?>
-
+          <div class="image-wrapper">
+            <?php $image = get_sub_field('image'); ?>
+            <?php if ($image) :
+            $url = $image['url'];
+            $title = $image['title'];
+            $alt = $image['alt'];
+            $caption = $image['caption'];
+            $size = 'image-landscape';
+            $thumb = $image['sizes'][$size]; ?>
+            <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr($alt); ?>" />
+            
+          <?php endif; ?>
+          </div>
         </div>
 
         <div class="<?php echo $textCol;?>">
