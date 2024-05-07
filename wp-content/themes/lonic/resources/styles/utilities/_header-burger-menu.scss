@@ -225,7 +225,8 @@
         border-bottom-left-radius: 20vh 20vh;
         overflow: hidden;
         @include media-breakpoint-up(lg) {
-          width: 65.104vw;
+          //width: 65.104vw;
+          width: auto;
         }
         height: 100vh;
         z-index: 600;
