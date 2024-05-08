@@ -2,12 +2,15 @@
 
 namespace Smush\Core\Lazy_Load;
 
+use Smush\Core\Array_Utils;
+use Smush\Core\Parser\Composite_Element;
 use Smush\Core\Parser\Element;
 use Smush\Core\Parser\Element_Attribute;
 use Smush\Core\Parser\Page;
-use Smush\Core\Parser\Parser;
 use Smush\Core\Settings;
 use Smush\Core\Transform\Transform;
+use Smush\Core\Upload_Dir;
+use Smush\Core\Url_Utils;
 
 class Lazy_Load_Transform implements Transform {
 	const LAZYLOAD_CLASS = 'lazyload';
@@ -28,27 +31,26 @@ class Lazy_Load_Transform implements Transform {
 	 * @var Lazy_Load_Helper
 	 */
 	private $helper;
+	/**
+	 * @var Array_Utils
+	 */
+	private $array_utils;
+	private $upload_dir;
+	/**
+	 * @var Url_Utils
+	 */
+	private $url_utils;
 
 	public function __construct() {
-		$this->settings = Settings::get_instance();
-		$this->helper   = Lazy_Load_Helper::get_instance();
+		$this->settings    = Settings::get_instance();
+		$this->helper      = Lazy_Load_Helper::get_instance();
+		$this->array_utils = new Array_Utils();
+		$this->upload_dir  = new Upload_Dir();
+		$this->url_utils   = new Url_Utils();
 	}
 
 	public function should_transform() {
-		if (
-			is_admin() ||
-			is_feed() ||
-			is_preview() ||
-			is_embed() ||
-			! $this->settings->is_module_active( 'lazy_load' ) ||
-			$this->skip_lazy_load() ||
-			$this->helper->is_excluded_uri() ||
-			$this->helper->is_excluded_wp_location()
-		) {
-			return false;
-		}
-
-		return true;
+		return ! $this->helper->should_skip_lazyload();
 	}
 
 	public function transform_page( $page ) {
@@ -56,26 +58,6 @@ class Lazy_Load_Transform implements Transform {
 		if ( ! $this->helper->is_format_excluded( 'iframe' ) ) {
 			$this->transform_iframes( $page );
 		}
-	}
-
-	/**
-	 * @return mixed|null
-	 */
-	private function skip_lazy_load() {
-		/**
-		 * Internal filter to disable page parsing.
-		 *
-		 * Because the page parser module is universal, we need to make sure that all modules have the ability to skip
-		 * parsing of certain pages. For example, lazy loading should skip if_preview() pages. In order to achieve this
-		 * functionality, I've introduced this filter. Filter priority can be used to overwrite the $skip param.
-		 *
-		 * @param bool $skip Skip status.
-		 *
-		 * @since 3.2.2
-		 *
-		 * Note: This is named weirdly, but we are keeping it like it is for backward compatibility.
-		 */
-		return apply_filters( 'wp_smush_should_skip_parse', false );
 	}
 
 	/**
@@ -247,7 +229,6 @@ class Lazy_Load_Transform implements Transform {
 
 	private function get_default_excluded_attributes() {
 		return array(
-			'rev-slidebg', // Skip Revolution slider images.
 			'data-lazyload=',
 			'soliloquy-preload', // Soliloquy slider.
 			'no-lazyload', // Internal class to skip images.
@@ -258,7 +239,6 @@ class Lazy_Load_Transform implements Transform {
 			'data-lazy-src=',
 			'data-lazysrc=',
 			'data-bgposition=',
-			'data-envira-src=',
 			'fullurl=',
 			'jetpack-lazy-image',
 			'lazy-slider-img=',
@@ -300,9 +280,13 @@ class Lazy_Load_Transform implements Transform {
 	}
 
 	private function transform_image_elements( Page $page ) {
-		foreach ( $page->get_elements() as $element ) {
-			$this->transform_image_element( $element );
+		foreach ( $page->get_composite_elements() as $composite_element ) {
+			if ( ! $this->is_composite_element_excluded( $composite_element ) ) {
+				$this->transform_elements( $composite_element->get_elements() );
+			}
 		}
+
+		$this->transform_elements( $page->get_elements() );
 	}
 
 	private function transform_image_element( Element $element ) {
@@ -318,7 +302,7 @@ class Lazy_Load_Transform implements Transform {
 
 	private function maybe_lazy_load_source_element( Element $element ) {
 		$srcset_attribute = $element->get_attribute( 'srcset' );
-		if ( empty( $srcset_attribute->get_image_urls() ) ) {
+		if ( ! $srcset_attribute || empty( $srcset_attribute->get_image_urls() ) ) {
 			return false;
 		}
 
@@ -331,6 +315,7 @@ class Lazy_Load_Transform implements Transform {
 			|| ! $this->helper->is_image_extension_supported( $srcset_extension, $srcset_image_url )
 			|| $this->is_element_excluded( $element )
 			|| $this->is_image_element_skipped_through_filter( $srcset_image_url, $original_markup )
+			|| $this->helper->is_native_lazy_loading_enabled()
 		) {
 			return false;
 		}
@@ -381,7 +366,9 @@ class Lazy_Load_Transform implements Transform {
 				'sizes',
 			) );
 
-			if ( 'img' === $element->get_tag() && $this->helper->is_noscript_fallback_enabled() ) {
+			$this->set_placeholder_width_and_height_in_style_attribute( $element, $src_image_url );
+
+			if ( $element->is_image_element() && $this->helper->is_noscript_fallback_enabled() ) {
 				// TODO: Remove the duplicate <noscript> if it already exists before.
 				$element->set_postfix( "<noscript>$original_markup</noscript>" );
 			}
@@ -461,5 +448,77 @@ class Lazy_Load_Transform implements Transform {
 		$new_class_attr = apply_filters( 'wp_smush_lazy_load_classes', $new_class_attr );
 
 		$element->add_or_update_attribute( new Element_Attribute( 'class', $new_class_attr ) );
+	}
+
+	/**
+	 * @param Element $element
+	 * @param $src_image_url
+	 *
+	 * @return void
+	 */
+	private function set_placeholder_width_and_height_in_style_attribute( Element $element, $src_image_url ) {
+		// We need explicit values for width and height. First try attribute values.
+		$width  = (int) $element->get_attribute_value( 'width' );
+		$height = (int) $element->get_attribute_value( 'height' );
+
+		// If attributes are missing, check if the image file name has dimensions in it
+		if ( empty( $width ) || empty( $height ) ) {
+			list( $width, $height ) = $this->url_utils->guess_dimensions_from_image_url( $src_image_url );
+		}
+
+		// If all else fails, use getimagesize for local images
+		if ( empty( $width ) || empty( $height ) ) {
+			$image_dimensions = $this->get_image_dimensions( $src_image_url );
+			if ( ! empty( $image_dimensions ) ) {
+				list( $width, $height ) = $image_dimensions;
+			}
+		}
+
+		if ( $width && $height ) {
+			$original_style = $element->get_attribute_value( 'style' );
+			$new_style      = "--smush-placeholder-width: {$width}px; --smush-placeholder-aspect-ratio: $width/$height;$original_style";
+
+			$element->add_or_update_attribute( new Element_Attribute( 'style', $new_style ) );
+		}
+	}
+
+	private function get_image_dimensions( $image_url ) {
+		$upload_url = $this->upload_dir->get_upload_url();
+		if ( ! str_starts_with( $image_url, $upload_url ) ) {
+			return array();
+		}
+
+		$upload_path = $this->upload_dir->get_upload_path();
+		$image_path  = str_replace( $upload_url, $upload_path, $image_url );
+		if ( ! file_exists( $image_path ) ) {
+			return array();
+		}
+
+		return getimagesize( $image_path );
+	}
+
+	/**
+	 * @param Composite_Element $composite_element
+	 *
+	 * @return bool
+	 */
+	private function is_composite_element_excluded( Composite_Element $composite_element ): bool {
+		foreach ( $composite_element->get_elements() as $sub_element ) {
+			if ( $this->is_element_excluded( $sub_element ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param array $elements
+	 *
+	 * @return void
+	 */
+	private function transform_elements( array $elements ) {
+		foreach ( $elements as $element ) {
+			$this->transform_image_element( $element );
+		}
 	}
 }

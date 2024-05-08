@@ -9,7 +9,6 @@
 namespace Smush\Core\Lazy_Load;
 
 use Smush\Core\Controller;
-use Smush\Core\Integrations\AMP_Integration;
 use Smush\Core\Parser\Page_Parser;
 use Smush\Core\Server_Utils;
 use Smush\Core\Settings;
@@ -51,10 +50,6 @@ class Lazy_Load_Controller extends Controller {
 		'rev-slidebg', // Skip Revolution slider images.
 		'soliloquy-preload', // Soliloquy slider.
 	);
-	/**
-	 * @var AMP_Integration
-	 */
-	private $amp;
 
 	/**
 	 * Static instance
@@ -89,7 +84,6 @@ class Lazy_Load_Controller extends Controller {
 	 * @since 3.2.0
 	 */
 	public function __construct() {
-		$this->amp      = new AMP_Integration();
 		$this->settings = Settings::get_instance();
 		$this->helper   = Lazy_Load_Helper::get_instance();
 
@@ -111,7 +105,7 @@ class Lazy_Load_Controller extends Controller {
 		}
 
 		// Disable WordPress native lazy load.
-		$this->register_filter( 'wp_lazy_loading_enabled', '__return_false' );
+		$this->register_filter( 'wp_lazy_loading_enabled', array( $this, 'maybe_disable_wordpress_native_lazyload' ) );
 
 		// Load js file that is required in public facing pages.
 		$this->register_action( 'wp_head', array( $this, 'add_inline_styles' ) );
@@ -145,7 +139,7 @@ class Lazy_Load_Controller extends Controller {
 	 * @since 3.2.0
 	 */
 	public function add_inline_styles() {
-		if ( $this->amp->is_amp_endpoint() ) {
+		if ( $this->helper->should_skip_lazyload() ) {
 			return;
 		}
 		// Fix for poorly coded themes that do not remove the no-js in the HTML class.
@@ -227,6 +221,14 @@ class Lazy_Load_Controller extends Controller {
 				min-width: 16px;
 			}
 
+			.lazyload,
+			.lazyloading {
+				--smush-placeholder-width: 100px;
+				--smush-placeholder-aspect-ratio: 1/1;
+				width: var(--smush-placeholder-width) !important;
+				aspect-ratio: var(--smush-placeholder-aspect-ratio) !important;
+			}
+
 			<?php endif; ?>
 		</style>
 		<?php
@@ -238,7 +240,7 @@ class Lazy_Load_Controller extends Controller {
 	 * @since 3.2.0
 	 */
 	public function enqueue_assets() {
-		if ( $this->amp->is_amp_endpoint() || $this->helper->is_native_lazy_loading_enabled() ) {
+		if ( $this->helper->should_skip_lazyload() || $this->helper->is_native_lazy_loading_enabled() ) {
 			return;
 		}
 
@@ -449,5 +451,9 @@ class Lazy_Load_Controller extends Controller {
 		$transforms['lazy_load'] = new Lazy_Load_Transform();
 
 		return $transforms;
+	}
+
+	public function maybe_disable_wordpress_native_lazyload() {
+		return ! $this->helper->is_native_lazy_loading_enabled();
 	}
 }

@@ -6,7 +6,7 @@ use Smush\Core\Controller;
 
 class AMP_Integration extends Controller {
 	public function __construct() {
-		$this->register_action( 'wp_smush_should_skip_parse', array( $this, 'skip_for_amp_pages' ) );
+		$this->register_action( 'wp_smush_should_skip_lazy_load', array( $this, 'skip_for_amp_pages' ) );
 	}
 
 	public function skip_for_amp_pages( $skip ) {

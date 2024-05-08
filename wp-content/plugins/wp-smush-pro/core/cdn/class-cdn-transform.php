@@ -42,9 +42,11 @@ class CDN_Transform implements Transform {
 	}
 
 	public function transform_page( $page ) {
-		foreach ( $page->get_elements() as $element ) {
-			$this->transform_element( $element );
+		foreach ( $page->get_composite_elements() as $composite_element ) {
+			$this->transform_elements( $composite_element->get_elements() );
 		}
+
+		$this->transform_elements( $page->get_elements() );
 
 		foreach ( $page->get_styles() as $style ) {
 			$this->transform_style( $style );
@@ -65,11 +67,36 @@ class CDN_Transform implements Transform {
 	 * @return void
 	 */
 	private function update_element_attributes( $element ) {
-		if ( $element->get_tag() === 'source' ) {
-			$this->update_source_element_attributes( $element );
-		} else {
-			$this->update_img_element_attributes( $element );
+		$img_url = $this->get_main_image_url( $element );
+		if ( empty( $img_url ) ) {
+			return;
 		}
+
+		$image_markup = $element->get_markup();
+		if ( $this->cdn_helper->skip_image( $img_url, $image_markup ) ) {
+			return;
+		}
+
+		if ( $element->is_image_element() ) {
+			$this->update_img_element_attributes( $element );
+		} else {
+			$this->update_other_element_attributes( $element );
+		}
+	}
+
+	private function get_main_image_url( $element ) {
+		$src_attribute = $element->get_attribute( 'src' );
+		if ( $src_attribute && $src_attribute->get_single_image_url() ) {
+			return $src_attribute->get_single_image_url()->get_absolute_url();
+		}
+
+		foreach ( $element->get_image_attributes() as $attribute ) {
+			if ( $attribute->get_single_image_url() ) {
+				return $attribute->get_single_image_url()->get_absolute_url();
+			}
+		}
+
+		return '';
 	}
 
 	/**
@@ -77,7 +104,7 @@ class CDN_Transform implements Transform {
 	 *
 	 * @return void
 	 */
-	private function update_source_element_attributes( $element ) {
+	private function update_other_element_attributes( $element ) {
 		foreach ( $element->get_image_attributes() as $attribute ) {
 			$this->update_image_urls( $attribute->get_image_urls(), $element->get_markup() );
 		}
@@ -89,6 +116,9 @@ class CDN_Transform implements Transform {
 	 * @return void
 	 */
 	private function update_img_element_attributes( $element ) {
+		$image_markup = $element->get_markup();
+		$this->update_alternate_attributes( $element, $image_markup );
+
 		$src_attribute = $element->get_attribute( 'src' );
 		if ( ! $src_attribute ) {
 			return;
@@ -99,12 +129,7 @@ class CDN_Transform implements Transform {
 			return;
 		}
 
-		$src_url      = $src_image_url->get_absolute_url();
-		$image_markup = $element->get_markup();
-		if ( $this->cdn_helper->skip_image( $src_url, $image_markup ) ) {
-			return;
-		}
-
+		$src_url         = $src_image_url->get_absolute_url();
 		$updated_src_url = $this->filter_before_process( $src_url, $image_markup );
 		if ( $this->cdn_helper->is_supported_url( $updated_src_url ) ) {
 			$updated_src_url = $this->process_url( $updated_src_url, $image_markup );
@@ -112,8 +137,6 @@ class CDN_Transform implements Transform {
 
 			$this->update_img_element_srcset_attribute( $element, $src_url );
 		}
-
-		$this->update_alternate_attributes( $element, $image_markup );
 	}
 
 	private function process_url( $url, $image, $resizing = false ) {
@@ -171,10 +194,6 @@ class CDN_Transform implements Transform {
 	 * @return void
 	 */
 	private function update_img_element_srcset_attribute( $element, $src_url ) {
-		if ( 'img' !== $element->get_tag() ) {
-			return;
-		}
-
 		$srcset_attribute = $element->get_attribute( 'srcset' );
 		$already_updated  = $srcset_attribute && $this->srcset_attribute_already_updated( $srcset_attribute );
 		if ( $already_updated ) {
@@ -219,7 +238,7 @@ class CDN_Transform implements Transform {
 	private function update_alternate_attributes( $element, $image_markup ) {
 		foreach ( $element->get_image_attributes() as $alternate_attribute ) {
 			if ( in_array( $alternate_attribute->get_name(), array( 'src', 'srcset' ) ) ) {
-				// src and srcset are already handled
+				// src and srcset are handled separately
 				continue;
 			}
 
@@ -329,10 +348,24 @@ class CDN_Transform implements Transform {
 	}
 
 	public function transform_image_url( $url ) {
+		if ( ! $this->cdn_helper->is_supported_url( $url ) ) {
+			return $url;
+		}
 		return $this->cdn_helper->generate_cdn_url( $url );
 	}
 
 	private function is_rest_request() {
 		return defined( 'REST_REQUEST' ) && REST_REQUEST;
+	}
+
+	/**
+	 * @param array $elements
+	 *
+	 * @return void
+	 */
+	private function transform_elements( array $elements ) {
+		foreach ( $elements as $element ) {
+			$this->transform_element( $element );
+		}
 	}
 }

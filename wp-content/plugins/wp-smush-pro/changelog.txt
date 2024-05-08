@@ -6,6 +6,17 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+= 3.16.2 ( 2024-04-09 ) =
+- Fix: LazyLoad module not working correctly for picture elements in certain situations
+- Fix: LazyLoad module not working correctly for some CSS variables
+- Fix: Better handling of !important CSS rules by the LazyLoad module
+- Fix: Performance issues on some WooCommerce pages
+
+= 3.16.1 ( 2024-03-27 ) =
+- Improvement: Better compatibility with page builders
+- Improvement: General code improvements
+- Fix: WP Offload integration preventing some formats from getting offloaded
+
 = 3.16.0 ( 2024-03-06 ) =
 - New: Directly serve Local Webp images, no rewrite rules required!
 - New: Support for inline style tags in CDN and Local WebP modules
@@ -231,4 +242,4 @@ Change Log:
 
 
 
-734049-1711283474-au
+734049-1715196042-au

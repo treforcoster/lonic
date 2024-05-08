@@ -44,7 +44,7 @@ abstract class Assert
      */
     public static function that($value, $defaultMessage = null, string $defaultPropertyPath = null): AssertionChain
     {
-        $assertionChain = new AssertionChain($value, $defaultMessage, $defaultPropertyPath);		 			 		 	  		 			  
+        $assertionChain = new AssertionChain($value, $defaultMessage, $defaultPropertyPath);
 
         return $assertionChain->setAssertionClassName(static::$assertionClass);
     }

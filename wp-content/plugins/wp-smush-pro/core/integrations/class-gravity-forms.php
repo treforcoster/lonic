@@ -52,7 +52,7 @@ class Gravity_Forms extends Abstract_Integration {
 		}
 
 		// Track gravity form submission and validate if there is any image uploaded in Image or File Upload fields.
-		add_action( 'gform_after_submission', array( $this, 'smush_gform_after_submission' ), 10, 2 );		  	   				 	    	 	
+		add_action( 'gform_after_submission', array( $this, 'smush_gform_after_submission' ), 10, 2 );
 	}
 
 	/*

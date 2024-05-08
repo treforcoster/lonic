@@ -24,6 +24,7 @@ if ( ! defined( 'WPINC' ) ) {
 class Settings {
 
 	const SUBSITE_CONTROLS_OPTION_KEY = 'wp-smush-networkwide';
+	const SETTINGS_KEY = 'wp-smush-settings';
 	const LEVEL_LOSSLESS = 0;
 	const LEVEL_SUPER_LOSSY = 1;
 	const LEVEL_ULTRA_LOSSY = 2;
@@ -202,24 +203,9 @@ class Settings {
 
 		add_filter( 'wp_smush_settings', array( $this, 'remove_unavailable' ) );
 
-		// TODO: Fix network settings issue and remove temporary fix.
-		add_filter( 'option_wp-smush-settings', array( $this, 'maybe_filter_subsite_settings_for_mu_sites' ) );
+		add_action( 'switch_blog', array( $this, 'maybe_reset_cache_site_settings' ), 10, 2 );
 
 		$this->init();
-	}
-
-	public function maybe_filter_subsite_settings_for_mu_sites( $subsite_settings ) {
-		if ( ! is_multisite() || empty( $this->get_subsite_page_modules() ) ) {
-			return $subsite_settings;
-		}
-
-		$network_settings = get_site_option( 'wp-smush-settings' );
-		$network_fields   = array_merge( $this->get_settings_fields(), $this->get_webp_fields() );
-		foreach ( $network_fields as $setting_field ) {
-			$subsite_settings[ $setting_field ] = ! empty( $network_settings[ $setting_field ] );
-		}
-
-		return $subsite_settings;
 	}
 
 	/**
@@ -443,84 +429,48 @@ class Settings {
 	 * If there are no settings in the database, populate it with the defaults, if settings are present
 	 */
 	public function init() {
-		$site_settings = array();
-
-		$global = $this->is_network_enabled();
-
-		// Always get global settings if global settings enabled or is in network admin.
-		if ( true === $global || ( is_array( $global ) && is_network_admin() ) ) {
-			$site_settings = get_site_option( 'wp-smush-settings', array() );
-		}
-
-		if ( false === $global ) {
-			$site_settings = get_option( 'wp-smush-settings', array() );
-
-			if ( ! is_multisite() ) {
-				$this->settings = $site_settings;
-			}
-
-			// Make sure we're not missing any settings.
-			$global_settings = get_site_option( 'wp-smush-settings', array() );
-			$site_settings   = array_merge( $global_settings, $site_settings );
-
-			// Settings are taken from global settings.
-			if ( ! empty( $global_settings ) ) {
-				$site_settings['accessible_colors'] = isset( $global_settings['accessible_colors'] ) ? $global_settings['accessible_colors'] : $this->defaults['accessible_colors'];
-				$site_settings['usage']             = isset( $global_settings['usage'] ) ? $global_settings['usage'] : $this->defaults['usage'];
-				$site_settings['keep_data']         = isset( $global_settings['keep_data'] ) ? $global_settings['keep_data'] : $this->defaults['keep_data'];
-				$site_settings['webp_mod']          = isset( $global_settings['webp_mod'] ) ? $global_settings['webp_mod'] : $this->defaults['webp_mod'];
-			}
-		}
-
-		// Custom access enabled - combine settings from network with site settings.
-		if ( is_array( $global ) ) {
-			$network_settings = array_diff( $this->modules, $global );
-			$global_settings  = get_site_option( 'wp-smush-settings', array() );
-			$site_settings    = get_option( 'wp-smush-settings', array() );
-
-			foreach ( $network_settings as $key ) {
-				// Remove values that are network wide from site settings.
-				$site_settings = array_diff_key( $site_settings, array_flip( $this->{$key . '_fields'} ) );
-				// Take the values from network settings.
-				$network_part = array_intersect_key( $global_settings, array_flip( $this->{$key . '_fields'} ) );
-				// And append them to the site settings.
-				$site_settings = array_merge( $site_settings, $network_part );
-			}
-		}
-
-		if ( empty( $site_settings ) ) {
-			$this->settings = $this->defaults;
-			$this->set_setting( 'wp-smush-settings', $this->settings );
-		} else {
-			$this->settings = wp_parse_args( $site_settings, $this->defaults );
-		}
 	}
 
 	/**
 	 * Checks whether the settings are applicable for the whole network/site or sitewise (multisite).
 	 */
 	public function is_network_enabled() {
-		// If single site return true.
+		return $this->is_network_setting( self::SETTINGS_KEY );
+	}
+
+	public function is_network_setting( $option_id ) {
 		if ( ! is_multisite() ) {
 			return false;
 		}
 
-		if ( self::is_ajax_network_admin() || is_network_admin() ) {
+		$global_setting_keys = array(
+			'wp_smush_api_auth',
+			self::SUBSITE_CONTROLS_OPTION_KEY,
+		);
+
+		if ( in_array( $option_id, $global_setting_keys, true ) ) {
 			return true;
 		}
 
-		// Get directly from db.
-		$network_enabled = get_site_option( self::SUBSITE_CONTROLS_OPTION_KEY );
-		if ( ! isset( $network_enabled ) || false === (bool) $network_enabled ) {
+		$subsite_modules = $this->get_activated_subsite_pages();
+		if ( empty( $subsite_modules ) ) {
 			return true;
 		}
 
-		if ( '1' === $network_enabled || true === $network_enabled ) {
-			return false;
+		$module_option_keys = array(
+			'wp-smush-image_sizes'  => 'bulk',
+			'wp-smush-resize_sizes' => 'bulk',
+			'wp-smush-lazy_load'    => 'lazy_load',
+			'wp-smush-cdn_status'   => 'cdn',
+		);
+
+		if ( ! isset( $module_option_keys[ $option_id ] ) ) {
+			return self::is_ajax_network_admin() || is_network_admin();
 		}
 
-		// Partial enabled.
-		return $network_enabled;
+		$module = $module_option_keys[ $option_id ];
+
+		return ! in_array( $module, $subsite_modules, true );
 	}
 
 	/**
@@ -575,6 +525,66 @@ class Settings {
 		return false;
 	}
 
+	public function maybe_reset_cache_site_settings( $new_blog_id, $prev_blog_id ) {
+		if ( $new_blog_id !== $prev_blog_id ) {
+			$this->reset_cache_site_settings();
+		}
+	}
+
+	public function reset_cache_site_settings() {
+		$this->settings = array();// Reset settings, leave force update the settings for get_site_settings.
+	}
+
+	private function update_site_settings( $new_settings ) {
+		$new_settings  = (array) $new_settings;
+		$site_settings = $this->get_site_settings();
+
+		foreach ( $new_settings as $setting => $value ) {
+			if ( isset( $site_settings[ $setting ] ) ) {
+				$site_settings[ $setting ] = $value;
+			}
+		}
+
+		$this->update_site_option( self::SETTINGS_KEY, $site_settings );
+		$this->reset_cache_site_settings();
+	}
+
+	public function get_site_settings() {
+		if ( empty( $this->settings ) ) {
+			$this->settings = $this->prepare_site_settings();
+		}
+
+		return $this->settings;
+	}
+
+	private function prepare_site_settings() {
+		$is_multisite = is_multisite();
+		if ( ! $is_multisite ) {
+			// Make sure the new default settings are included into the old configs.
+			return wp_parse_args( get_option( self::SETTINGS_KEY, array() ), $this->defaults );
+		}
+
+		$network_settings = get_site_option( self::SETTINGS_KEY, array() );
+		$network_settings = wp_parse_args( $network_settings, $this->defaults );
+		if ( $this->is_network_enabled() ) {
+			return $network_settings;
+		}
+
+		$subsite_modules  = $this->get_activated_subsite_pages();
+		$network_modules  = array_diff( $this->modules, $subsite_modules );
+		$subsite_settings = get_option( self::SETTINGS_KEY, array() );
+
+		foreach ( $network_modules as $key ) {
+			// Remove values that are network wide from subsite settings.
+			$subsite_settings = array_diff_key( $subsite_settings, array_flip( $this->{$key . '_fields'} ) );
+		}
+
+		// And append subsite settings to the site settings.
+		$network_settings = array_merge( $network_settings, $subsite_settings );
+
+		return $network_settings;
+	}
+
 	/**
 	 * Getter method for $settings.
 	 *
@@ -585,7 +595,7 @@ class Settings {
 	 * @return array|bool  Return either a setting value or array of settings.
 	 */
 	public function get( $setting = '' ) {
-		$settings = $this->settings;
+		$settings = $this->get_site_settings();
 
 		if ( ! empty( $setting ) ) {
 			return isset( $settings[ $setting ] ) ? $settings[ $setting ] : false;
@@ -607,9 +617,7 @@ class Settings {
 			return;
 		}
 
-		$this->settings[ $setting ] = $value;
-
-		$this->set_setting( 'wp-smush-settings', $this->settings );
+		$this->update_site_settings( array( $setting => $value ) );
 	}
 
 	/**
@@ -625,17 +633,20 @@ class Settings {
 			return false;
 		}
 
-		$global = $this->is_network_enabled();
-
-		if ( $global && ! is_array( $global ) ) {
-			return get_site_option( $name, $default );
+		if ( ! is_multisite() ) {
+			return get_option( $name, $default );
 		}
 
-		// Fallback to network settings.
-		$settings = get_option( $name, $default );
+		$global          = $this->is_network_setting( $name );
+		$global_settings = get_site_option( $name, $default );
+		if ( $global ) {
+			return $global_settings;
+		}
 
-		// TODO: this fallback is dangerous! Make sure that a proper false option is not replaced.
-		return $settings ? $settings : get_site_option( $name, $default );
+		$subsite_settings = get_option( $name, $default );
+		$subsite_settings = false !== $subsite_settings ? $subsite_settings : $global_settings;
+
+		return $subsite_settings;
 	}
 
 	/**
@@ -651,9 +662,17 @@ class Settings {
 			return false;
 		}
 
-		$global = $this->is_network_enabled();
+		if ( self::SETTINGS_KEY === $name ) {
+			return $this->update_site_settings( $value );
+		}
 
-		return $global && ! is_array( $global ) ? update_site_option( $name, $value ) : update_option( $name, $value );
+		return $this->update_site_option( $name, $value );
+	}
+
+	private function update_site_option( $name, $value ) {
+		$global = $this->is_network_setting( $name );
+
+		return $global ? update_site_option( $name, $value ) : update_option( $name, $value );
 	}
 
 	/**
@@ -668,9 +687,9 @@ class Settings {
 			return false;
 		}
 
-		$global = $this->is_network_enabled();
+		$global = $this->is_network_setting( $name );
 
-		return $global && ! is_array( $global ) ? delete_site_option( $name ) : delete_option( $name );
+		return $global ? delete_site_option( $name ) : delete_option( $name );
 	}
 
 	/**
@@ -689,17 +708,30 @@ class Settings {
 		delete_site_option( self::SUBSITE_CONTROLS_OPTION_KEY );
 		delete_site_option( 'wp-smush-webp_hide_wizard' );
 		delete_site_option( 'wp-smush-preset_configs' );
-		$this->delete_setting( 'wp-smush-settings' );
 		$this->delete_setting( 'wp-smush-image_sizes' );
 		$this->delete_setting( 'wp-smush-resize_sizes' );
 		$this->delete_setting( 'wp-smush-cdn_status' );
 		$this->delete_setting( 'wp-smush-lazy_load' );
-		$this->delete_setting( 'skip-smush-setup' );
 		$this->delete_setting( 'wp-smush-hide-tutorials' );
 		delete_option( 'wp-smush-png2jpg-rewrite-rules-flushed' );
 		delete_option( 'wp_smush_scan_slice_size' );
 
+		// We used update_option for skip-smush-setup,
+		// so let's reset it with delete_option instead of delete_site_option for MU site.
+		delete_option( 'skip-smush-setup' );
+
+		// Reset site settings.
+		$this->reset_site_settings();
+
 		wp_send_json_success();
+	}
+
+	private function reset_site_settings() {
+		$this->delete_setting( self::SETTINGS_KEY );
+		$this->reset_cache_site_settings();
+		// The action wp_smush_settings_updated only triggers after option is updated, does not trigger on add_(site_)option.
+		// So to support this, we need to add the default option first.
+		$this->update_site_settings( $this->defaults );
 	}
 
 	/**
@@ -800,17 +832,7 @@ class Settings {
 			}
 		}
 
-		$settings = $this->get();
-
-		foreach ( $new_settings as $setting => $value ) {
-			if ( ! isset( $settings[ $setting ] ) ) {
-				continue;
-			}
-
-			$settings[ $setting ] = $value;
-		}
-
-		$this->set_setting( 'wp-smush-settings', $settings );
+		$this->update_site_settings( $new_settings );
 		$status['is_outdated_stats'] = Global_Stats::get()->is_outdated();
 		wp_send_json_success( $status );
 	}

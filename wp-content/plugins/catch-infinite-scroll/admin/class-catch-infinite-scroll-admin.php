@@ -39,6 +39,7 @@ class Catch_Infinite_Scroll_Admin {
 	 * @var      string    $version    The current version of this plugin.
 	 */
 	private $version;
+	private $catch_infinite_scroll;
 
 	/**
 	 * Initialize the class and set its properties.

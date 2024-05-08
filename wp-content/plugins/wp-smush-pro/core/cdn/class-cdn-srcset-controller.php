@@ -173,12 +173,12 @@ class CDN_Srcset_Controller extends Controller {
 			}
 
 			foreach ( $links[0] as $link ) {
-				$src = $this->cdn_helper->is_supported_url( $link );
-				if ( ! $src ) {
+				if ( ! $this->cdn_helper->is_supported_url( $link ) ) {
 					continue;
 				}
 
 				// Replace the data-envira-srcset of the image with CDN link.
+				$src = $link;
 				$src = $this->cdn_helper->generate_cdn_url( $src );
 				if ( $src ) {
 					// Replace the src of the image with CDN link.
@@ -202,8 +202,7 @@ class CDN_Srcset_Controller extends Controller {
 		$src = apply_filters( 'wp_smush_cdn_before_process_src', $src, $image );
 
 		// Make sure this image is inside a supported directory. Try to convert to valid path.
-		$src = $this->cdn_helper->is_supported_url( $src );
-		if ( $src ) {
+		if ( $this->cdn_helper->is_supported_url( $src ) ) {
 			$src = $this->process_src( $image, $src, false );
 
 			// Replace the src of the image with CDN link.
@@ -242,12 +241,12 @@ class CDN_Srcset_Controller extends Controller {
 						$links = Helpers\Parser::get_links_from_content( $links );
 						if ( isset( $links[0] ) && is_array( $links[0] ) ) {
 							foreach ( $links[0] as $link ) {
-								$src = $this->cdn_helper->is_supported_url( $link );
-								if ( ! $src ) {
+								if ( ! $this->cdn_helper->is_supported_url( $link ) ) {
 									continue;
 								}
 
 								// Replace the data-envira-srcset of the image with CDN link.
+								$src = $link;
 								$src = $this->cdn_helper->generate_cdn_url( $src );
 								if ( $src ) {
 									// Replace the src of the image with CDN link.
@@ -264,8 +263,7 @@ class CDN_Srcset_Controller extends Controller {
 		$lazy_attributes = array( 'data-src', 'data-lazy-src', 'data-lazyload', 'data-original' );
 		foreach ( $lazy_attributes as $attr ) {
 			$data_src = Helpers\Parser::get_attribute( $new_image, $attr );
-			$data_src = $this->cdn_helper->is_supported_url( $data_src );
-			if ( $data_src ) {
+			if ( $this->cdn_helper->is_supported_url( $data_src ) ) {
 				$cdn_image = $this->process_src( $image, $data_src );
 				Helpers\Parser::remove_attribute( $new_image, $attr );
 				Helpers\Parser::add_attribute( $new_image, $attr, $cdn_image );
@@ -316,8 +314,7 @@ class CDN_Srcset_Controller extends Controller {
 		$src = apply_filters( 'smush_cdn_before_process_background_src', $src, $image );
 
 		// Make sure this image is inside a supported directory. Try to convert to valid path.
-		$src = $this->cdn_helper->is_supported_url( $src );
-		if ( $src ) {
+		if ( $this->cdn_helper->is_supported_url( $src ) ) {
 			$src = $this->process_src( $image, $src );
 
 			// Replace the src of the image with CDN link.
@@ -559,8 +556,7 @@ class CDN_Srcset_Controller extends Controller {
 		}
 
 		foreach ( $images[0] as $key => $image ) {
-			$image = $this->cdn_helper->is_supported_url( $image );
-			if ( ! $image ) {
+			if ( ! $this->cdn_helper->is_supported_url( $image ) ) {
 				continue;
 			}
 

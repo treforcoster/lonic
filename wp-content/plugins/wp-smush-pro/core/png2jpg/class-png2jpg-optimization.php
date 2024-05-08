@@ -272,8 +272,6 @@ class Png2Jpg_Optimization extends Media_Item_Optimization {
 		if ( count( $converted_sizes ) === count( $sizes ) ) {
 			$png_file_paths = array_flip( $converted_source_files );
 
-			$this->delete_files( $png_file_paths );
-
 			// All sizes successful, save media item.
 			$media_item->set_mime_type( 'image/jpeg' );
 			$media_item->save();
@@ -292,6 +290,7 @@ class Png2Jpg_Optimization extends Media_Item_Optimization {
 			);
 
 			$this->replace_urls_in_content( $old_urls, $media_item->get_size_urls() );
+			$this->delete_files( $png_file_paths );
 
 			return true;
 		} else {
@@ -558,6 +557,8 @@ class Png2Jpg_Optimization extends Media_Item_Optimization {
 				$media_item->get_main_size()->set_file_name( basename( $restore_file_path ) );
 				$media_item->set_mime_type( 'image/png' );
 				$media_item->save();
+
+				do_action( 'wp_smush_after_restore_png_jpg', $media_item, $jpg_paths, $jpg_urls );
 
 				$this->replace_urls_in_content( $jpg_urls, $media_item->get_size_urls() );
 				$this->delete_files( $jpg_paths );

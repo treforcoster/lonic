@@ -90,6 +90,9 @@ class Element {
 	private function get_image_attribute_names() {
 		$attribute_names = apply_filters(
 			'wp_smush_get_image_attribute_names',
+			/**
+			 * TODO: break down this list and move to integration classes, only keep the bare minimum here
+			 */
 			array(
 				'href',
 				'data-href',
@@ -101,7 +104,11 @@ class Element {
 				'data-thumbnail',
 				'data-back',
 				'data-lazyload',
-				// We need the following to support webp *after* lazy load
+				// WP Rocket lazy loading:
+				'data-lazy-src',
+				'data-lazy-srcset',
+				'data-original',
+				// We need the following to support webp *after* lazy load.
 				'data-bg',
 				'data-bg-image',
 			)
@@ -312,5 +319,9 @@ class Element {
 		} else {
 			$this->add_attribute( new Element_Attribute( $attribute_name, $appendage ) );
 		}
+	}
+
+	public function is_image_element() {
+		return 'img' === $this->get_tag();
 	}
 }

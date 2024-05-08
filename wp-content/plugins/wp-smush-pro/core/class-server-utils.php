@@ -152,4 +152,11 @@ class Server_Utils {
 
 		return $protocol . '//' . $domain . $path;
 	}
+
+	public function get_request_method() {
+		if ( empty( $_SERVER['REQUEST_METHOD'] ) ) {
+			return '';
+		}
+		return strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) );
+	}
 }

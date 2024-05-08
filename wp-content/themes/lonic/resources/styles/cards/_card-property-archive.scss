@@ -12,7 +12,7 @@
       img {
         position: absolute;
         width: 100%;
-        height:100%;
+        height: 100%;
         object-fit: cover;
       }
 
@@ -67,6 +67,37 @@
           // --text-size-large-links-min: 1.375rem;
           // --text-size-large-links: 1.146vw;
           // --text-size-large-links-max: 5rem;
+        }
+      }
+    }
+    .contact-wrapper {
+      flex: none;
+      margin-left: auto;
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+
+      &:before {
+        content: "ENQUIRE";
+        font-size: 12px;
+        position: absolute;
+        top: -22px;
+        width: 100%;
+        text-align: center;
+      }
+
+      .contact {
+        width: 22px;
+        height: 22px;
+        display: inline-block;
+        flex: none;
+        padding: 0;
+
+        svg {
+          width: 100%;
+          height: auto;
+          margin: 0;
         }
       }
     }

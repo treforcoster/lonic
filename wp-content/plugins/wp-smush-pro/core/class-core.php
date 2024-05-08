@@ -209,8 +209,10 @@ class Core extends Stats {
 		new Integrations\Gutenberg();
 		new Integrations\Composer();
 		new Integrations\Gravity_Forms();
-		new Integrations\Envira();
-		new Integrations\Avada();
+		$avada = new Integrations\Avada();
+		$avada->init();
+		$envira = new Integrations\Envira();
+		$envira->init();
 		$hummingbird = new Integrations\Hummingbird_Integration();
 		$hummingbird->init();
 
@@ -219,6 +221,12 @@ class Core extends Stats {
 
 		$amp = new Integrations\AMP_Integration();
 		$amp->init();
+
+		$essential_grid = new Integrations\Essential_Grid_Integration();
+		$essential_grid->init();
+
+		$elementor = new Integrations\Elementor_Integration();
+		$elementor->init();
 
 		// Register logger to schedule cronjob.
 		Helper::logger();

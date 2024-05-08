@@ -20,7 +20,7 @@ class MixPanel {
 	}
 
 	allowToTrack() {
-		return !! wp_smush_mixpanel.opt_in;
+		return !! ( wp_smush_mixpanel.token && wp_smush_mixpanel.opt_in );
 	}
 
 	track( event, properties = {} ) {

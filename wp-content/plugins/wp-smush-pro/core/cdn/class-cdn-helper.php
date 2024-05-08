@@ -59,7 +59,7 @@ class CDN_Helper {
 			return false;
 		}
 
-		return in_array( $extension, $this->supported_extensions );
+		return in_array( $extension, $this->supported_extensions, true );
 	}
 
 	private function is_url_scheme_supported( $url ) {
@@ -69,29 +69,32 @@ class CDN_Helper {
 	}
 
 	public function is_supported_url( $url ) {
-		if ( empty( trim( $url ) ) ) {
+		if (
+			empty( trim( $url ) ) ||
+			! $this->is_url_scheme_supported( $url ) ||
+			! $this->is_url_extension_supported( $url )
+		) {
 			return false;
 		}
 
-		if ( ! $this->is_url_scheme_supported( $url ) || ! $this->is_url_extension_supported( $url ) ) {
-			return false;
+		if ( str_starts_with( $url, content_url() ) ) {
+			return true;
 		}
 
-		$uploads                  = $this->get_cdn_custom_uploads_dir();
-		$base_url_available       = isset( $uploads['baseurl'] );
-		$url_contains_base_url    = false !== strpos( $url, $uploads['baseurl'] );
-		$url_contains_content_url = false !== strpos( $url, content_url() );
-		if ( ! $url_contains_content_url && $base_url_available && ! $url_contains_base_url ) {
-			return false;
+		$uploads            = $this->get_cdn_custom_uploads_dir();
+		$base_url_available = isset( $uploads['baseurl'] );
+		if ( $base_url_available && str_starts_with( $url, $uploads['baseurl'] ) ) {
+			return true;
 		}
 
-		$mapped_domain               = $this->check_mapped_domain();
-		$url_missing_required_domain = is_multisite() && $mapped_domain && false === strpos( $url, $mapped_domain );
-		if ( $url_missing_required_domain ) {
-			return false;
+		$mapped_domain = $this->check_mapped_domain();
+		if ( $mapped_domain ) {
+			$url           = set_url_scheme( $url, 'http' );
+			$mapped_domain = set_url_scheme( $mapped_domain, 'http' );
+			return str_starts_with( $url, $mapped_domain );
 		}
 
-		return true;
+		return false;
 	}
 
 	/**
@@ -263,11 +266,10 @@ class CDN_Helper {
 		 * Taken from 6e13e2f0
 		 */
 		return WP_Smush::is_pro()
-		       // CDN will not work if there is no dashboard plugin installed.
-		       && file_exists( WP_PLUGIN_DIR . '/wpmudev-updates/update-notifications.php' )
-		       && class_exists( 'WPMUDEV_Dashboard' )
-		       // CDN will not work if site is not registered with the dashboard.
-		       && WPMUDEV_Dashboard::$api->has_key();
+			   // CDN will not work if there is no dashboard plugin installed.
+			   && class_exists( 'WPMUDEV_Dashboard' )
+			   // CDN will not work if site is not registered with the dashboard.
+			   && WPMUDEV_Dashboard::$api->has_key();
 	}
 
 	public function get_cdn_base_url() {

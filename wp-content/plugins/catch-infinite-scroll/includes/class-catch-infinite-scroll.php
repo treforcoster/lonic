@@ -47,6 +47,7 @@ class Catch_Infinite_Scroll {
 	 * @var      string    $CATCH_INFINITE_SCROLL    The string used to uniquely identify this plugin.
 	 */
 	protected $CATCH_INFINITE_SCROLL;
+	protected $catch_infinite_scroll;
 
 	/**
 	 * The current version of the plugin.

@@ -62,7 +62,11 @@ class Media_Library_Row {
 		}
 
 		if ( $this->optimizer->has_errors() ) {
-			return $this->optimizer->get_errors();
+			$optimization_errors = $this->optimizer->get_errors();
+			if ( $optimization_errors->get_error_message( 'in_progress' ) ) {
+				$optimization_errors->remove( 'in_progress' );
+			}
+			return $optimization_errors;
 		}
 
 		return new WP_Error();

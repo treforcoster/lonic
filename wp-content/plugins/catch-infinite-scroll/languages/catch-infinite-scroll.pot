@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Catch Infinite Scroll\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/tags/_s\n"
-"POT-Creation-Date: 2022-03-29 00:53-0700\n"
+"POT-Creation-Date: 2024-04-16 23:00+0545\n"
 "PO-Revision-Date: 2016-12-12 09:23-0500\n"
 "Last-Translator: Sakin Shrestha <info@catchplugins.com>\n"
 "Language-Team: Catch Plugins <info@catchplugins.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.4.2\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;esc_attr_e;esc_attr__;_nx;_x;"
 "esc_html_e;esc_html__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_n_noop:1,2;"
 "__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
@@ -22,18 +22,18 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../admin/class-catch-infinite-scroll-admin.php:127
+#: ../admin/class-catch-infinite-scroll-admin.php:128
 #: ../admin/partials/catch-infinite-scroll-display-dashboard.php:19
 msgid "Settings"
 msgstr ""
 
-#: ../admin/class-catch-infinite-scroll-admin.php:140
 #: ../admin/class-catch-infinite-scroll-admin.php:141
+#: ../admin/class-catch-infinite-scroll-admin.php:142
 #: ../admin/partials/catch-infinite-scroll-admin-display.php:17
 msgid "Catch Infinite Scroll"
 msgstr ""
 
-#: ../admin/class-catch-infinite-scroll-admin.php:156
+#: ../admin/class-catch-infinite-scroll-admin.php:157
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
