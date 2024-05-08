@@ -28,6 +28,7 @@
     <?php 
       $row1 = get_sub_field('row_1');
       $reversed = array_reverse($row1);
+      //$reversed = $row1 ;
       $size = 'full'; // (thumbnail, medium, large, full or custom size)
 
       

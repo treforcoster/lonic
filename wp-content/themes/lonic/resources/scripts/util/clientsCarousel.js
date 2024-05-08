@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import { gsap } from 'gsap';
+//import { Timeline } from 'gsap/gsap-core';
 // import { ScrollTrigger } from 'gsap/ScrollTrigger.js';
 
 class ClientsCarousel {
@@ -72,11 +73,15 @@ class ClientsCarousel {
 
     let distance = -1 * rowWidth;
 
-    gsap.fromTo(
+    let bottomTL = gsap.timeline({repeat: -1});
+
+    bottomTL.fromTo(
       '.animated-banner-right',
       { x: distance },
-      { x: 0, ease: 'none', duration: time, repeat: -1 }
+      { x: 0, ease: 'none', duration: time }
     );
+
+    bottomTL.seek(time/2);
   }
 }
 
