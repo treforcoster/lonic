@@ -388,7 +388,7 @@ class Forminator_Signature_Field extends Forminator_Field {
 
 		$html .= self::get_field_label( $label, 'forminator-field-' . $id, $required );
 
-			$html .= '<div class="forminator-signature" data-elementheight="' . $height . '" aria-describedby="' . esc_attr( 'forminator-field-' . $id . '-description' ) . '">';
+			$html .= '<div class="forminator-signature" data-elementheight="' . $height . '"' . ( ! empty( $description ) ? ' aria-describedby="' . esc_attr( 'forminator-field-' . $id . '-description' ) . '"' : '' ) . '>';
 
 				$html .= '<span id="' . $id . '_placeholder" class="forminator-signature--placeholder" aria-hidden="true">' . esc_html( $placeholder ) . '</span>';
 

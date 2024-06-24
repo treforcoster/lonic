@@ -6,7 +6,7 @@
       <div class="row">
         <div class="col-lg-12 large text-light padding-bottom-section text-center">
 
-          <?php the_sub_field('text') ?>
+          <?php echo get_sub_field('text') ?>
 
         </div>
         <div class="col-lg-12">
@@ -22,7 +22,7 @@
                   <div class='s-<?php echo $count; ?> stat padding-top-intro padding-bottom-intro'>
 
                     <h3 class="number"><?php the_sub_field('number'); ?></h3>
-                    <p class="h3"><?php the_sub_field('text'); ?></p>
+                    <p class="h3"><?php echo get_sub_field('text'); ?></p>
                   </div>
                 </div>
 

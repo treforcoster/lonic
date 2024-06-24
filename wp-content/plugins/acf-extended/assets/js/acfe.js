@@ -1093,7 +1093,8 @@
             modal = new acfe.Modal($modal, args);
 
             // actions
-            acf.doAction('new_modal', modal);
+            acf.doAction('acfe/new_modal', modal);
+            acfe.doActionDeprecated('new_modal', [modal], '0.9.0.5', 'acfe/new_modal');
 
             // return
             return modal;
@@ -1109,7 +1110,8 @@
         modal = new acfe.Modal(args);
 
         // actions
-        acf.doAction('new_modal', modal);
+        acf.doAction('acfe/new_modal', modal);
+        acfe.doActionDeprecated('new_modal', [modal], '0.9.0.5', 'acfe/new_modal');
 
         // return
         return modal;
@@ -2220,6 +2222,75 @@
     if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
     }
+
+
+    /**
+     * acfe.copyClipboard
+     *
+     * @param data
+     * @param message
+     */
+    acfe.copyClipboard = function(data, message) {
+
+        // default message
+        message = acf.parseArgs(message, {
+            auto: acf.__('Data has been copied to your clipboard.'),
+            manual: acf.__('Please copy the following data to your clipboard.'),
+        });
+
+        // fallback for browsers that don't support navigator.clipboard
+        var fallbackCopy = function(data, message) {
+
+            var $input = $('<input type="text" style="clip:rect(0,0,0,0);clip-path:none;position:absolute;" value="" />').appendTo($('body'));
+            $input.attr('value', data).select();
+
+            if (document.execCommand('copy')) {
+                alert(message.auto);
+            } else {
+                prompt(message.manual, data);
+            }
+
+            $input.remove();
+
+        }
+
+        // navigator clipboard
+        if (navigator.clipboard) {
+
+            navigator.clipboard.writeText(data).then(function() {
+                alert(message.auto);
+                return true;
+            }).catch(function() {
+                fallbackCopy(data, message);
+            });
+
+            // fallback
+        } else {
+            fallbackCopy(data, message);
+        }
+
+    }
+
+
+    /**
+     * acfe.scrollTo
+     *
+     * Scroll to element, if needed with acf.isInView()
+     *
+     * @param $el
+     * @param scrollTime
+     * @constructor
+     */
+    acfe.scrollTo = function($el, scrollTime = 500) {
+
+        if (!acf.isInView($el)) {
+            $('body, html').animate({
+                scrollTop: $el.offset().top - $(window).height() / 2
+            }, scrollTime);
+        }
+
+    }
+
 
     /**
      * acfe.versionCompare

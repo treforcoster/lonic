@@ -4,7 +4,7 @@
     <div class="container-fluid">
       <div class="row items-center">
         <div class="col-lg-5 medium text-light p-b-mobile-element p-b-desktop-element">
-          <?php the_sub_field('text'); ?>
+          <?php echo get_sub_field('text'); ?>
         </div>
         <div class="col-7 medium text-dark text-right">
           <div class="navigation-wrapper">
@@ -49,7 +49,7 @@
 
                           <h3><?php the_sub_field('title'); ?></h3>
 
-                          <?php the_sub_field('text'); ?>
+                          <?php echo get_sub_field('text'); ?>
 
                         </div>
                       </div>

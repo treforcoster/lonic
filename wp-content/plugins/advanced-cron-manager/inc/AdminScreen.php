@@ -295,7 +295,9 @@ class AdminScreen {
 			} else {
 				$parsed_args[] = array(
 					'type' => gettype( $arg ),
-					'msg'  => $arg,
+					'msg'  => wp_filter_nohtml_kses( sanitize_text_field(
+						html_entity_decode( $arg, ENT_QUOTES, 'UTF-8' )
+					) ),
 				);
 			}
 

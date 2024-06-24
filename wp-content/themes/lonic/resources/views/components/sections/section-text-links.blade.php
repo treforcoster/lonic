@@ -5,7 +5,7 @@
     <div class="row ">
       <div class="col-lg-8 text-dark ">
 
-        <?php the_sub_field('text'); ?>
+        <?php echo get_sub_field('text'); ?>
 
 
       </div>

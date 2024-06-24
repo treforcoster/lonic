@@ -20898,7 +20898,7 @@ html.sui-has-overlay {
   background-color: rgba(0,0,0,0);
 }
 
-.sui-2-12-23 .sui-wrap .multivalue-modal div[id^=forminator-modal-body-] .sui-tab-content.active {
+.sui-2-12-23 .sui-wrap .multivalue-modal div[id^=forminator-modal-body-] .sui-tab-content.active:not(:has(.sui-tooltip)) {
   overflow: hidden;
 }
 
@@ -25088,4 +25088,4 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
 /*# sourceMappingURL=shared-ui.min.css.map*/
 
 
-/* 734049-1715196031-au */
+/* 734049-1719258597-au */

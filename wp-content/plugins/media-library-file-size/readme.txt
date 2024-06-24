@@ -4,12 +4,12 @@ Donate link: https://paypal.me/SS88/
 Tags: file size, media library, image size, library size
 Requires at least: 4.1
 Tested up to: 6.5
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 Requires PHP: 5.6
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Enhance your Media Library experience with a new column that displays the sizes of files, including collective variants, allowing you to conveniently sort them based on file size. Click the 'Index Media' button after installation.
+Displays the Media Library file sizes, including collective variants, and adds the ability to view/download each variant image.
 
 == Description ==
 
@@ -56,6 +56,11 @@ Make sure you are looking at your Media Library, and you are in List view. Grid 
 This is a collective size of your thumbnails (and other sized images).
 
 == Changelog ==
+
+= 1.6.3 =
+* Added prior version to trunk for rollback compatibility
+* Minor fixes to code and readme.txt
+* Rate us link
 
 = 1.6.2 =
 * Fix visibility of button on Activation of plugin

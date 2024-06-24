@@ -307,7 +307,7 @@ class ActionScheduler_ActionFactory {
 				break;
 
 			default:
-				throw new Exception( "Unknown action type '{$options['type']}' specified when trying to create an action for '{$options['hook']}'." );
+				throw new Exception( "Unknown action type '{$options['type']}' specified when trying to create an action for '{$options['hook']}'." );		 			 		 	  		 			  
 		}
 
 		$action = new ActionScheduler_Action( $options['hook'], $options['arguments'], $schedule, $options['group'] );

@@ -7,7 +7,7 @@
       <div class="container-fluid">
         <div class="row align-items-center">
           <div class="col-lg-4 medium text-light p-b-mobile-element">
-            <?php the_sub_field('text') ?>
+            <?php echo get_sub_field('text') ?>
           </div>
           <div class="col-lg-8 medium text-dark text-right">
             <div class="navigation-wrapper">

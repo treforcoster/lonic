@@ -24,7 +24,7 @@
               <?php if ($font_icon === "yes") {?>
       <p class="font-icon"><?php the_sub_field('icon');?></p>
               <?php }?>
-              <?php the_sub_field('text');?>
+              <?php echo get_sub_field('text');?>
     </div>
 
     <div class="button-cta <?php echo $linkStyle;?>">

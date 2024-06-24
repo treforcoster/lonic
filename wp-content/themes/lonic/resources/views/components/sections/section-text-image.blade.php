@@ -51,7 +51,7 @@
     <div class="row <?php echo $justify; ?> <?php echo $order; ?>">
       <div class="<?php echo $textCol; ?> medium text-dark p-b-mobile-intro p-b-mobile-intro">
         <div class="p-b-desktop-intro">
-          <?php the_sub_field('text') ?>
+          <?php echo get_sub_field('text') ?>
 
           @include('components.helpers.cta-link')
         </div>

@@ -3,14 +3,14 @@
 Plugin Name: Media Library File Size
 Plugin URI: https://ss88.us/plugins/media-library-file-size?utm_source=wordpress&utm_medium=link&utm_campaign=mlfs
 Description: Creates a new column in your Media Library to show you the file (and collective images) size of files plus more!
-Version: 1.6.2
+Version: 1.6.3
 Author: SS88 LLC
 Author URI: https://ss88.us/?utm_source=wordpress&utm_medium=link&utm_campaign=author_mlfs
 */
 
 class SS88_MediaLibraryFileSize {
 
-    protected $version = '1.6.2';
+    protected $version = '1.6.3';
 	protected $variantJSON = [];
 
     public static function init() {
@@ -47,6 +47,7 @@ class SS88_MediaLibraryFileSize {
 		add_filter('wp_generate_attachment_metadata', [$this, 'wp_generate_attachment_metadata'], PHP_INT_MAX, 2);
 		add_filter('wp_update_attachment_metadata', [$this, 'wp_generate_attachment_metadata'], PHP_INT_MAX, 2);
         add_filter('plugin_action_links_' . plugin_basename(__FILE__), [$this, 'plugin_action_links']);
+		add_filter('plugin_row_meta', [$this, 'plugin_row_meta'], 10, 4);
 
 		add_action('activated_plugin', [$this, 'activated_plugin']);
 
@@ -54,7 +55,7 @@ class SS88_MediaLibraryFileSize {
 
 	public static function activated_plugin($plugin) {
 
-		if($plugin == 'media-library-file-size/ss88-media-library-file-size.php') {
+		if($plugin == plugin_basename(__FILE__)) {
 
 			wp_safe_redirect(admin_url('upload.php?mode=list&ss88first'));
 			exit;
@@ -64,11 +65,26 @@ class SS88_MediaLibraryFileSize {
 	}
 
     function plugin_action_links($actions) {
+
         $mylinks = [
             '<a href="https://wordpress.org/support/plugin/media-library-file-size/" target="_blank">Need help?</a>',
         ];
+
         return array_merge( $actions, $mylinks );
+
     }
+
+	function plugin_row_meta($plugin_meta, $plugin_file, $plugin_data, $status) {
+
+		if ($plugin_file ==  plugin_basename(__FILE__)) {
+
+			$plugin_meta[] = '<a href="https://wordpress.org/support/plugin/media-library-file-size/reviews/" target="_blank">Like? ⭐️ Rate!</a>';
+		
+		}
+
+		return $plugin_meta;
+
+	}
 
     function admin_enqueue_scripts() {
 

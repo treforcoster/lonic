@@ -5,7 +5,7 @@
     <div class="container-fluid">
       <div class="row align-items-center">
         <div class="col-lg-12 medium text-dark padding-bottom-intro">
-          <?php the_sub_field('text') ?>
+          <?php echo get_sub_field('text') ?>
         </div>
       </div>
     </div>

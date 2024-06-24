@@ -9,7 +9,7 @@
         <div class="row ">
           <div class="col-8 col-lg-6 medium text-dark p-b-mobile-element">
 
-            <?php the_sub_field('text') ?>
+            <?php echo get_sub_field('text') ?>
 
           </div>
           <div class="col-lg-6 medium text-dark text-right">

@@ -15,7 +15,7 @@
 
                     <h1><?php the_sub_field('title'); ?></h1>
 
-                    <?php the_sub_field('text'); ?>
+                    <?php echo get_sub_field('text'); ?>
 
                     <?php $links = get_sub_field('links'); ?>
 

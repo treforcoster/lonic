@@ -8,6 +8,7 @@
   .divider {
     position: relative;
     &:after {
+      @include media-breakpoint-up(lg) {
       content: "";
       background: #66ffd0;
       width: 1px;
@@ -15,6 +16,7 @@
       top: -50%;
       right: 4vw;
       position: absolute;
+      }
 
     }
   }

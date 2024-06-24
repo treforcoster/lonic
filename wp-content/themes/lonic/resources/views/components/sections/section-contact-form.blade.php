@@ -6,7 +6,7 @@
       <div class="row align-items-center">
         <div class="col-12 medium text-dark p-b-mobile-intro p-b-desktop-intro">
 
-          <?php the_sub_field('text') ?>
+          <?php echo get_sub_field('text') ?>
 
         </div>
         <div class="col-12 medium text-black">

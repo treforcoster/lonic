@@ -3,7 +3,7 @@
     <div class="container-fluid">
 
         <div class="row">
-            <div class="col-lg-4 p-b-mobile-section divider no-bullets">
+            <div class="col-lg-4 padding-bottom-element divider no-bullets">
                 <div class="padding-bottom-element">
                 <img class="logo-footer" src="<?php the_field('logo_footer', 'options'); ?>">
                 </div>
@@ -11,19 +11,19 @@
             </div>
             <div class="col-lg-8">
                 <div class="row">
-                    <div class="col-6 col-lg-3  medium p-b-mobile-element ">
+                    <div class="col-6 col-lg-3  medium padding-bottom-element">
                         @php dynamic_sidebar('footer-2') @endphp
                     </div>
         
-                    <div class="col-6 col-lg-3  medium p-b-mobile-section ">
+                    <div class="col-6 col-lg-3  medium padding-bottom-element ">
                         @php dynamic_sidebar('footer-3') @endphp
                     </div>
         
-                    <div class="col-6 col-lg-3  medium p-b-mobile-section ">
+                    <div class="col-6 col-lg-3  medium padding-bottom-element d-none d-lg-block">
                         @php dynamic_sidebar('footer-4') @endphp
                     </div>
         
-                    <div class="col-6 col-lg-3  medium p-b-mobile-section ">
+                    <div class="col-6 col-lg-3  medium padding-bottom-element ">
                         @php dynamic_sidebar('footer-5') @endphp
                     </div>
                 </div>

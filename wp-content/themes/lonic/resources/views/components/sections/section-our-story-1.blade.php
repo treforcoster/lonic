@@ -45,7 +45,7 @@
     <div class="row justify-content-end align-items-center">
       <div class="col-lg-4 medium text-dark p-b-mobile-intro p-b-mobile-intro medium">
         
-          <?php the_sub_field('text') ?>
+          <?php echo get_sub_field('text') ?>
 
         
       </div>

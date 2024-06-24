@@ -7,7 +7,7 @@
       <div class="row align-items-center">
         <div class="col-lg-4 medium text-light p-b-mobile-section p-b-desktop-element">
 
-          <?php the_sub_field('text') ?>
+          <?php echo get_sub_field('text') ?>
 
         </div>
       </div>

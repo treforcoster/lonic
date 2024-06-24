@@ -11,7 +11,7 @@
           <div class="header-wrapper">
             <div class="col-lg-10  p-b-mobile-intro p-b-desktop-intro">
               <h1 class="lead-in-heading"><?php the_sub_field('title') ?></h1>
-              <?php the_sub_field('text') ?>
+              <?php echo get_sub_field('text') ?>
             </div>
           </div>
         </div>

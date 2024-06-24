@@ -37,7 +37,7 @@
 
       <div class="info">
 
-        <?php the_sub_field('text');?>
+        <?php  echo the_sub_field('text');?>
       </div>
 
     </div>

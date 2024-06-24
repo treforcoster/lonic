@@ -6,7 +6,7 @@
   <div class="content p-t-mobile-section p-b-mobile-section p-t-desktop-section p-b-desktop-section">
     <div class="container-fluid">
       <div class="row ">
-        <?php the_sub_field('text') ?>
+        <?php echo get_sub_field('text') ?>
 
         <div class="col-12">
           <?php

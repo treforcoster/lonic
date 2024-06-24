@@ -31,7 +31,7 @@
                                     <div class='slide-content medium'>
                                         <div class="inner">
                                             <h3 class="title"><?php the_sub_field('title'); ?></h3>
-                                            <div class="text"><?php the_sub_field('text'); ?></div>
+                                            <div class="text"><?php echo get_sub_field('text'); ?></div>
                                         </div>
                                     </div>
                                 </div>

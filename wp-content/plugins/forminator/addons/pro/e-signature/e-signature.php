@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Addon Name: E-Signature
+ * Integration Name: E-Signature
  * Version: 1.0
  * Plugin URI:  https://wpmudev.com/
  * Description: E-Signature field for Forminator
@@ -18,7 +18,7 @@ class Forminator_E_Signature {
 	/**
 	 * Get Instance
 	 *
-	 * @since 1.0 Signature Addon
+	 * @since 1.0 Signature Integration
 	 * @return self|null
 	 */
 	public static function get_instance() {

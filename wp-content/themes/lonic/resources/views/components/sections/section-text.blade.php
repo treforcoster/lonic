@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
       <div class="col-lg-6 medium">
 
-        <?php the_sub_field('text'); ?>
+        <?php echo get_sub_field('text'); ?>
 
 
       </div>

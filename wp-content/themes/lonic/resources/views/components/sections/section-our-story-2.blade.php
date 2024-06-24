@@ -4,7 +4,7 @@
   <div class="container-fluid">
     <div class="row justify-content-between align-items-center  padding-bottom-section">
       <div class="col-lg-3 medium">
-          <?php the_sub_field('text') ?>
+          <?php echo get_sub_field('text') ?>
       </div>
       <div class="col-lg-8">
 

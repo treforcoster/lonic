@@ -1,8 +1,34 @@
 Plugin Name: WP Defender
 Author: WPMU DEV
-Tested up to: 6.5.2
+Tested up to: 6.5.4
 
 Change Log:
+
+= 4.7.2 ( 2024-06-18 ) =
+
+- Enhance: Option to reset Locations on the IP Banning page
+- Enhance: Removed unnecessary login filters on Mask Login to enhance security
+- Enhance: Show loading icon with message when clicking pagination buttons on Firewall logs
+- Enhance: Change the final text for the WP CLI command to remove log files older than a week
+- Enhance: Added malware signature to detect fake Core Fork plugin enhancing site security
+- Enhance: Email design improvement for 2FA code
+- Enhance: Show loading icon only for the current button
+- Enhance: Updated malware signatures to detect different infected files improving overall security
+- Enhance: Add WP CLI to clear the MaxMind license key
+- Fix: Custom logo overlaps on Malware Scanning progress bar
+- Fix: Update Calotes\DB\Mapper::save() to handle integers correctly
+- Fix: Google reCAPTCHA bypassed using auto-fill on the Login page
+- Fix: Google reCAPTCHA v2 invisible not working with the Ship to a different address option in the WooCommerce plugin
+- Fix: Suspicious files are not detected in the plugin folder when Scan plugin files are enabled
+- Fix: Notification displayed twice on the Notifications page in the free version
+- Fix: Mask Login URL isn't working when it is a Plain permalink structure
+- Fix: WordPress sends an error email with the Mask_Login::filter_site_url method
+- Fix: Update Support links
+- Fix: UI Improvements
+- Fix: Bulk delete issues fail when files have non-edit permissions
+- Fix: Calendar displayed in blue when High contrast mode is enabled
+- Fix: Ban/unban IP from Firewall Logs not reflected on the IP Banning Tab
+- Fix: Mask URL is not working on the default WP recovery email when a site goes down
 
 = 4.7.1 ( 2024-05-01 ) =
 
@@ -45,18 +71,5 @@ Change Log:
 
 - Enhance: Recommended IP Detection method with improved accuracy, site security, and harder-to-bypass IP banning
 
-= 4.4.1 ( 2023-12-19 ) =
 
-- Enhance: UI Enhancements
-
-= 4.4.0 ( 2023-12-11 ) =
-
-- Enhance: Adjust the size of the summary box logo
-- Enhance: Update the Twitter name and logo
-- Enhance: Update SUI to the latest version
-- Fix: Update malware signatures
-- Fix: PHP warning after activating Defender Security Headers
-- Fix: Remove Translation Link when the Whitelabel Hide Links option is enabled
-
-
-734049-1715196022-au
+734049-1719258585-au

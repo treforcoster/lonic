@@ -25,7 +25,7 @@
       <div class="col-lg-5 medium text-dark g-10">
         <div class="text-border padding-element">
 
-          <?php the_sub_field('text') ?>
+          <?php echo get_sub_field('text') ?>
 
           @include('components.helpers.cta-link')
         </div>
