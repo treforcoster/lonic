@@ -6,8 +6,8 @@
   $justify = "align-items-center justify-content-between";
   $size = "image-landscape";
   $field = "image_landscape";
-   $imageCol = "col-lg-5";
-  $textCol = " col-lg-5";
+   $imageCol = "col-lg-6";
+  $textCol = "col-lg-5";
 
   if ($position == "right") {
 
@@ -17,20 +17,20 @@
     $order = 'reverse';
   }
 } else {
-
+ $justify = "align-items-center justify-content-between";
   $size = "image-portrait";
   $field = "image_portrait";
-  $imageCol = "offset-lg-1 col-lg-5";
-  $textCol = "offset-lg-1 col-lg-4";
+  $imageCol = " col-lg-6";
+  $textCol = " col-lg-5";
 
   if ($position == "right") {
 
     $order = ' ';
-    $justify = " ";
+   
   } else {
 
     $order = 'reverse';
-    $justify = "justify-between";
+   
   }
 } ?>
 
@@ -40,7 +40,7 @@
 } else {
 
   $order = 'reverse';
-  $justify = 'justify-content-end';
+
 } ?>
 
 <section id="<?php //echo $section['section_id'];
@@ -49,7 +49,7 @@
 ">
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-lg-11">
+            <div class="col-lg-9">
                 <div class="row  <?php echo $justify; ?> <?php echo $order; ?>">
                     <div class="<?php echo $textCol; ?>">
                         <div class="medium h2-small-underline">
