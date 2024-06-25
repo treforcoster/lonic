@@ -35,7 +35,7 @@
       position: relative;
       left: -125px;
       padding: 40px;
-      z-index: 10000;
+      z-index: 4000;
       border-radius: clamp(1.875rem, 1.563vw, 10rem);
       overflow: hidden;
     }
@@ -46,7 +46,7 @@
       position: relative;
       right: -125px;
       padding: 40px;
-      z-index: 10000;
+      z-index: 4000;
       border-radius: clamp(1.875rem, 1.563vw, 10rem);
       overflow: hidden;
     }
