@@ -3,11 +3,11 @@
 
 <?php if ($style == "landscape") {
 
-  $justify = "justify-content-between";
+  $justify = "align-items-center justify-content-between";
   $size = "image-landscape";
   $field = "image_landscape";
-  $imageCol = "col-lg-7";
-  $textCol = "col-lg-4";
+   $imageCol = "col-lg-5";
+  $textCol = " col-lg-5";
 
   if ($position == "right") {
 
@@ -30,7 +30,7 @@
   } else {
 
     $order = 'reverse';
-    $justify = "justify-content-end";
+    $justify = "justify-between";
   }
 } ?>
 
@@ -44,25 +44,27 @@
 } ?>
 
 <section id="<?php //echo $section['section_id'];
-              ?>" class="section  section-text-image image-<?php echo $position; ?> p-t-mobile-section p-t-desktop-section  bg-<?php the_sub_field('background_colour'); ?> text-<?php the_sub_field('text_colour'); ?>
+              ?>" class="section  section-text-image image-<?php echo $position; ?> padding-top-section padding-bottom-section  bg-<?php the_sub_field('background_colour'); ?> text-<?php the_sub_field('text_colour'); ?>
 
 ">
-  <div class="container-fluid">
-    <div class="row <?php echo $justify; ?> <?php echo $order; ?>">
-      <div class="<?php echo $textCol; ?> medium text-dark p-b-mobile-intro p-b-mobile-intro">
-        <div class="p-b-desktop-intro">
-          <?php echo get_sub_field('text') ?>
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-11">
+                <div class="row  <?php echo $justify; ?> <?php echo $order; ?>">
+                    <div class="<?php echo $textCol; ?>">
+                        <div class="medium h2-small-underline">
+                            <?php echo get_sub_field('text') ?>
 
-          @include('components.helpers.cta-link')
-        </div>
-      </div>
-      <div class="<?php echo $imageCol; ?>">
+                            @include('components.helpers.cta-link')
+                        </div>
+                    </div>
+                    <div class="<?php echo $imageCol; ?>">
 
-        <div class="<?php echo $size; ?>">
+                        <div class="<?php echo $size; ?>">
 
-          <?php $image = get_sub_field($field) ?>
+                            <?php $image = get_sub_field($field) ?>
 
-          <?php if (!empty($image)) {
+                            <?php if (!empty($image)) {
             // vars
             $url = $image['url'];
             $alt = $image['alt'];
@@ -71,12 +73,16 @@
 
 
           ?>
-            <img src="<?php echo $sizedImage; ?>" alt="<?php echo $alt; ?>">
+                            <img class="rounded-image" src="<?php echo $sizedImage; ?>" alt="<?php echo $alt; ?>">
 
-          <?php } ?>
+                            <?php } ?>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
         </div>
 
-      </div>
     </div>
-  </div>
 </section>

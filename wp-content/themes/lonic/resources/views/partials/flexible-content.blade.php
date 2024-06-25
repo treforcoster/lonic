@@ -10,6 +10,10 @@
 @include('components.sections.section-text-image')
 @endif
 
+@if(get_row_layout() == 'quote_&_image')
+@include('components.sections.section-quote-image')
+@endif
+
 @if(get_row_layout() == 'title_&_text')     
 @include('components.sections.section-text-title')
 @endif

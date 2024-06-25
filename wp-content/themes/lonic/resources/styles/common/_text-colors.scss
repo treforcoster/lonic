@@ -200,6 +200,11 @@
     }
   }
 
+  cite {
+    color: var(--text-color-white-alt);
+    font-style: normal
+  }
+
   h2 {
     &:after {
       background: var(--text-color-white-alt) !important;

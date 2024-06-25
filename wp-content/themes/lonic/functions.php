@@ -73,19 +73,7 @@ collect([
         }
     });
 
-function my_password_form()
-{
-    global $post;
-    $label = 'pwbox-'.(empty($post->ID) ? rand() : $post->ID);
-    $o = '<section class="section-password-block p-t-mobile-section p-b-mobile-section p-t-desktop-section p-b-desktop-section medium text-dark"><div class="container-fluid"><div class="row p-b-mobile-section p-b-desktop-section"><div class="col-lg-6"><form action="'.esc_url(site_url('wp-login.php?action=postpass', 'login_post')).'" method="post">
-    '.__("<h1><span class='lead-in-heading'>GALLERY</span>Please enter the password below to see photos from The Summer Lunch</h1>").'
-    <label for="'.$label.'">'.__('Password:').' </label><input name="post_password" id="'.$label.'" type="password" size="20" maxlength="20" /><input type="submit" name="Submit" value="'.esc_attr__('Submit').'" />
-    </form></div></div></div></section>
-    ';
 
-    return $o;
-}
-add_filter('the_password_form', 'my_password_form');
 
 add_filter('wp_lazy_loading_enabled', '__return_true', 99);
 add_action('wp_ajax_myfilter', 'misha_filter_function'); // wp_ajax_{ACTION HERE}

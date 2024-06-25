@@ -5,7 +5,7 @@ add_action('after_setup_theme', function () {
         //add_image_size('image-carousel', 1770, 1125, true);
         add_image_size('image-carousel', 1100, 1100, true);
         add_image_size('image-landscape', 1090, 745, true);
-        add_image_size('image-portrait', 1090, 1590, true);
+        add_image_size('image-portrait', 1090, 1090, true);
         add_image_size('property-image', 1080, 820, true);
         add_image_size('gallery-image', 2000, 1110, true);
         //add_image_size('property-gallery', 1080, 765, true);

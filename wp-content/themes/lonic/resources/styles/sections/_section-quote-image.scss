@@ -1,0 +1,54 @@
+.section-quote-image {
+  .image-portrait {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1500;
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .image-landscape {
+    img {
+      width: 100%;
+      height: auto;
+    }
+  
+  }
+
+  .reverse {
+    flex-direction: row-reverse;
+
+    .image-landscape {
+      img {
+        left: auto;
+        right: 0;
+      }
+    }
+  }
+
+  &.image-left {
+    .text-wrapper {
+      position: relative;
+      left: -125px;
+      padding: 40px;
+      z-index: 10000;
+      border-radius: clamp(1.875rem, 1.563vw, 10rem);
+      overflow: hidden;
+    }
+  }
+
+  &.image-right {
+    .text-wrapper {
+      position: relative;
+      right: -125px;
+      padding: 40px;
+      z-index: 10000;
+      border-radius: clamp(1.875rem, 1.563vw, 10rem);
+      overflow: hidden;
+    }
+  }
+}
