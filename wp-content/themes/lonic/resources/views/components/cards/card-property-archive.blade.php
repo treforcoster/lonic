@@ -24,7 +24,7 @@
             <?php $brochure = get_field('brochure', get_the_ID()); ?>
             <?php $virtual = get_field('virtual_tour', get_the_ID()); ?>
 
-            <?php if ($brochure || $virtual) {?>
+            <?php if ($brochure || $virtual || $contact ) {?>
 
             <div class="property-links d-flex gap-3">
 
