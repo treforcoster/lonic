@@ -3,6 +3,8 @@
   padding-bottom: 56.25%;
   position: relative;
   height: 0;
+  border-radius: clamp(1.875rem, 1.563vw, 10rem);
+  overflow: hidden;
 }
 .video-embed iframe {
   left: 0;
