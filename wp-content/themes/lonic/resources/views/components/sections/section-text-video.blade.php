@@ -7,6 +7,7 @@
   if ($position == "right") {
 
     $order = ' ';
+
   
   } else {
 
@@ -22,7 +23,7 @@
 ">
   <div class="container-fluid">
     <div class="row g-8 justify-content-between <?php echo $order; ?>">
-      <div class="col-lg-5 medium text-dark g-10">
+      <div class="col-lg-5 medium text-dark g-10 mobile-padding-bottom-element">
         <div class="text-border padding-element">
 
           <?php echo get_sub_field('text') ?>

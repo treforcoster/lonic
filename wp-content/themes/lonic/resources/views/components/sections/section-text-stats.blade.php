@@ -10,7 +10,7 @@
 
         </div>
         <div class="col-lg-12">
-          <div class="row align-items-center padding-bottom-element">
+          <div class="row align-items-center justify-content-center padding-bottom-element">
 
             <?php $count = 0; ?>
 

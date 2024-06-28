@@ -80,3 +80,9 @@
 .padding-none {
   padding: 0;
 }
+
+.mobile-padding-bottom-element {
+  @include media-breakpoint-down(lg) {
+  padding-bottom: clamp(var(--element-min), var(--element), var(--element-max));
+  }
+}

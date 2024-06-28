@@ -1,6 +1,5 @@
 .section-text-stats {
   position: relative;
-
   .background {
     background-position: center;
     background-size: cover;
@@ -18,28 +17,126 @@
     z-index: 50;
   }
 
+  .col {
+   
+    flex: none;
+    width: 50% !important;
+    @include media-breakpoint-up(md) {
+      width: 33% !important;
+    }
+
+    @include media-breakpoint-up(lg) {
+      width: 20% !important;
+    }
+  }
+
   .stat {
     position: relative;
 
     &:after {
       position: absolute;
       right: -0.75rem;
-      top: 0;
       content: '';
       width: 1px;
-      height: 100%;
       background: #687f82;
+      height: 130px;
+      top: 50%;
+      margin-top: -65px;
+      display: none;
+    }
+
+    &:before {
+      position: absolute;
+      left: -0.75rem;
+      content: '';
+      width: 1px;
+      background: #687f82;
+      height: 130px;
+      top: 50%;
+      margin-top: -65px;
+      display: none;
     }
 
     &.s-0 {
       &:before {
-        position: absolute;
-        left: -0.75rem;
-        top: 0;
-        content: '';
-        width: 1px;
-        height: 100%;
-        background: #687f82;
+        display: block;
+      }
+      &:after {
+        display: block;
+      }
+    }
+
+    &.s-1 {
+      &:before {
+        display: none;
+      }
+      &:after {
+        display: block;
+      }
+
+     
+    }
+
+    &.s-2 {
+      &:before {
+        display: block;
+      }
+      &:after {
+        display: block;
+      }
+
+      @include media-breakpoint-up(md) {
+        &:before {
+          display: none;
+        }
+        &:after {
+          display: block;
+        }
+      }
+    }
+
+    &.s-3 {
+      &:before {
+        display: none;
+      }
+      &:after {
+        display: block;
+      }
+
+      @include media-breakpoint-up(md) {
+        &:before {
+          display: block;
+        }
+        &:after {
+          display: block;
+        }
+      }
+
+      @include media-breakpoint-up(lg) {
+        &:before {
+          display: none;
+        }
+        &:after {
+          display: block;
+        }
+      }
+    }
+
+    &.s-4 {
+      &:before {
+        display: block;
+      }
+      &:after {
+        display: block;
+      }
+
+      @include media-breakpoint-up(md) {
+        &:before {
+          display: none;
+        }
+        &:after {
+          display: block;
+        }
       }
     }
   }
