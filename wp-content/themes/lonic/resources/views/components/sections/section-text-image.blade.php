@@ -52,7 +52,7 @@
             <div class="col-lg-9">
                 <div class="row  <?php echo $justify; ?> <?php echo $order; ?>">
                     <div class="<?php echo $textCol; ?>">
-                        <div class="medium h2-small-underline">
+                        <div class="medium h2-small-underline mobile-padding-bottom-element">
                             <?php echo get_sub_field('text') ?>
 
                             @include('components.helpers.cta-link')
