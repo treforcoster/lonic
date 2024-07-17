@@ -10,7 +10,7 @@ add_action('after_setup_theme', function () {
         add_image_size('gallery-image', 2000, 1110, true);
         //add_image_size('property-gallery', 1080, 765, true);
         // add_image_size('image-portrait', 670, 765, true);
-        // add_image_size('featured-image', 1340, 890, true);
+         add_image_size('featured-image', 1080, 1020, true);
         // add_image_size('property-info', 1080, 1080, true);
         // add_image_size('gallery-image', 1920, 1080, true);
 
